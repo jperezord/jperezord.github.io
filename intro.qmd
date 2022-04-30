@@ -1,4 +1,4 @@
-# Introduction
+# Introduction {.unnumbered}
 
 Two years after the start of the pandemic, Spain is facing the sixth wave with a cumulative total of 11 million infected and almost 100,000 deaths \[[link](https://www.rtve.es/noticias/20220225/mapa-del-coronavirus-espana/2004681.shtml)\]. The high vaccination rate has cushioned the impact of the new variants of COVID-19. However, the relative ignorance of the virus, as well as the inability of administrations to predict its outbreaks, continue to put the health system at risk.
 
