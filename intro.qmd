@@ -1,9 +1,23 @@
 # Introduction
 
-This is a book created from markdown and executable code.
+Two years after the start of the pandemic, Spain is facing the sixth wave with a cumulative total of 11 million infected and almost 100,000 deaths \[[link](https://www.rtve.es/noticias/20220225/mapa-del-coronavirus-espana/2004681.shtml)\]. The high vaccination rate has cushioned the impact of the new variants of COVID-19. However, the relative ignorance of the virus, as well as the inability of administrations to predict its outbreaks, continue to put the health system at risk.
 
-See @knuth84 for additional discussion of literate programming.
+Transmission of the virus occurs primarily through exhalation of very small respiratory droplets and particles that contain the virus even when the infected person has no symptoms. According to the World Health Organization (WHO), infected people are apparently most contagious just before symptoms appear (about two days before) and in the first phase of the disease \[[link](https://www.who.int/es/news-room/questions-and-answers/item/coronavirus-disease-covid-19-how-is-it-transmitted)\]. Said respiratory particles can be inhaled by people and/or deposit on their eyes, nose or mouth.
 
-```{r}
-1 + 1
-```
+The current measures that governments are taking to mitigate the socioeconomic impact of COVID-19 and support the economic recovery of the countries seem to have a tendency towards coexistence with the virus. This strategy is mainly supported by the high vaccination rate that minimizes the potential health effects of the virus. Given this scenario, obtaining a prediction model that includes factors considered key in transmission will be vital for proper optimization of the health system's resources.
+
+The main objective of this work will be the use of machine learning techniques applied to time series for the prediction of COVID-19 outbreaks. For this, meteorological data and mobility data will be used, detailing demographic factors as far as possible.
+
+# Objetives
+
+The main objectives are:
+
+-   Identify whether meteorological and mobility factors are important in predicting COVID-19 outbreaks.
+
+-   Use of machine learning and time series prediction techniques for modeling the evolution of the virus.
+
+For which, it will be necessary to achieve a series of secondary objectives:
+
+-   Identification of relevant data and study of the possibilities they offer.
+
+-   Understand the behavior of the virus by analyzing the medical literature Identification of machine learning and prediction techniques that best suit the purpose of our project.

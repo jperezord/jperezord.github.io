@@ -2,11 +2,13 @@
 
 This is the website for the master's thesis **"COVID-19: Outbreak prediction combining meteorological, mobility and demographic data"** for UOC's master in Data Science.
 
-This book contains the development of the third working package (PEC3) with delivery date 15-may-2022. It is exposed the acquisition, cleaning and exploration process of the starting data. It also includes the development of the predictive models used for outbreak prediction and the results obtained.
+This book contains the development of the third working package (PEC3) with delivery date 15-may-2022.
+
+Throughout the book, it is exposed the acquisition, cleaning and exploration process of the starting data. It also includes the development of the predictive models used for outbreak prediction and the results obtained.
 
 
 ::: {.callout-note appearance="simple"}
-This book is written with the [Quarto](https://quarto.org) publishing system and published at <https://jperezord.github.io/> using Github pages.
+This book was written with the [Quarto](https://quarto.org) publishing system and hosted at <https://jperezord.github.io/> using Github pages.
 :::
 
 ## License
