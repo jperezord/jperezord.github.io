@@ -3,6 +3,7 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
 # CNE data {#sec-cne}
 
 Load packages:
@@ -16,8 +17,7 @@ pacman::p_load(
 )
 ```
 
-
-Number of cases by diagnostic technique and province of residence [[link](https://cnecovid.isciii.es/covid19/resources/metadata_tecnica_ccaa_prov_res.pdf)]:
+Number of cases by diagnostic technique and province of residence \[[link](https://cnecovid.isciii.es/covid19/resources/metadata_tecnica_ccaa_prov_res.pdf)\]:
 
 -   provincia_iso: ISO code of the province of residence.
 -   fecha: date \[From pandemic onset to May 10, the date of symptom onset or, if not, the date of diagnosis minus 6 days. symptoms or, in the absence of symptoms, the date of diagnosis minus 6 days. From May 11, the date of symptom onset, or in the absence thereof, the date of diagnosis minus 3 days, or the date of diagnosis for cases date of diagnosis minus 3 days, or the date of diagnosis for asymptomatic cases. asymptomatic cases.
