@@ -26,5 +26,19 @@
     "title": "References",
     "section": "",
     "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97."
+  },
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "PEC3 - COVID-19 Outbreak prediction",
+    "section": "Welcome",
+    "text": "Welcome\nThis is the website for the master’s thesis “COVID-19: Outbreak prediction combining meteorological, mobility and demographic data” for UOC’s master in Data Science.\nThis book contains the development of the third working package (PEC3) with delivery date 15-may-2022. It is exposed the acquisition, cleaning and exploration process of the starting data. It also includes the development of the predictive models used for outbreak prediction and the results obtained.\n\n\n\n\n\n\nThis book is written with the Quarto publishing system and published at https://jperezord.github.io/ using Github pages."
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "PEC3 - COVID-19 Outbreak prediction",
+    "section": "License",
+    "text": "License\nThis work is under an Attribution-NonCommercial-NoDerivs work license 3.0 (CC BY-NC-ND 3.0) 3.0 CreativeCommons\n© 2022 GitHub, Inc.\n\nTerms\nPrivacy\nSecurity\nStatus\nDocs\nContact GitHub\nPricing\nAPI\nTraining\nBlog\nAbout"
   }
 ]
