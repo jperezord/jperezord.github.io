@@ -13,9 +13,13 @@ Load packages:
 pacman::p_load(
       here,      # file locator
       tidyverse, # data management and ggplot2 graphics
-      skimr      # get overview of data
+      skimr,     # get overview of data
+      janitor,   # produce and adorn tabulations and cross-tabulations
+      flextable  # beautifull tables
 )
 ```
+
+## CNE diagnostic technique
 
 Number of cases by diagnostic technique and province of residence \[[link](https://cnecovid.isciii.es/covid19/resources/metadata_tecnica_ccaa_prov_res.pdf)\]:
 
@@ -29,11 +33,89 @@ Number of cases by diagnostic technique and province of residence \[[link](https
 -   num_casos_prueba_desconocida: Number of cases without information on laboratory testing.
 
 ```{r}
-cne_data <- read_csv(
-        file = here("data", "raw", "casos_tecnica_provincia.csv")
+cne_tecnica <- read_csv(
+      file = here("data", "raw", "casos_tecnica_provincia.csv"),
+      show_col_types = FALSE
 )
+
+skim(cne_tecnica)
 ```
 
 ```{r}
-skim(cne_data)
+#| warning = FALSE
+cne_tecnica %>%  
+      tabyl(provincia_iso) %>% 
+      adorn_pct_formatting() %>%
+      adorn_title(row_name = "Province")
+```
+
+Cleaning NAs
+
+```{r}
+cne_tecnica <- cne_tecnica %>% 
+      drop_na(provincia_iso)
+```
+
+## CNE hospitalizations
+
+Number of cases, hospitalisations, admissions to ICU and deaths by sex, age and province of residence \[[link](https://cnecovid.isciii.es/covid19/resources/metadata_diag_ccaa_decl_prov_edad_sexo.pdf)\]:
+
+-   provincia_iso:ISO code of the province of residence.
+-   fecha:
+    -   Cases: For cases prior to 11-May, the date of diagnosis is used, in its absence the date of declaration to the community and, in its absence, the key date (key date). the date of declaration to the community and, in its absence, the key date (date used for statistics by the Autonomous used for statistics by the Autonomous Regions). In cases after 10 May, in the absence of a diagnosis date, the date used is the date of diagnosis. date of diagnosis, the key date is used.
+
+    -   Hospitalisations, ICU admissions, deaths: hospitalised cases are represented by date of hospitalisation (failing this, date of diagnosis, and if not, date of death).
+-   sexo: sex of cases: H (male), M (female), NC (not stated)
+-   grupo_edad: age group to which the case belongs: 0-9, 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, ≥80 years. NC: not stated
+-   num_casos: number of reported cases confirmed as having a positive diagnostic test for active infection (PDIA) as infection (PDIA) as set out in the Early Detection Strategy, surveillance and control strategy for COVID-19 and in addition cases notified before 11-May that required hospitalisation, ICU admission or required hospitalisation, ICU admission or died with a clinical diagnosis of COVID19, according to the case definitions in force at the time.
+-   num_hosp: number of hospitalised cases
+-   num_uci: number of cases admitted to ICU
+-   num_def: number of deaths
+
+```{r}
+cne_hosp_data <- read_csv(
+      file = here("data", "raw", "casos_hosp_uci_def_sexo_edad_provres.csv"),
+      show_col_types = FALSE
+)
+
+skim(cne_hosp_data)
+```
+
+```{r}
+cne_hosp_data %>% 
+      tabyl(provincia_iso, sexo) %>% 
+      adorn_totals(where = "col") %>% 
+      adorn_percentages(denominator = "col") %>% 
+      adorn_pct_formatting() %>% 
+      adorn_ns(position = "front") %>% 
+      adorn_title(
+            row_name = "Province",
+            col_name = "Gender",
+            placement = "combined") %>% # this is necessary to print as image
+      flextable::flextable() %>%        # convert to pretty image
+      flextable::autofit()              # format to one line per row 
+```
+
+Cleaning NAs
+
+```{r}
+cne_hosp_data <- cne_hosp_data %>% 
+      drop_na(provincia_iso)
+```
+
+## Combination
+
+We proceed to combine both datasets.
+
+Before combine it is neccesary to group the demographic data from the hospitalisation dataframe.
+
+```{r}
+cne_hosp_data_grouped <-  cne_hosp_data %>% 
+      group_by(provincia_iso, fecha) %>% 
+      summarise_at(vars(num_casos, num_hosp, num_uci, num_def), sum)
+```
+
+```{r}
+cne_data <- inner_join(cne_tecnica, cne_hosp_data_grouped, by=c("provincia_iso", "fecha"))
+cne_data
 ```
