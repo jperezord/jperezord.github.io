@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jperezord.github.io/index.html</loc>
-    <lastmod>2022-04-30T10:53:01.852Z</lastmod>
+    <lastmod>2022-04-30T15:51:46.670Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/intro.html</loc>
@@ -15,5 +15,13 @@
   <url>
     <loc>https://jperezord.github.io/references.html</loc>
     <lastmod>2022-04-27T21:58:09.355Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jperezord.github.io/data.html</loc>
+    <lastmod>2022-04-30T15:51:46.671Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jperezord.github.io/cne_data.html</loc>
+    <lastmod>2022-04-30T15:54:15.796Z</lastmod>
   </url>
 </urlset>

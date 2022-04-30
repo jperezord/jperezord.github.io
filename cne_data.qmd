@@ -1,0 +1,34 @@
+# CNE data
+
+Load packages:
+
+```{r}
+# loading of packages required for the analyses
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr      # get overview of data
+)
+```
+
+
+Number of cases by diagnostic technique and province of residence [[link](https://cnecovid.isciii.es/covid19/resources/metadata_tecnica_ccaa_prov_res.pdf)]:
+
+-   provincia_iso: ISO code of the province of residence.
+-   fecha: date \[From pandemic onset to May 10, the date of symptom onset or, if not, the date of diagnosis minus 6 days. symptoms or, in the absence of symptoms, the date of diagnosis minus 6 days. From May 11, the date of symptom onset, or in the absence thereof, the date of diagnosis minus 3 days, or the date of diagnosis for cases date of diagnosis minus 3 days, or the date of diagnosis for asymptomatic cases. asymptomatic cases.
+-   num_casos: Number of cases by diagnostic technique and province of residence.
+-   num_casos_prueba_pcr: Number of cases with PCR laboratory test or molecular techniques.
+-   num_casos_prueba_test_ac: Number of cases with laboratory test of rapid antibody test.
+-   num_casos_prueba_ag: Number of cases with laboratory test of antigen detection test antigen test.
+-   num_casos_prueba_elisa: Number of cases with high-resolution serology laboratory testing.
+-   num_casos_prueba_desconocida: Number of cases without information on laboratory testing.
+
+```{r}
+cne_data <- read_csv(
+        file = here("data", "raw", "casos_tecnica_provincia.csv")
+)
+```
+
+```{r}
+skim(cne_data)
+```

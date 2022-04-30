@@ -6,7 +6,6 @@ This book contains the development of the third working package (PEC3) with deli
 
 Throughout the book, it is exposed the acquisition, cleaning and exploration process of the starting data. It also includes the development of the predictive models used for outbreak prediction and the results obtained.
 
-
 ::: {.callout-note appearance="simple"}
 This book was written with the [Quarto](https://quarto.org) publishing system and hosted at <https://jperezord.github.io/> using Github pages.
 :::
@@ -28,4 +27,3 @@ This work is under an [Attribution-NonCommercial-NoDerivs work license 3.0 (CC B
     Training
     Blog
     About
-
