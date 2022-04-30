@@ -1,9 +1,29 @@
-# Preface {.unnumbered}
+## Welcome {.unnumbered}
 
-This is a Quarto book.
+This is the website for the master's thesis **"COVID-19: Outbreak prediction combining meteorological, mobility and demographic data"** for UOC's master in Data Science.
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+This book contains the development of the third working package (PEC3) with delivery date 15-may-2022. It is exposed the acquisition, cleaning and exploration process of the starting data. It also includes the development of the predictive models used for outbreak prediction and the results obtained.
 
-```{r}
-1 + 1
-```
+
+::: {.callout-note appearance="simple"}
+This book is written with the [Quarto](https://quarto.org) publishing system and published at <https://jperezord.github.io/> using Github pages.
+:::
+
+## License
+
+This work is under an [Attribution-NonCommercial-NoDerivs work license 3.0 (CC BY-NC-ND 3.0) 3.0 CreativeCommons](https://creativecommons.org/licenses/by-nc-nd/3.0/es/)
+
+    © 2022 GitHub, Inc.
+
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
