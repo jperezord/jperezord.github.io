@@ -14,8 +14,7 @@ pacman::p_load(
       here,      # file locator
       tidyverse, # data management and ggplot2 graphics
       skimr,     # get overview of data
-      janitor,   # produce and adorn tabulations and cross-tabulations
-      flextable  # beautifull tables
+      janitor    # produce and adorn tabulations and cross-tabulations
 )
 ```
 
@@ -37,9 +36,15 @@ cne_tecnica <- read_csv(
       file = here("data", "raw", "casos_tecnica_provincia.csv"),
       show_col_types = FALSE
 )
+cne_tecnica
+```
 
+Check data distribution and missing data.
+
+```{r}
 skim(cne_tecnica)
 ```
+
 
 ```{r}
 #| warning = FALSE
@@ -54,7 +59,11 @@ Cleaning NAs
 ```{r}
 cne_tecnica <- cne_tecnica %>% 
       drop_na(provincia_iso)
+      
+# Show data information
+skim(cne_tecnica)
 ```
+
 
 ## CNE hospitalizations
 
@@ -77,7 +86,12 @@ cne_hosp_data <- read_csv(
       file = here("data", "raw", "casos_hosp_uci_def_sexo_edad_provres.csv"),
       show_col_types = FALSE
 )
+cne_hosp_data
+```
 
+Check data distribution and missing data.
+
+```{r}
 skim(cne_hosp_data)
 ```
 
@@ -91,9 +105,7 @@ cne_hosp_data %>%
       adorn_title(
             row_name = "Province",
             col_name = "Gender",
-            placement = "combined") %>% # this is necessary to print as image
-      flextable::flextable() %>%        # convert to pretty image
-      flextable::autofit()              # format to one line per row 
+            placement = "combined")
 ```
 
 Cleaning NAs
@@ -101,13 +113,14 @@ Cleaning NAs
 ```{r}
 cne_hosp_data <- cne_hosp_data %>% 
       drop_na(provincia_iso)
+skim(cne_hosp_data)
 ```
 
 ## Combination
 
 We proceed to combine both datasets.
 
-Before combine it is neccesary to group the demographic data from the hospitalisation dataframe.
+Before the combination it is neccesary to group the demographic data from the hospitalisation dataframe.
 
 ```{r}
 cne_hosp_data_grouped <-  cne_hosp_data %>% 
@@ -115,7 +128,35 @@ cne_hosp_data_grouped <-  cne_hosp_data %>%
       summarise_at(vars(num_casos, num_hosp, num_uci, num_def), sum)
 ```
 
+Data combination:
+
 ```{r}
-cne_data <- inner_join(cne_tecnica, cne_hosp_data_grouped, by=c("provincia_iso", "fecha"))
+cne_data <- inner_join(cne_tecnica, 
+                       cne_hosp_data_grouped, 
+                       by = c("provincia_iso", "fecha"))
 cne_data
 ```
+
+The total number of cases aggregated from hospitalisation data ('num_casos.y') should be the same as the data extracted from the detection tecnica.
+
+```{r}
+str_glue("Is the aggregated data equal? {sum(cne_data$num_casos.x) == sum(cne_data$num_casos.y)}")
+str_glue("Summatory from tecnica data: {sum(cne_data$num_casos.x)}")
+str_glue("Summatory from hospitalisation data: {sum(cne_data$num_casos.y)}")
+```
+
+Hence it is possible to remove one of them.
+
+```{r}
+cne_data <- cne_data %>% 
+      rename(num_casos = num_casos.x) %>% 
+      select(-num_casos.y)             # Remove num_casos from hospitalisation data)
+```
+
+Result:
+
+```{r}
+cne_data
+```
+
+The data contains information from `r min(cne_data$fecha)` to `r max(cne_data$fecha)`.

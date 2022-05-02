@@ -1,0 +1,223 @@
+---
+title: "Google data"
+author: "Jaime Perez Ordieres (jperezord)"
+---
+
+```{r}
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr,     # get overview of data
+      janitor,   # produce and adorn tabulations and cross-tabulations
+      tsibble,
+      imputeTS
+)
+```
+
+Data is avaible in the following [link](https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip)
+
+```{r}
+# List local google raw files
+google_files <- list.files(
+      path = here("data", "raw"),
+      recursive = TRUE,
+      full.names = TRUE,
+      pattern = "*Region_Mobility_Report.csv"
+)
+```
+
+```{r}
+google_data <- map_dfr(
+      .x = google_files, 
+      .f = ~read_csv(.x, show_col_types = FALSE)
+)
+google_data
+```
+
+```{r}
+skim(google_data)
+```
+
+There are some discrepancies between the NA data.
+
+sub_region_1 and iso_3166_2_code has a total of 98,4% of completness while sub_region_2 has only 68,3%. One of the reasons could be that some sub_regions in Spain are considered both Autonomous Communities (AC)/Autonomous Cities (C) and Provinces (Pr).
+
+For those cases, sub_region_2 contains missing values.
+
+```{r}
+# Fix sub_region_2 missing data
+google_data <- google_data %>% 
+      mutate(
+            sub_region_2 = case_when(
+                  sub_region_1 == "Asturias" ~ "Asturias",
+                  sub_region_1 == "Balearic Islands" ~ "Baleares",
+                  sub_region_1 == "Cantabria" ~ "Cantabria",
+                  sub_region_1 == "Ceuta" ~ "Ceuta",
+                  sub_region_1 == "Community of Madrid" ~ "Madrid",
+                  sub_region_1 == "La Rioja" ~ "Rioja",
+                  sub_region_1 == "Melilla" ~ "Melilla",
+                  sub_region_1 == "Navarre" ~ "Navarra",
+                  sub_region_1 == "Region of Murcia" ~ "Murcia",
+                  TRUE ~ sub_region_2
+            )
+      )
+```
+
+```{r}
+google_data %>%  
+      tabyl(sub_region_1) %>% 
+      adorn_pct_formatting()
+```
+
+```{r}
+table(google_data$sub_region_2)
+```
+
+To clean the data, the following actions will be taken:
+
+- NA data from sub_region_1 and 2 will be eliminated. 
+- Some columns do not add usefull information for our analysis shuch as "country_region_code", "metro_area", "census_fips_code" and "place_id". So, they will be eliminated from the dataset
+- Column names are too longer and contain redundant information. We are going to rename them.
+
+```{r}
+google_data <- google_data %>% 
+      drop_na(sub_region_1, sub_region_2) %>% 
+      select(-country_region, -country_region_code, -metro_area, -census_fips_code, -place_id) %>% 
+      rename(
+            "CA"                = sub_region_1,
+            "province"          = sub_region_2,
+            "fecha"             = date,
+            "retail_recreation" = retail_and_recreation_percent_change_from_baseline,
+            "grocery_pharmacy"  = grocery_and_pharmacy_percent_change_from_baseline,
+            "parks"             = parks_percent_change_from_baseline,
+            "transit_stations"  = transit_stations_percent_change_from_baseline,
+            "workplaces"        = workplaces_percent_change_from_baseline,
+            "residential"       = residential_percent_change_from_baseline
+      )
+google_data
+```
+
+```{r}
+skim(google_data)
+```
+
+At this point, only the numeric variables contains NAs. As this information is embedded in time series, it will be possible to impute missing values.
+
+Missing values are presented in all the provinces but mostly in Ceuta and Melilla.
+
+
+```{r}
+google_data %>% 
+      pivot_longer(cols = 5:10, names_to = "variables") %>% 
+      filter(is.na(value)) %>% 
+      pull(province) %>% 
+      table() %>% 
+      sort(decreasing = TRUE)
+```
+
+To impute missing data, we will convert the data to time series:
+
+```{r}
+google_TimeS <- google_data %>% 
+      pivot_longer(cols = 5:10, names_to = "variables") %>% 
+      as_tsibble(index = fecha, key = c(variables, province))
+```
+
+Independent imputation of data. For that, we impute the missing values by separating the variables independently.
+
+```{r}
+grocery_pharmacy_data <- google_TimeS %>% 
+      filter(variables == "grocery_pharmacy") %>% 
+      select(-variables) %>% 
+      group_by(province) %>% 
+      na_kalman() %>% 
+      rename("mob_grocery_pharmacy" = value)
+```
+
+```{r}
+grocery_parks_data <- google_TimeS %>% 
+      filter(variables == "parks") %>% 
+      select(-variables) %>%
+      group_by(province) %>% 
+      na_kalman() %>% 
+      rename("mob_parks" = value)
+```
+
+```{r}
+grocery_residential_data <- google_TimeS %>% 
+      filter(variables == "residential") %>% 
+      select(-variables) %>%
+      group_by(province) %>% 
+      na_kalman() %>% 
+      rename("mob_residential" = value)
+```
+
+```{r}
+grocery_retail_recreation_data <- google_TimeS %>% 
+      filter(variables == "retail_recreation") %>% 
+      select(-variables) %>%
+      group_by(province) %>% 
+      na_kalman() %>% 
+      rename("mob_retail_recreation" = value)
+```
+
+```{r}
+grocery_transit_stations_data <- google_TimeS %>% 
+      filter(variables == "transit_stations") %>% 
+      select(-variables) %>%
+      group_by(province) %>% 
+      na_kalman() %>% 
+      rename("mob_transit_stations" = value)
+```
+
+```{r}
+grocery_workplaces_data <- google_TimeS %>% 
+      filter(variables == "workplaces") %>% 
+      select(-variables) %>%
+      group_by(province) %>% 
+      na_kalman() %>% 
+      rename("mob_workplaces" = value)
+```
+
+Once imputed missing data, we can combine the data again
+
+```{r}
+google_TimeS_imputed <- grocery_pharmacy_data %>% 
+      inner_join(grocery_parks_data, by=c("CA", "province", "iso_3166_2_code", "fecha")) %>% 
+      inner_join(grocery_residential_data, by=c("CA", "province", "iso_3166_2_code", "fecha")) %>% 
+      inner_join(grocery_retail_recreation_data, by=c("CA", "province", "iso_3166_2_code", "fecha")) %>% 
+      inner_join(grocery_transit_stations_data, by=c("CA", "province", "iso_3166_2_code", "fecha")) %>% 
+      inner_join(grocery_workplaces_data, by=c("CA", "province", "iso_3166_2_code", "fecha"))
+google_TimeS_imputed
+```
+
+Apart from missing data, there are also some gaps in the data for Ceuta and Melilla.
+
+```{r}
+google_TimeS_imputed %>% 
+      pivot_longer(cols = 5:10, names_to = "variables") %>% 
+      as_tsibble(index = fecha, key = c(variables, province)) %>% 
+      has_gaps(.full = TRUE) %>% 
+      filter(.gaps == TRUE)
+```
+
+```{r}
+google_gaps <- google_TimeS_imputed %>% 
+      pivot_longer(cols = 5:10, names_to = "variables") %>% 
+      as_tsibble(index = fecha, key = c(variables, province)) %>% 
+      count_gaps(.full = TRUE)
+google_gaps
+```
+
+Since in further analysis we will not use "Ceuta" or "Melilla" data, we chose to eliminate them rather than to impute the missing values.
+
+```{r}
+google_TimeS_imputed <- google_TimeS_imputed %>% 
+      filter(!province %in% c("Ceuta", "Melilla"))
+google_TimeS_imputed
+```
+
+```{r}
+skim(google_TimeS_imputed)
+```
+
