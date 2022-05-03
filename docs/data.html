@@ -118,6 +118,11 @@ ul.task-list{list-style: none;}
   <a href="./google_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">GOOGLE data</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></a>
+  </div>
+</li>
     </ul>
   </li>
         <li class="sidebar-item">
@@ -134,8 +139,16 @@ ul.task-list{list-style: none;}
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#cne-data" id="toc-cne-data" class="nav-link active" data-scroll-target="#cne-data">CNE data</a></li>
+  <li><a href="#covid-19" id="toc-covid-19" class="nav-link active" data-scroll-target="#covid-19">COVID-19</a>
+  <ul class="collapse">
+  <li><a href="#cne-data" id="toc-cne-data" class="nav-link" data-scroll-target="#cne-data">CNE data</a></li>
+  </ul></li>
+  <li><a href="#mobility-data" id="toc-mobility-data" class="nav-link" data-scroll-target="#mobility-data">Mobility data</a>
+  <ul class="collapse">
+  <li><a href="#ine-data" id="toc-ine-data" class="nav-link" data-scroll-target="#ine-data">INE data</a></li>
   <li><a href="#google-data" id="toc-google-data" class="nav-link" data-scroll-target="#google-data">Google data</a></li>
+  </ul></li>
+  <li><a href="#ine-data-1" id="toc-ine-data-1" class="nav-link" data-scroll-target="#ine-data-1">INE data</a></li>
   </ul>
 </nav>
     </div>
@@ -160,8 +173,10 @@ ul.task-list{list-style: none;}
 
 </header>
 
-<section id="cne-data" class="level2">
-<h2 class="anchored" data-anchor-id="cne-data">CNE data</h2>
+<section id="covid-19" class="level2">
+<h2 class="anchored" data-anchor-id="covid-19">COVID-19</h2>
+<section id="cne-data" class="level3">
+<h3 class="anchored" data-anchor-id="cne-data">CNE data</h3>
 <p>The data published in the <a href="https://cnecovid.isciii.es/covid19/#distribuci%C3%B3n-geogr%C3%A1fica">CNE COVID-19 Panel</a> offers information related to infections, recoveries and deaths reported by local and regional governments in Spain. It comes from the individualised declaration of COVID-19 cases to the National Epidemiological Surveillance Network (RENAVE) through the SiViEs computer application.</p>
 <p>In SiViEs, all reported cases are accounted for, following the surveillance strategy in force at the time (Strategy for early detection, surveillance and control of COVID-19 available at <a href="https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/COVID19_Estrategia_vigilancia_y_control_e_indicadores.pdf" class="uri">https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/COVID19_Estrategia_vigilancia_y_control_e_indicadores.pdf</a></p>
 <p>In the current work, we will use two datasets from CNE:</p>
@@ -170,9 +185,15 @@ ul.task-list{list-style: none;}
 <li><p>casos_hosp_uci_def_sexo_edad_provres.csv: Number of hospitalisations, number of admissions to ICU and number of deaths by sex, age and province of residence.</p></li>
 </ul>
 </section>
-<section id="google-data" class="level2">
-<h2 class="anchored" data-anchor-id="google-data">Google data</h2>
-<p>The data published at <a href="https://www.google.com/covid19/mobility/?hl=en-GB">https://www.google.com/covid19/mobility/?hl=en-GB</a> offers information related to mobility using the Google ecosystem application services such as Android.</p>
+</section>
+<section id="mobility-data" class="level2">
+<h2 class="anchored" data-anchor-id="mobility-data">Mobility data</h2>
+<section id="ine-data" class="level3">
+<h3 class="anchored" data-anchor-id="ine-data">INE data</h3>
+</section>
+<section id="google-data" class="level3">
+<h3 class="anchored" data-anchor-id="google-data">Google data</h3>
+<p>The data published at <a href="https://www.google.com/covid19/mobility/?hl=en-GB" class="uri">https://www.google.com/covid19/mobility/?hl=en-GB</a> offers information related to mobility using the Google ecosystem application services such as Android.</p>
 <p>The dataset information is available worldwide. In our case, only the information relating to Spain was extracted.</p>
 <p>The Google Mobility Reports aim to provide insights into what has changed in response to policies aimed at combating COVID-19. The reports chart movement trends over time by geography, across different categories of places such as retail and recreation, supermarkets and pharmacies, parks, public transport, workplaces and residential.</p>
 <p>Each Community Mobility Report is broken down by location and displays the change in visits to places.</p>
@@ -181,6 +202,10 @@ ul.task-list{list-style: none;}
 <li><p>Region_Mobility_Report_CSVs.zip contains worldwide information</p></li>
 <li><p>20XX_ES_Region_Mobility_Report.csv contains information for Spain. Note: information is provided by year in separate files.</p></li>
 </ul>
+</section>
+</section>
+<section id="ine-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="ine-data-1">INE data</h2>
 
 
 </section>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.345">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>PEC3 - COVID-19 Outbreak prediction - 3&nbsp; INE data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<link href="./references.html" rel="next">
+<link href="./google_data.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link id="quarto-text-highlighting-styles" href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">PEC3 - COVID-19 Outbreak prediction</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/jperezord/jperezord.github.io.git" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+    <div class="sidebar-item-container"> 
+        <a href="./data.html" class="sidebar-item-text sidebar-link">Task 1: Data acquisition and exploration</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+        <i class="bi bi-chevron-right ms-2"></i>
+      </a>
+    </div>
+    <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cne_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CNE data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">GOOGLE data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></a>
+  </div>
+</li>
+    </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ine" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></span></h1>
+</div>
+
+
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>Load packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>      here,      <span class="co"># file locator</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      tidyverse, <span class="co"># data management and ggplot2 graphics</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      skimr,     <span class="co"># get overview of data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      janitor,   <span class="co"># produce and adorn tabulations and cross-tabulations</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      tsibble,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      imputeTS</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Data is available in the Spanish National Institute of Statistics in the following <a href="https://www.ine.es/experimental/movilidad/experimental_em4.htm#tablas_resultados">link</a>. It is also provided a <a href="https://www.ine.es/jaxiT3/Tabla.htm?t=48252">link</a> for direct access to the download portal via queries.</p>
+<p>Data can be downloaded in different formats. In our case we have used ‘CSV: separado por ;’</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/consulta_descarga_ine.png" class="img-fluid figure-img"></p>
+<p></p><figcaption aria-hidden="true" class="figure-caption">Downloading process</figcaption><p></p>
+</figure>
+</div>
+<p>The technical project carried out for INE study is available in the following <a href="https://www.ine.es/experimental/movilidad/exp_em_proyecto.pdf">link</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"ine_48252_estudio_movilidad.csv"</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ine_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20,667 × 7
+   `Total Nacional` `Comunidades y Ciu…` Provincias Islas `Tipo de dato` Periodo
+   &lt;chr&gt;            &lt;chr&gt;                &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;  
+ 1 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 29/12/…
+ 2 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 26/12/…
+ 3 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 22/12/…
+ 4 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 19/12/…
+ 5 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 15/12/…
+ 6 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 12/12/…
+ 7 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 8/12/2…
+ 8 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 1/12/2…
+ 9 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 28/11/…
+10 Total Nacional   &lt;NA&gt;                 &lt;NA&gt;       &lt;NA&gt;  Porcentaje de… 24/11/…
+# … with 20,657 more rows, and 1 more variable: Total &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>It is needed to rename the colulmn’s name in order to facilitate the work.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">CA =</span> <span class="st">'Comunidades y Ciudades Autónomas'</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">province =</span> Provincias,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">islas =</span> Islas,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">fecha =</span> Periodo,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">flujo =</span> Total</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ine_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20,667 × 5
+   CA    province islas fecha      flujo
+   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;
+ 1 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  29/12/2021  15.9
+ 2 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  26/12/2021  10.2
+ 3 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  22/12/2021  18.6
+ 4 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  19/12/2021  12.6
+ 5 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  15/12/2021  21.0
+ 6 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  12/12/2021  12.9
+ 7 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  8/12/2021   12.3
+ 8 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  1/12/2021   21.4
+ 9 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  28/11/2021  12.3
+10 &lt;NA&gt;  &lt;NA&gt;     &lt;NA&gt;  24/11/2021  20.7
+# … with 20,657 more rows</code></pre>
+</div>
+</div>
+<p>Transform date to a valid format:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">fecha =</span> <span class="fu">as.Date</span>(fecha, <span class="at">format =</span> <span class="st">"%d/%m/%Y"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ine_data<span class="sc">$</span>fecha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+"2019-11-18" "2020-05-23" "2020-10-18" "2020-11-27" "2021-05-23" "2021-12-29" </code></pre>
+</div>
+</div>
+<p>There are missing data for CA and provinces. So, we proceed to elimite the missing information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>(CA, province)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(ine_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">ine_data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">15687</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">province</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">islas</td>
+<td style="text-align: right;">12948</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: Date</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">min</th>
+<th style="text-align: left;">max</th>
+<th style="text-align: left;">median</th>
+<th style="text-align: right;">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">fecha</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2019-11-18</td>
+<td style="text-align: left;">2021-12-29</td>
+<td style="text-align: left;">2020-10-18</td>
+<td style="text-align: right;">249</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">flujo</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13.03</td>
+<td style="text-align: right;">4.98</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">9.44</td>
+<td style="text-align: right;">12.69</td>
+<td style="text-align: right;">16.61</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: left;">▂▇▅▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>No isles will be used in our analysis, so instead of clean and impute missing values, we have decided to elimite them from the dataset.</p>
+<p>We also eliminate the CA column since it information is redundant with province.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(<span class="fu">is.na</span>(islas)) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="sc">-</span>islas, <span class="sc">-</span>CA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Regarding completeness of the dataset, there are not daily information. The gap between days vary between one day (no gaps during lockdown) and up to four days.</p>
+<p>To complete the data, we are going to interpolate the data between the known values.</p>
+<p>In order to do that, we are going to transform data in a wider format (as a matrix).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> province, <span class="at">values_from =</span> flujo)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ine_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 249 × 53
+   fecha      Almería Cádiz Córdoba Granada Huelva  Jaén Málaga Sevilla Huesca
+   &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+ 1 2021-12-29   15.9   16.4   15.0     17.6  13.6  13.1    17.4    17.6  12.6 
+ 2 2021-12-26    9.89  10.9    9.54    11.4   8.36  8.16   11.0    10.6   8.54
+ 3 2021-12-22   17.4   17.1   15.4     18.4  14.1  13.0    18.8    19.3  13.3 
+ 4 2021-12-19   11.5   13.0   12.1     14.5  10.5  11.7    13.1    13.9   9.91
+ 5 2021-12-15   18.4   19.3   18.4     20.4  16.7  16      21.0    22.9  14.3 
+ 6 2021-12-12   11.6   13.5   12.4     14.3  10.7  11.5    13.6    13.5  10.2 
+ 7 2021-12-08   12.3   13.7   12.2     13.8  11.4  10.2    14.0    13.5  11.9 
+ 8 2021-12-01   18.3   19.2   18.4     20.1  16.6  15.5    21.3    22.7  14.3 
+ 9 2021-11-28   11.8   12.5   11.7     13.9  10.3   9.89   13.7    13.2   9.11
+10 2021-11-24   18.2   18.6   17.9     19.6  16.5  13.3    21.1    22.6  12.9 
+# … with 239 more rows, and 43 more variables: Teruel &lt;dbl&gt;, Zaragoza &lt;dbl&gt;,
+#   Asturias &lt;dbl&gt;, `Balears, Illes` &lt;dbl&gt;, `Palmas, Las` &lt;dbl&gt;,
+#   `Santa Cruz de Tenerife` &lt;dbl&gt;, Cantabria &lt;dbl&gt;, Ávila &lt;dbl&gt;, Burgos &lt;dbl&gt;,
+#   León &lt;dbl&gt;, Palencia &lt;dbl&gt;, Salamanca &lt;dbl&gt;, Segovia &lt;dbl&gt;, Soria &lt;dbl&gt;,
+#   Valladolid &lt;dbl&gt;, Zamora &lt;dbl&gt;, Albacete &lt;dbl&gt;, `Ciudad Real` &lt;dbl&gt;,
+#   Cuenca &lt;dbl&gt;, Guadalajara &lt;dbl&gt;, Toledo &lt;dbl&gt;, Barcelona &lt;dbl&gt;,
+#   Girona &lt;dbl&gt;, Lleida &lt;dbl&gt;, Tarragona &lt;dbl&gt;, `Alicante/Alacant` &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>For all the provinces, there are information for 18-nov-2019 which is the pre-pandemic reference value. Since it is not needed to show variations in mobility, we are going to filter it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(fecha <span class="sc">&gt;</span> <span class="fu">as.Date</span>(<span class="st">"18/11/2019"</span>, <span class="at">format =</span> <span class="st">"%d/%m/%Y"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(fecha)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ine_data<span class="sc">$</span>fecha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+"2020-03-16" "2020-05-23" "2020-10-19" "2020-11-28" "2021-05-23" "2021-12-29" </code></pre>
+</div>
+</div>
+<p>To interpolate the data, we need to convert the dataframe in a time series format and fill gaps with the missing days.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">fill_gaps</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using `fecha` as index variable.</code></pre>
+</div>
+</div>
+<p>The total number of missing values per province are:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(ine_data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 fecha                Almería                  Cádiz 
+                     0                    406                    406 
+               Córdoba                Granada                 Huelva 
+                   406                    406                    406 
+                  Jaén                 Málaga                Sevilla 
+                   406                    406                    406 
+                Huesca                 Teruel               Zaragoza 
+                   406                    406                    406 
+              Asturias         Balears, Illes            Palmas, Las 
+                   406                    406                    406 
+Santa Cruz de Tenerife              Cantabria                  Ávila 
+                   406                    406                    406 
+                Burgos                   León               Palencia 
+                   406                    406                    406 
+             Salamanca                Segovia                  Soria 
+                   406                    406                    406 
+            Valladolid                 Zamora               Albacete 
+                   406                    406                    406 
+           Ciudad Real                 Cuenca            Guadalajara 
+                   406                    406                    406 
+                Toledo              Barcelona                 Girona 
+                   406                    406                    406 
+                Lleida              Tarragona       Alicante/Alacant 
+                   406                    406                    406 
+    Castellón/Castelló      Valencia/València                Badajoz 
+                   406                    406                    406 
+               Cáceres              Coruña, A                   Lugo 
+                   406                    406                    406 
+               Ourense             Pontevedra                 Madrid 
+                   406                    406                    406 
+                Murcia                Navarra            Araba/Álava 
+                   406                    406                    406 
+               Bizkaia               Gipuzkoa              Rioja, La 
+                   406                    406                    406 
+                 Ceuta                Melilla 
+                   406                    406 </code></pre>
+</div>
+</div>
+<p>The missing data is completed by interpolating available information. Here is an example of how the interpolation works in our dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(ine_data)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(ine_data, imp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ine_data_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Missing data interpolation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicamos interpolacion</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(ine_data)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>ine_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 53 [1D]
+   fecha      Almería Cádiz Córdoba Granada Huelva  Jaén Málaga Sevilla Huesca
+   &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+ 1 2020-03-16   11.0  10.7    11.9    11.4   11.4   8.81  11.4    12.3   10.3 
+ 2 2020-03-17    9.14 10.1    11.4     9.78  10.9   7.65  10.7    11.5   10.2 
+ 3 2020-03-18    7.28  9.5    10.9     8.16  10.5   6.49  10.1    10.8   10.1 
+ 4 2020-03-19    7.08  9.28   10.7     8.06  10.2   6.30   9.80   10.6   10.0 
+ 5 2020-03-20    6.87  9.05   10.4     7.97  10.0   6.12   9.53   10.3    9.98
+ 6 2020-03-21    5.53  7.24    8.06    7.08   7.77  5.35   7.09    7.89   7.11
+ 7 2020-03-22    4.19  5.42    5.7     6.2    5.51  4.57   4.65    5.44   4.24
+ 8 2020-03-23    6.59  7.74    8.24    8.20   8.30  6.25   7.02    8.48   7.04
+ 9 2020-03-24    8.98 10.1    10.8    10.2   11.1   7.93   9.39   11.5    9.85
+10 2020-03-25    9.11 10.2    10.8    10.0   11.0   8.02   9.47   11.5    9.72
+# … with 644 more rows, and 43 more variables: Teruel &lt;dbl&gt;, Zaragoza &lt;dbl&gt;,
+#   Asturias &lt;dbl&gt;, `Balears, Illes` &lt;dbl&gt;, `Palmas, Las` &lt;dbl&gt;,
+#   `Santa Cruz de Tenerife` &lt;dbl&gt;, Cantabria &lt;dbl&gt;, Ávila &lt;dbl&gt;, Burgos &lt;dbl&gt;,
+#   León &lt;dbl&gt;, Palencia &lt;dbl&gt;, Salamanca &lt;dbl&gt;, Segovia &lt;dbl&gt;, Soria &lt;dbl&gt;,
+#   Valladolid &lt;dbl&gt;, Zamora &lt;dbl&gt;, Albacete &lt;dbl&gt;, `Ciudad Real` &lt;dbl&gt;,
+#   Cuenca &lt;dbl&gt;, Guadalajara &lt;dbl&gt;, Toledo &lt;dbl&gt;, Barcelona &lt;dbl&gt;,
+#   Girona &lt;dbl&gt;, Lleida &lt;dbl&gt;, Tarragona &lt;dbl&gt;, `Alicante/Alacant` &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>Now, the missing values per province are zero.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(ine_data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 fecha                Almería                  Cádiz 
+                     0                      0                      0 
+               Córdoba                Granada                 Huelva 
+                     0                      0                      0 
+                  Jaén                 Málaga                Sevilla 
+                     0                      0                      0 
+                Huesca                 Teruel               Zaragoza 
+                     0                      0                      0 
+              Asturias         Balears, Illes            Palmas, Las 
+                     0                      0                      0 
+Santa Cruz de Tenerife              Cantabria                  Ávila 
+                     0                      0                      0 
+                Burgos                   León               Palencia 
+                     0                      0                      0 
+             Salamanca                Segovia                  Soria 
+                     0                      0                      0 
+            Valladolid                 Zamora               Albacete 
+                     0                      0                      0 
+           Ciudad Real                 Cuenca            Guadalajara 
+                     0                      0                      0 
+                Toledo              Barcelona                 Girona 
+                     0                      0                      0 
+                Lleida              Tarragona       Alicante/Alacant 
+                     0                      0                      0 
+    Castellón/Castelló      Valencia/València                Badajoz 
+                     0                      0                      0 
+               Cáceres              Coruña, A                   Lugo 
+                     0                      0                      0 
+               Ourense             Pontevedra                 Madrid 
+                     0                      0                      0 
+                Murcia                Navarra            Araba/Álava 
+                     0                      0                      0 
+               Bizkaia               Gipuzkoa              Rioja, La 
+                     0                      0                      0 
+                 Ceuta                Melilla 
+                     0                      0 </code></pre>
+</div>
+</div>
+<p>Dataset summary:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ine_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     fecha               Almería          Cádiz          Córdoba     
+ Min.   :2020-03-16   Min.   : 4.10   Min.   : 5.42   Min.   : 5.68  
+ 1st Qu.:2020-08-26   1st Qu.:12.12   1st Qu.:13.60   1st Qu.:11.99  
+ Median :2021-02-05   Median :14.07   Median :15.94   Median :13.63  
+ Mean   :2021-02-05   Mean   :13.72   Mean   :15.24   Mean   :13.56  
+ 3rd Qu.:2021-07-18   3rd Qu.:15.76   3rd Qu.:17.65   3rd Qu.:15.40  
+ Max.   :2021-12-29   Max.   :18.49   Max.   :20.37   Max.   :18.85  
+    Granada          Huelva           Jaén           Málaga     
+ Min.   : 5.71   Min.   : 5.51   Min.   : 4.17   Min.   : 4.56  
+ 1st Qu.:13.13   1st Qu.:11.48   1st Qu.:10.30   1st Qu.:13.43  
+ Median :15.29   Median :13.26   Median :11.64   Median :16.03  
+ Mean   :14.80   Mean   :13.10   Mean   :11.38   Mean   :15.33  
+ 3rd Qu.:17.00   3rd Qu.:15.03   3rd Qu.:12.87   3rd Qu.:17.90  
+ Max.   :20.55   Max.   :18.76   Max.   :16.40   Max.   :21.37  
+    Sevilla          Huesca          Teruel          Zaragoza    
+ Min.   : 5.44   Min.   : 4.24   Min.   : 1.950   Min.   : 5.80  
+ 1st Qu.:13.00   1st Qu.:10.99   1st Qu.: 6.995   1st Qu.:13.30  
+ Median :15.34   Median :12.62   Median : 8.685   Median :15.90  
+ Mean   :15.27   Mean   :12.38   Mean   : 8.232   Mean   :15.88  
+ 3rd Qu.:17.72   3rd Qu.:14.09   3rd Qu.: 9.849   3rd Qu.:18.57  
+ Max.   :23.10   Max.   :17.95   Max.   :12.240   Max.   :24.51  
+    Asturias     Balears, Illes   Palmas, Las    Santa Cruz de Tenerife
+ Min.   : 5.24   Min.   : 3.92   Min.   : 5.11   Min.   : 5.20         
+ 1st Qu.:12.34   1st Qu.:13.40   1st Qu.:13.22   1st Qu.:13.37         
+ Median :14.92   Median :16.00   Median :15.60   Median :15.83         
+ Mean   :14.78   Mean   :15.43   Mean   :15.38   Mean   :15.59         
+ 3rd Qu.:17.18   3rd Qu.:18.19   3rd Qu.:17.75   3rd Qu.:17.99         
+ Max.   :24.28   Max.   :22.97   Max.   :22.60   Max.   :27.24         
+   Cantabria         Ávila           Burgos           León      
+ Min.   : 5.84   Min.   : 4.51   Min.   : 3.97   Min.   : 5.56  
+ 1st Qu.:13.28   1st Qu.:10.18   1st Qu.:10.36   1st Qu.:12.73  
+ Median :16.35   Median :11.88   Median :12.15   Median :14.70  
+ Mean   :16.05   Mean   :11.56   Mean   :12.01   Mean   :14.47  
+ 3rd Qu.:18.84   3rd Qu.:13.25   3rd Qu.:13.89   3rd Qu.:16.61  
+ Max.   :25.78   Max.   :17.09   Max.   :18.65   Max.   :20.39  
+    Palencia       Salamanca        Segovia          Soria       
+ Min.   : 5.05   Min.   : 6.02   Min.   : 4.96   Min.   : 3.030  
+ 1st Qu.:12.10   1st Qu.:12.68   1st Qu.:10.57   1st Qu.: 7.553  
+ Median :14.25   Median :14.40   Median :12.13   Median : 8.706  
+ Mean   :13.98   Mean   :14.21   Mean   :12.34   Mean   : 9.004  
+ 3rd Qu.:16.22   3rd Qu.:16.28   3rd Qu.:14.23   3rd Qu.:10.776  
+ Max.   :20.25   Max.   :20.24   Max.   :19.65   Max.   :14.310  
+   Valladolid        Zamora         Albacete      Ciudad Real    
+ Min.   : 5.55   Min.   : 4.82   Min.   : 3.43   Min.   : 3.080  
+ 1st Qu.:13.03   1st Qu.:10.98   1st Qu.:10.75   1st Qu.: 8.534  
+ Median :15.58   Median :12.74   Median :12.53   Median : 9.940  
+ Mean   :15.58   Mean   :12.53   Mean   :12.24   Mean   : 9.674  
+ 3rd Qu.:18.56   3rd Qu.:14.41   3rd Qu.:14.25   3rd Qu.:11.237  
+ Max.   :23.70   Max.   :17.99   Max.   :17.46   Max.   :13.670  
+     Cuenca        Guadalajara        Toledo        Barcelona    
+ Min.   : 3.010   Min.   : 4.38   Min.   : 4.15   Min.   : 6.42  
+ 1st Qu.: 8.873   1st Qu.:11.97   1st Qu.:11.22   1st Qu.:14.37  
+ Median :10.520   Median :14.20   Median :13.17   Median :17.23  
+ Mean   :10.275   Mean   :14.13   Mean   :12.94   Mean   :16.97  
+ 3rd Qu.:11.902   3rd Qu.:16.73   3rd Qu.:15.18   3rd Qu.:19.88  
+ Max.   :15.270   Max.   :20.71   Max.   :19.05   Max.   :26.24  
+     Girona          Lleida        Tarragona     Alicante/Alacant
+ Min.   : 4.16   Min.   : 5.16   Min.   : 4.93   Min.   : 5.72   
+ 1st Qu.:11.18   1st Qu.:11.07   1st Qu.:11.55   1st Qu.:14.87   
+ Median :13.64   Median :12.69   Median :13.69   Median :17.21   
+ Mean   :13.04   Mean   :12.94   Mean   :13.39   Mean   :16.51   
+ 3rd Qu.:15.11   3rd Qu.:14.98   3rd Qu.:15.59   3rd Qu.:18.81   
+ Max.   :19.41   Max.   :20.68   Max.   :20.06   Max.   :22.39   
+ Castellón/Castelló Valencia/València    Badajoz         Cáceres     
+ Min.   : 4.95      Min.   : 6.17     Min.   : 4.90   Min.   : 4.02  
+ 1st Qu.:13.07      1st Qu.:15.59     1st Qu.:10.73   1st Qu.:10.23  
+ Median :15.11      Median :18.20     Median :12.47   Median :11.87  
+ Mean   :14.82      Mean   :17.89     Mean   :12.27   Mean   :11.52  
+ 3rd Qu.:17.04      3rd Qu.:20.74     3rd Qu.:14.07   3rd Qu.:13.29  
+ Max.   :20.98      Max.   :25.81     Max.   :17.56   Max.   :16.27  
+   Coruña, A          Lugo          Ourense        Pontevedra   
+ Min.   : 6.02   Min.   : 4.88   Min.   : 6.43   Min.   : 6.15  
+ 1st Qu.:12.90   1st Qu.:10.94   1st Qu.:13.11   1st Qu.:13.85  
+ Median :15.60   Median :13.12   Median :15.33   Median :16.95  
+ Mean   :15.28   Mean   :12.74   Mean   :15.12   Mean   :16.61  
+ 3rd Qu.:17.89   3rd Qu.:14.88   3rd Qu.:17.46   3rd Qu.:19.77  
+ Max.   :23.06   Max.   :18.32   Max.   :22.01   Max.   :24.80  
+     Madrid          Murcia         Navarra       Araba/Álava   
+ Min.   : 5.95   Min.   : 5.13   Min.   : 5.33   Min.   : 6.30  
+ 1st Qu.:13.69   1st Qu.:11.64   1st Qu.:13.10   1st Qu.:14.78  
+ Median :16.48   Median :13.43   Median :15.53   Median :17.75  
+ Mean   :16.40   Mean   :13.40   Mean   :15.40   Mean   :17.39  
+ 3rd Qu.:19.49   3rd Qu.:15.37   3rd Qu.:17.96   3rd Qu.:20.28  
+ Max.   :25.68   Max.   :20.19   Max.   :23.29   Max.   :25.40  
+    Bizkaia         Gipuzkoa       Rioja, La         Ceuta       
+ Min.   : 7.53   Min.   : 4.71   Min.   : 4.74   Min.   : 4.870  
+ 1st Qu.:16.12   1st Qu.:11.71   1st Qu.:12.17   1st Qu.: 9.985  
+ Median :19.37   Median :14.32   Median :14.29   Median :11.860  
+ Mean   :19.23   Mean   :14.17   Mean   :14.11   Mean   :11.977  
+ 3rd Qu.:22.63   3rd Qu.:16.65   3rd Qu.:16.34   3rd Qu.:13.985  
+ Max.   :29.00   Max.   :22.56   Max.   :21.37   Max.   :18.340  
+    Melilla     
+ Min.   : 6.48  
+ 1st Qu.:12.45  
+ Median :14.33  
+ Mean   :14.32  
+ 3rd Qu.:16.19  
+ Max.   :20.19  </code></pre>
+</div>
+</div>
+<p>Finally, we transform the data to a longer format so we will be able to easily join the data with other sources.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ine_data <span class="ot">&lt;-</span> ine_data <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">!</span>fecha, <span class="at">names_to =</span> <span class="st">"province"</span>, <span class="at">values_to =</span> <span class="st">"flujo"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>ine_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 34,008 x 3 [1D]
+# Key:       province [52]
+   fecha      province flujo
+   &lt;date&gt;     &lt;chr&gt;    &lt;dbl&gt;
+ 1 2020-03-16 Almería  11.0 
+ 2 2020-03-16 Cádiz    10.7 
+ 3 2020-03-16 Córdoba  11.9 
+ 4 2020-03-16 Granada  11.4 
+ 5 2020-03-16 Huelva   11.4 
+ 6 2020-03-16 Jaén      8.81
+ 7 2020-03-16 Málaga   11.4 
+ 8 2020-03-16 Sevilla  12.3 
+ 9 2020-03-16 Huesca   10.3 
+10 2020-03-16 Teruel    6.77
+# … with 33,998 more rows</code></pre>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./google_data.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">GOOGLE data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,6 +1,8 @@
 # Task 1: Data acquisition and exploration {#sec-data}
 
-## CNE data
+## COVID-19
+
+### CNE data
 
 The data published in the [CNE COVID-19 Panel](https://cnecovid.isciii.es/covid19/#distribuci%C3%B3n-geogr%C3%A1fica) offers information related to infections, recoveries and deaths reported by local and regional governments in Spain. It comes from the individualised declaration of COVID-19 cases to the National Epidemiological Surveillance Network (RENAVE) through the SiViEs computer application.
 
@@ -12,9 +14,15 @@ In the current work, we will use two datasets from CNE:
 
 -   casos_hosp_uci_def_sexo_edad_provres.csv: Number of hospitalisations, number of admissions to ICU and number of deaths by sex, age and province of residence.
 
-## Google data
+## Mobility data
 
-The data published at [https://www.google.com/covid19/mobility/?hl=en-GB](https://www.google.com/covid19/mobility/?hl=en-GB) offers information related to mobility using the Google ecosystem application services such as Android.
+### INE data
+
+
+
+### Google data
+
+The data published at <https://www.google.com/covid19/mobility/?hl=en-GB> offers information related to mobility using the Google ecosystem application services such as Android.
 
 The dataset information is available worldwide. In our case, only the information relating to Spain was extracted.
 
@@ -27,5 +35,10 @@ Data provided by Google:
 -   Region_Mobility_Report_CSVs.zip contains worldwide information
 
 -   20XX_ES_Region_Mobility_Report.csv contains information for Spain. Note: information is provided by year in separate files.
+
+
+## INE data
+
+
 
 
