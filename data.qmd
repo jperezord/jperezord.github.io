@@ -1,3 +1,31 @@
 # Task 1: Data acquisition and exploration {#sec-data}
 
-DESCRIPCION DE TODOS LOS DATOS UTILIZADOS
+## CNE data
+
+The data published in the [CNE COVID-19 Panel](https://cnecovid.isciii.es/covid19/#distribuci%C3%B3n-geogr%C3%A1fica) offers information related to infections, recoveries and deaths reported by local and regional governments in Spain. It comes from the individualised declaration of COVID-19 cases to the National Epidemiological Surveillance Network (RENAVE) through the SiViEs computer application.
+
+In SiViEs, all reported cases are accounted for, following the surveillance strategy in force at the time (Strategy for early detection, surveillance and control of COVID-19 available at <https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/COVID19_Estrategia_vigilancia_y_control_e_indicadores.pdf>
+
+In the current work, we will use two datasets from CNE:
+
+-   casos_tecnica_provincia.csv: Number of cases by diagnostic technique and province (of residence)
+
+-   casos_hosp_uci_def_sexo_edad_provres.csv: Number of hospitalisations, number of admissions to ICU and number of deaths by sex, age and province of residence.
+
+## Google data
+
+The data published at [https://www.google.com/covid19/mobility/?hl=en-GB](https://www.google.com/covid19/mobility/?hl=en-GB) offers information related to mobility using the Google ecosystem application services such as Android.
+
+The dataset information is available worldwide. In our case, only the information relating to Spain was extracted.
+
+The Google Mobility Reports aim to provide insights into what has changed in response to policies aimed at combating COVID-19. The reports chart movement trends over time by geography, across different categories of places such as retail and recreation, supermarkets and pharmacies, parks, public transport, workplaces and residential.
+
+Each Community Mobility Report is broken down by location and displays the change in visits to places.
+
+Data provided by Google:
+
+-   Region_Mobility_Report_CSVs.zip contains worldwide information
+
+-   20XX_ES_Region_Mobility_Report.csv contains information for Spain. Note: information is provided by year in separate files.
+
+

@@ -45,7 +45,6 @@ Check data distribution and missing data.
 skim(cne_tecnica)
 ```
 
-
 ```{r}
 #| warning = FALSE
 cne_tecnica %>%  
@@ -63,7 +62,6 @@ cne_tecnica <- cne_tecnica %>%
 # Show data information
 skim(cne_tecnica)
 ```
-
 
 ## CNE hospitalizations
 

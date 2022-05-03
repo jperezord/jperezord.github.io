@@ -54,7 +54,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
 </head>
-<body class="floating fullcontent">
+<body class="floating">
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -108,6 +108,11 @@
   <a href="./cne_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CNE data</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Google data</span></a>
+  </div>
+</li>
     </ul>
   </li>
         <li class="sidebar-item">
@@ -119,15 +124,45 @@
     </div>
 </nav>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+<h2 id="toc-title">Table of contents</h2>
+<ul>
+<li><a href="#cne-data" class="nav-link active" data-scroll-target="#cne-data">CNE data</a></li>
+<li><a href="#google-data" class="nav-link" data-scroll-target="#google-data">Google data</a></li>
+</ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 <header id="title-block-header">
 <h1 class="title display-7"><span id="sec-data" class="quarto-section-identifier d-none d-lg-block">Task 1: Data acquisition and exploration</span></h1>
 </header>
-<p>DESCRIPCION DE TODOS LOS DATOS UTILIZADOS</p>
+
+<section id="cne-data" class="level2">
+<h2 class="anchored" data-anchor-id="cne-data">CNE data</h2>
+<p>The data published in the <a href="https://cnecovid.isciii.es/covid19/#distribuci%C3%B3n-geogr%C3%A1fica">CNE COVID-19 Panel</a> offers information related to infections, recoveries and deaths reported by local and regional governments in Spain. It comes from the individualised declaration of COVID-19 cases to the National Epidemiological Surveillance Network (RENAVE) through the SiViEs computer application.</p>
+<p>In SiViEs, all reported cases are accounted for, following the surveillance strategy in force at the time (Strategy for early detection, surveillance and control of COVID-19 available at <a href="https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/COVID19_Estrategia_vigilancia_y_control_e_indicadores.pdf" class="uri">https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/COVID19_Estrategia_vigilancia_y_control_e_indicadores.pdf</a></p>
+<p>In the current work, we will use two datasets from CNE:</p>
+<ul>
+<li><p>casos_tecnica_provincia.csv: Number of cases by diagnostic technique and province (of residence)</p></li>
+<li><p>casos_hosp_uci_def_sexo_edad_provres.csv: Number of hospitalisations, number of admissions to ICU and number of deaths by sex, age and province of residence.</p></li>
+</ul>
+</section>
+<section id="google-data" class="level2">
+<h2 class="anchored" data-anchor-id="google-data">Google data</h2>
+<p>The data published at <a href="https://www.google.com/covid19/mobility/?hl=en-GB">https://www.google.com/covid19/mobility/?hl=en-GB</a> offers information related to mobility using the Google ecosystem application services such as Android.</p>
+<p>The dataset information is available worldwide. In our case, only the information relating to Spain was extracted.</p>
+<p>The Google Mobility Reports aim to provide insights into what has changed in response to policies aimed at combating COVID-19. The reports chart movement trends over time by geography, across different categories of places such as retail and recreation, supermarkets and pharmacies, parks, public transport, workplaces and residential.</p>
+<p>Each Community Mobility Report is broken down by location and displays the change in visits to places.</p>
+<p>Data provided by Google:</p>
+<ul>
+<li><p>Region_Mobility_Report_CSVs.zip contains worldwide information</p></li>
+<li><p>20XX_ES_Region_Mobility_Report.csv contains information for Spain. Note: information is provided by year in separate files.</p></li>
+</ul>
 
 
+</section>
 </main> <!-- /main -->
 <script type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

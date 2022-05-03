@@ -1,7 +1,12 @@
 ---
-title: "Google data"
-author: "Jaime Perez Ordieres (jperezord)"
+output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
+
+# GOOGLE data {#sec-google}
+
+Load packages:
 
 ```{r}
 pacman::p_load(
@@ -40,7 +45,7 @@ skim(google_data)
 
 There are some discrepancies between the NA data.
 
-sub_region_1 and iso_3166_2_code has a total of 98,4% of completness while sub_region_2 has only 68,3%. One of the reasons could be that some sub_regions in Spain are considered both Autonomous Communities (AC)/Autonomous Cities (C) and Provinces (Pr).
+sub_region_1 and iso_3166_2\_code has a total of 98,4% of completness while sub_region_2 has only 68,3%. One of the reasons could be that some sub_regions in Spain are considered both Autonomous Communities (AC)/Autonomous Cities (C) and Provinces (Pr).
 
 For those cases, sub_region_2 contains missing values.
 
@@ -75,9 +80,9 @@ table(google_data$sub_region_2)
 
 To clean the data, the following actions will be taken:
 
-- NA data from sub_region_1 and 2 will be eliminated. 
-- Some columns do not add usefull information for our analysis shuch as "country_region_code", "metro_area", "census_fips_code" and "place_id". So, they will be eliminated from the dataset
-- Column names are too longer and contain redundant information. We are going to rename them.
+-   NA data from sub_region_1 and 2 will be eliminated.
+-   Some columns do not add usefull information for our analysis shuch as "country_region_code", "metro_area", "census_fips_code" and "place_id". So, they will be eliminated from the dataset
+-   Column names are too longer and contain redundant information. We are going to rename them.
 
 ```{r}
 google_data <- google_data %>% 
@@ -104,7 +109,6 @@ skim(google_data)
 At this point, only the numeric variables contains NAs. As this information is embedded in time series, it will be possible to impute missing values.
 
 Missing values are presented in all the provinces but mostly in Ceuta and Melilla.
-
 
 ```{r}
 google_data %>% 
@@ -220,4 +224,3 @@ google_TimeS_imputed
 ```{r}
 skim(google_TimeS_imputed)
 ```
-
