@@ -116,7 +116,7 @@
     "href": "aemet_data.html#malaga",
     "title": "4  AEMET data",
     "section": "4.4 Malaga",
-    "text": "4.4 Malaga\n\nmeteo_malaga <- meteo_data %>% \n      filter(provincia == \"Málaga\")\n\n\n# NA imputation test\nimp <- na_interpolation(meteo_malaga)\n\nNAs imputed to average temperature:\n\nggplot_na_imputations(meteo_malaga$tmed, imp$tmed)\n\n\n\n\nNAs imputed to precipitations:\n\nggplot_na_imputations(meteo_malaga$prec, imp$prec)\n\n\n\n\nNAs imputed to wind speed: there are not missing data.\nData interpolation test looks good, so we proceed to charge it:\n\nmeteo_malaga <- na_interpolation(meteo_malaga)"
+    "text": "4.4 Malaga\n\nmeteo_malaga <- meteo_data %>% \n      filter(provincia == \"Málaga\")\n\n\n# NA imputation test\nimp <- na_interpolation(meteo_malaga)\n\nNAs imputed to average temperature:\n\nggplot_na_imputations(meteo_malaga$tmed, imp$tmed)\n\n\n\n\nNAs imputed to precipitations:\n\nggplot_na_imputations(meteo_malaga$prec, imp$prec)\n\n\n\n\nNAs imputed to wind speed:\n\nprint(\"There are not NAs!\")\n\n[1] \"There are not NAs!\"\n\n\nData interpolation test looks good, so we proceed to charge it:\n\nmeteo_malaga <- na_interpolation(meteo_malaga)"
   },
   {
     "objectID": "aemet_data.html#sevilla",

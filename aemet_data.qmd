@@ -24,7 +24,7 @@ Data is available in the Spanish State Meteorological Agency through its opendat
 
 AEMET OpenData is a REST API (Application Programming Interface. REpresentational State Transfer) through which data can be downloaded free of charge.
 
-AEMET OpenData allows two types of access where both allow access to the same data catalog and data download in reusable formats: 
+AEMET OpenData allows two types of access where both allow access to the same data catalog and data download in reusable formats:
 
 -   General Access: It is a graphical access, intended for the general public. Its purpose is to allow access to data for users in a friendly way. The interaction with the data is characterized by being punctual, carried out through friendly interfaces intended for a human, directed step by step and through the choice of different options.
 
@@ -37,7 +37,6 @@ Last one method was used to download data from:
 -   Madrid airport
 -   Málaga airport
 -   Sevilla airport
-
 
 ```{r}
 # List aemet raw json files
@@ -254,7 +253,11 @@ NAs imputed to precipitations:
 ggplot_na_imputations(meteo_malaga$prec, imp$prec)
 ```
 
-NAs imputed to wind speed: there are not missing data.
+NAs imputed to wind speed: 
+
+```{r}
+print("There are not NAs!")
+```
 
 Data interpolation test looks good, so we proceed to charge it:
 
@@ -320,9 +323,3 @@ The final data looks like:
 ```{r}
 meteo_data_completed
 ```
-
-
-
-
-
-
