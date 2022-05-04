@@ -16,6 +16,7 @@ book:
         - cne_data.qmd
         - google_data.qmd
         - ine_data.qmd
+        - aemet_data.qmd
     - references.qmd
 
 bibliography: references.bib

@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.345">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>PEC3 - COVID-19 Outbreak prediction - 4&nbsp; AEMET data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<link href="./references.html" rel="next">
+<link href="./ine_data.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link id="quarto-text-highlighting-styles" href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">AEMET data</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">PEC3 - COVID-19 Outbreak prediction</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/jperezord/jperezord.github.io.git" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+    <div class="sidebar-item-container"> 
+        <a href="./data.html" class="sidebar-item-text sidebar-link">Task 1: Data acquisition and exploration</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+        <i class="bi bi-chevron-right ms-2"></i>
+      </a>
+    </div>
+    <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cne_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CNE data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">GOOGLE data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./aemet_data.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">AEMET data</span></a>
+  </div>
+</li>
+    </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#asturias" id="toc-asturias" class="nav-link active" data-scroll-target="#asturias"> <span class="header-section-number">4.1</span> Asturias</a></li>
+  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona"> <span class="header-section-number">4.2</span> Barcelona</a></li>
+  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid"> <span class="header-section-number">4.3</span> Madrid</a></li>
+  <li><a href="#malaga" id="toc-malaga" class="nav-link" data-scroll-target="#malaga"> <span class="header-section-number">4.4</span> Malaga</a></li>
+  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla"> <span class="header-section-number">4.5</span> Sevilla</a></li>
+  <li><a href="#data-combination" id="toc-data-combination" class="nav-link" data-scroll-target="#data-combination"> <span class="header-section-number">4.6</span> Data combination</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-aemet" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">AEMET data</span></span></h1>
+</div>
+
+
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>Load packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>      here,      <span class="co"># file locator</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      tidyverse, <span class="co"># data management and ggplot2 graphics</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      skimr,     <span class="co"># get overview of data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      janitor,   <span class="co"># produce and adorn tabulations and cross-tabulations</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      tsibble,   <span class="co"># manage time series</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      imputeTS,  <span class="co"># impute NAs for time series</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      jsonlite   <span class="co"># read json files</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Data is available in the Spanish State Meteorological Agency through its opendata platform <a href="https://opendata.aemet.es/centrodedescargas/productosAEMET?">link</a>.</p>
+<p>AEMET OpenData is a REST API (Application Programming Interface. REpresentational State Transfer) through which data can be downloaded free of charge.</p>
+<p>AEMET OpenData allows two types of access where both allow access to the same data catalog and data download in reusable formats:</p>
+<ul>
+<li><p>General Access: It is a graphical access, intended for the general public. Its purpose is to allow access to data for users in a friendly way. The interaction with the data is characterized by being punctual, carried out through friendly interfaces intended for a human, directed step by step and through the choice of different options.</p></li>
+<li><p>AEMET OpenData API: it allows another type of interaction with the data: this interaction is characterized by the possibility of being periodic and even programmed, from any programming language, without friendly interfaces, with the possibility of self-discovery and allows information reusers to include AEMET data in their own information systems.</p></li>
+</ul>
+<p>Last one method was used to download data from:</p>
+<ul>
+<li>Asturias airport</li>
+<li>Barcelona airport</li>
+<li>Madrid airport</li>
+<li>Málaga airport</li>
+<li>Sevilla airport</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List aemet raw json files</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>meteo_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">recursive =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">full.names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">pattern =</span> <span class="st">"*meteo.json"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Load and deserialize json files.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>meteo_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">.x =</span> meteo_files, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">.f =</span> <span class="sc">~</span><span class="fu">fromJSON</span>(.x, <span class="at">flatten =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>meteo_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,105 × 20
+   fecha    indicativo nombre provincia altitud tmed  prec  tmin  horatmin tmax 
+   &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
+ 1 2020-01… 1212E      ASTUR… ASTURIAS  127     7,4   0,0   3,8   19:42    11,0 
+ 2 2020-01… 1212E      ASTUR… ASTURIAS  127     7,3   0,0   3,2   05:14    11,4 
+ 3 2020-01… 1212E      ASTUR… ASTURIAS  127     10,7  0,7   7,4   22:57    14,0 
+ 4 2020-01… 1212E      ASTUR… ASTURIAS  127     8,4   2,4   5,6   18:32    11,1 
+ 5 2020-01… 1212E      ASTUR… ASTURIAS  127     8,2   0,0   4,7   03:39    11,8 
+ 6 2020-01… 1212E      ASTUR… ASTURIAS  127     7,6   0,0   2,8   01:53    12,3 
+ 7 2020-01… 1212E      ASTUR… ASTURIAS  127     8,8   0,0   4,3   07:38    13,3 
+ 8 2020-01… 1212E      ASTUR… ASTURIAS  127     13,4  0,0   9,0   Varias   17,7 
+ 9 2020-01… 1212E      ASTUR… ASTURIAS  127     14,4  5,5   8,7   22:53    20,2 
+10 2020-01… 1212E      ASTUR… ASTURIAS  127     8,2   0,6   4,9   23:46    11,6 
+# … with 4,095 more rows, and 10 more variables: horatmax &lt;chr&gt;, dir &lt;chr&gt;,
+#   velmedia &lt;chr&gt;, racha &lt;chr&gt;, horaracha &lt;chr&gt;, sol &lt;chr&gt;, presMax &lt;chr&gt;,
+#   horaPresMax &lt;chr&gt;, presMin &lt;chr&gt;, horaPresMin &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>All the information corresponds to airports.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(meteo_data<span class="sc">$</span>nombre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ ASTURIAS AEROPUERTO BARCELONA AEROPUERTO    MADRID AEROPUERTO 
+                 821                  821                  821 
+   MÁLAGA AEROPUERTO   SEVILLA AEROPUERTO 
+                 821                  821 </code></pre>
+</div>
+</div>
+<p>Data statistics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(meteo_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">meteo_data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">4105</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">fecha</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">821</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">indicativo</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nombre</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">provincia</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">altitud</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tmed</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">312</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">prec</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tmin</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">315</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">horatmin</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">673</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tmax</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">363</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">horatmax</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">588</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dir</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">velmedia</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">racha</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">horaracha</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1018</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sol</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">144</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">presMax</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">636</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">horaPresMax</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">presMin</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">681</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">horaPresMin</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Some cleaning is needed.</p>
+<p>First of all, we will remove useless columns for further analysis and rename the others. Secondly, we will transform date to a valid format. Last but not least, we will transform numeric data to a valid numeric format.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>meteo_data <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="sc">-</span>indicativo, <span class="sc">-</span>nombre, <span class="sc">-</span>altitud, <span class="sc">-</span>horatmin, <span class="sc">-</span>horatmax, <span class="sc">-</span>horaracha, <span class="sc">-</span>presMax, <span class="sc">-</span>horaPresMax, <span class="sc">-</span>presMin, <span class="sc">-</span>horaPresMin) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">fecha    =</span> <span class="fu">as.Date</span>(fecha, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">tmed     =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, tmed, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">prec     =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, prec, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">tmin     =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, tmin, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">tmax     =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, tmax, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">dir      =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, dir, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">velmedia =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, velmedia, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">racha    =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, racha, <span class="at">fixed =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">sol      =</span> <span class="fu">as.numeric</span>(<span class="fu">sub</span>(<span class="st">","</span>, <span class="st">"."</span>, sol, <span class="at">fixed =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">wd     =</span> dir,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">ws     =</span> velmedia,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">ws_max =</span> racha</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in mask$eval_all_mutate(quo): NAs introducidos por coerción</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>meteo_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,105 × 10
+   fecha      provincia  tmed  prec  tmin  tmax    wd    ws ws_max   sol
+   &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1 2020-01-01 ASTURIAS    7.4   0     3.8  11      99   2.5    7.8   7.9
+ 2 2020-01-02 ASTURIAS    7.3   0     3.2  11.4    22   2.8   10.3   2.8
+ 3 2020-01-03 ASTURIAS   10.7   0.7   7.4  14      99   2.8    9.7   1.9
+ 4 2020-01-04 ASTURIAS    8.4   2.4   5.6  11.1    99   3.6    7.2   0.7
+ 5 2020-01-05 ASTURIAS    8.2   0     4.7  11.8    13   2.5    7.2   8.6
+ 6 2020-01-06 ASTURIAS    7.6   0     2.8  12.3    22   3.1    8.9   6.3
+ 7 2020-01-07 ASTURIAS    8.8   0     4.3  13.3    99   1.9    8.9   8  
+ 8 2020-01-08 ASTURIAS   13.4   0     9    17.7    22   2.8    8.3   6.1
+ 9 2020-01-09 ASTURIAS   14.4   5.5   8.7  20.2    29   7.8   24.2   4.3
+10 2020-01-10 ASTURIAS    8.2   0.6   4.9  11.6    28   2.2   16.1   1.9
+# … with 4,095 more rows</code></pre>
+</div>
+</div>
+<p>In order to unify the data with other available sources, a rename of the provinces it needed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>meteo_data <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">provincia =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                  provincia <span class="sc">==</span> <span class="st">"ASTURIAS"</span> <span class="sc">~</span> <span class="st">"Asturias"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                  provincia <span class="sc">==</span> <span class="st">"BARCELONA"</span> <span class="sc">~</span> <span class="st">"Barcelona"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                  provincia <span class="sc">==</span> <span class="st">"MADRID"</span> <span class="sc">~</span> <span class="st">"Madrid"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                  provincia <span class="sc">==</span> <span class="st">"MALAGA"</span> <span class="sc">~</span> <span class="st">"Málaga"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                  provincia <span class="sc">==</span> <span class="st">"SEVILLA"</span> <span class="sc">~</span> <span class="st">"Seville"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                  <span class="cn">TRUE</span> <span class="sc">~</span> provincia</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(meteo_data<span class="sc">$</span>provincia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Asturias"  "Barcelona" "Madrid"    "Málaga"    "Seville"  </code></pre>
+</div>
+</div>
+<p>The data has missing information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(meteo_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">meteo_data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">4105</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">provincia</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: Date</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">min</th>
+<th style="text-align: left;">max</th>
+<th style="text-align: left;">median</th>
+<th style="text-align: right;">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">fecha</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2020-01-01</td>
+<td style="text-align: left;">2022-03-31</td>
+<td style="text-align: left;">2021-02-14</td>
+<td style="text-align: right;">821</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">tmed</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">16.60</td>
+<td style="text-align: right;">6.44</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">15.6</td>
+<td style="text-align: right;">21.0</td>
+<td style="text-align: right;">34.5</td>
+<td style="text-align: left;">▁▂▇▅▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">prec</td>
+<td style="text-align: right;">149</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">1.74</td>
+<td style="text-align: right;">6.20</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">87.9</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tmin</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">11.66</td>
+<td style="text-align: right;">6.22</td>
+<td style="text-align: right;">-13.4</td>
+<td style="text-align: right;">7.4</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">16.0</td>
+<td style="text-align: right;">27.5</td>
+<td style="text-align: left;">▁▁▇▇▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tmax</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">21.53</td>
+<td style="text-align: right;">7.28</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">16.2</td>
+<td style="text-align: right;">20.3</td>
+<td style="text-align: right;">26.4</td>
+<td style="text-align: right;">44.9</td>
+<td style="text-align: left;">▁▇▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wd</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">41.65</td>
+<td style="text-align: right;">36.42</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">99.0</td>
+<td style="text-align: right;">99.0</td>
+<td style="text-align: left;">▆▇▁▁▆</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ws</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">3.71</td>
+<td style="text-align: right;">1.74</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">18.9</td>
+<td style="text-align: left;">▇▅▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ws_max</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">10.22</td>
+<td style="text-align: right;">3.62</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">7.8</td>
+<td style="text-align: right;">9.7</td>
+<td style="text-align: right;">11.7</td>
+<td style="text-align: right;">31.9</td>
+<td style="text-align: left;">▆▇▂▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sol</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">6.94</td>
+<td style="text-align: right;">4.13</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">14.3</td>
+<td style="text-align: left;">▇▅▆▇▅</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>An interpolation for each provinces will be carried out in order to have the maximum information available.</p>
+<section id="asturias" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="asturias"><span class="header-section-number">4.1</span> Asturias</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>meteo_asturias <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NA imputation test</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>NAs imputed to average temperature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_asturias<span class="sc">$</span>tmed, imp<span class="sc">$</span>tmed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to precipitations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_asturias<span class="sc">$</span>prec, imp<span class="sc">$</span>prec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to wind speed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_asturias<span class="sc">$</span>ws, imp<span class="sc">$</span>ws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Data interpolation test looks good, so we proceed to charge it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>meteo_asturias <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="barcelona" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="barcelona"><span class="header-section-number">4.2</span> Barcelona</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>meteo_barcelona <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Barcelona"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NA imputation test</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_barcelona)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>NAs imputed to average temperature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_barcelona<span class="sc">$</span>tmed, imp<span class="sc">$</span>tmed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to precipitations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_barcelona<span class="sc">$</span>prec, imp<span class="sc">$</span>prec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to wind speed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_barcelona<span class="sc">$</span>ws, imp<span class="sc">$</span>ws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Data interpolation test looks good, so we proceed to charge it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>meteo_barcelona <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_barcelona)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="madrid" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="madrid"><span class="header-section-number">4.3</span> Madrid</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>meteo_madrid <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Madrid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NA imputation test</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_madrid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>NAs imputed to average temperature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"There are not NAs!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "There are not NAs!"</code></pre>
+</div>
+</div>
+<p>NAs imputed to precipitations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_madrid<span class="sc">$</span>prec, imp<span class="sc">$</span>prec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to wind speed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_madrid<span class="sc">$</span>ws, imp<span class="sc">$</span>ws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Data interpolation test looks good, so we proceed to charge it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>meteo_madrid <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_madrid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="malaga" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="malaga"><span class="header-section-number">4.4</span> Malaga</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>meteo_malaga <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Málaga"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NA imputation test</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_malaga)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>NAs imputed to average temperature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_malaga<span class="sc">$</span>tmed, imp<span class="sc">$</span>tmed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to precipitations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_malaga<span class="sc">$</span>prec, imp<span class="sc">$</span>prec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to wind speed: there are not missing data.</p>
+<p>Data interpolation test looks good, so we proceed to charge it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>meteo_malaga <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_malaga)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="sevilla" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="sevilla"><span class="header-section-number">4.5</span> Sevilla</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>meteo_seville <span class="ot">&lt;-</span> meteo_data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Seville"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NA imputation test</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_seville)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>NAs imputed to average temperature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_seville<span class="sc">$</span>tmed, imp<span class="sc">$</span>tmed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to precipitations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_seville<span class="sc">$</span>prec, imp<span class="sc">$</span>prec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>NAs imputed to wind speed:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot_na_imputations</span>(meteo_seville<span class="sc">$</span>ws, imp<span class="sc">$</span>ws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="aemet_data_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Data interpolation test looks good, so we proceed to charge it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>meteo_seville <span class="ot">&lt;-</span> <span class="fu">na_interpolation</span>(meteo_seville)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-combination" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="data-combination"><span class="header-section-number">4.6</span> Data combination</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>meteo_data_completed <span class="ot">&lt;-</span> meteo_asturias <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rbind</span>(meteo_barcelona) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rbind</span>(meteo_madrid) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rbind</span>(meteo_malaga) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rbind</span>(meteo_seville)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(meteo_data_completed<span class="sc">$</span>provincia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Asturias"  "Barcelona" "Madrid"    "Málaga"    "Seville"  </code></pre>
+</div>
+</div>
+<p>Final statistics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(meteo_data_completed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">meteo_data_completed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">4105</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">provincia</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: Date</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">min</th>
+<th style="text-align: left;">max</th>
+<th style="text-align: left;">median</th>
+<th style="text-align: right;">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">fecha</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2020-01-01</td>
+<td style="text-align: left;">2022-03-31</td>
+<td style="text-align: left;">2021-02-14</td>
+<td style="text-align: right;">821</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 16%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">tmed</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16.62</td>
+<td style="text-align: right;">6.45</td>
+<td style="text-align: right;">-6.2</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">15.6</td>
+<td style="text-align: right;">21.10</td>
+<td style="text-align: right;">34.5</td>
+<td style="text-align: left;">▁▂▇▅▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">prec</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.76</td>
+<td style="text-align: right;">6.13</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">87.9</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tmin</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11.68</td>
+<td style="text-align: right;">6.22</td>
+<td style="text-align: right;">-13.4</td>
+<td style="text-align: right;">7.4</td>
+<td style="text-align: right;">11.3</td>
+<td style="text-align: right;">16.10</td>
+<td style="text-align: right;">27.5</td>
+<td style="text-align: left;">▁▁▇▇▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tmax</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">21.56</td>
+<td style="text-align: right;">7.30</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">16.2</td>
+<td style="text-align: right;">20.3</td>
+<td style="text-align: right;">26.40</td>
+<td style="text-align: right;">44.9</td>
+<td style="text-align: left;">▁▇▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wd</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">41.79</td>
+<td style="text-align: right;">36.26</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">99.00</td>
+<td style="text-align: right;">99.0</td>
+<td style="text-align: left;">▆▇▁▁▆</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ws</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.72</td>
+<td style="text-align: right;">1.73</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">4.40</td>
+<td style="text-align: right;">18.9</td>
+<td style="text-align: left;">▇▅▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ws_max</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10.24</td>
+<td style="text-align: right;">3.61</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">7.8</td>
+<td style="text-align: right;">9.7</td>
+<td style="text-align: right;">12.15</td>
+<td style="text-align: right;">31.9</td>
+<td style="text-align: left;">▅▇▂▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sol</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6.97</td>
+<td style="text-align: right;">4.12</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">7.7</td>
+<td style="text-align: right;">10.30</td>
+<td style="text-align: right;">14.3</td>
+<td style="text-align: left;">▇▅▆▇▅</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The final data looks like:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>meteo_data_completed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,105 × 10
+   fecha      provincia  tmed  prec  tmin  tmax    wd    ws ws_max   sol
+   &lt;date&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+ 1 2020-01-01 Asturias    7.4   0     3.8  11      99   2.5    7.8   7.9
+ 2 2020-01-02 Asturias    7.3   0     3.2  11.4    22   2.8   10.3   2.8
+ 3 2020-01-03 Asturias   10.7   0.7   7.4  14      99   2.8    9.7   1.9
+ 4 2020-01-04 Asturias    8.4   2.4   5.6  11.1    99   3.6    7.2   0.7
+ 5 2020-01-05 Asturias    8.2   0     4.7  11.8    13   2.5    7.2   8.6
+ 6 2020-01-06 Asturias    7.6   0     2.8  12.3    22   3.1    8.9   6.3
+ 7 2020-01-07 Asturias    8.8   0     4.3  13.3    99   1.9    8.9   8  
+ 8 2020-01-08 Asturias   13.4   0     9    17.7    22   2.8    8.3   6.1
+ 9 2020-01-09 Asturias   14.4   5.5   8.7  20.2    29   7.8   24.2   4.3
+10 2020-01-10 Asturias    8.2   0.6   4.9  11.6    28   2.2   16.1   1.9
+# … with 4,095 more rows</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ine_data.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,328 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# AEMET data {#sec-aemet}
+
+Load packages:
+
+```{r}
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr,     # get overview of data
+      janitor,   # produce and adorn tabulations and cross-tabulations
+      tsibble,   # manage time series
+      imputeTS,  # impute NAs for time series
+      jsonlite   # read json files
+)
+```
+
+Data is available in the Spanish State Meteorological Agency through its opendata platform [link](https://opendata.aemet.es/centrodedescargas/productosAEMET?).
+
+AEMET OpenData is a REST API (Application Programming Interface. REpresentational State Transfer) through which data can be downloaded free of charge.
+
+AEMET OpenData allows two types of access where both allow access to the same data catalog and data download in reusable formats: 
+
+-   General Access: It is a graphical access, intended for the general public. Its purpose is to allow access to data for users in a friendly way. The interaction with the data is characterized by being punctual, carried out through friendly interfaces intended for a human, directed step by step and through the choice of different options.
+
+-   AEMET OpenData API: it allows another type of interaction with the data: this interaction is characterized by the possibility of being periodic and even programmed, from any programming language, without friendly interfaces, with the possibility of self-discovery and allows information reusers to include AEMET data in their own information systems.
+
+Last one method was used to download data from:
+
+-   Asturias airport
+-   Barcelona airport
+-   Madrid airport
+-   Málaga airport
+-   Sevilla airport
+
+
+```{r}
+# List aemet raw json files
+meteo_files <- list.files(
+      path = here("data", "raw"),
+      recursive = TRUE,
+      full.names = TRUE,
+      pattern = "*meteo.json"
+)
+```
+
+Load and deserialize json files.
+
+```{r}
+meteo_data <- map_dfr(
+      .x = meteo_files, 
+      .f = ~fromJSON(.x, flatten = TRUE)
+) %>% as_tibble()
+meteo_data
+```
+
+All the information corresponds to airports.
+
+```{r}
+table(meteo_data$nombre)
+```
+
+Data statistics:
+
+```{r}
+skim(meteo_data)
+```
+
+Some cleaning is needed.
+
+First of all, we will remove useless columns for further analysis and rename the others. Secondly, we will transform date to a valid format. Last but not least, we will transform numeric data to a valid numeric format.
+
+```{r}
+meteo_data <- meteo_data %>% 
+      select(-indicativo, -nombre, -altitud, -horatmin, -horatmax, -horaracha, -presMax, -horaPresMax, -presMin, -horaPresMin) %>% 
+      mutate(
+            fecha    = as.Date(fecha, format = "%Y-%m-%d"),
+            tmed     = as.numeric(sub(",", ".", tmed, fixed = TRUE)),
+            prec     = as.numeric(sub(",", ".", prec, fixed = TRUE)),
+            tmin     = as.numeric(sub(",", ".", tmin, fixed = TRUE)),
+            tmax     = as.numeric(sub(",", ".", tmax, fixed = TRUE)),
+            dir      = as.numeric(sub(",", ".", dir, fixed = TRUE)),
+            velmedia = as.numeric(sub(",", ".", velmedia, fixed = TRUE)),
+            racha    = as.numeric(sub(",", ".", racha, fixed = TRUE)),
+            sol      = as.numeric(sub(",", ".", sol, fixed = TRUE))
+      ) %>% 
+      rename(
+            wd     = dir,
+            ws     = velmedia,
+            ws_max = racha
+      )
+meteo_data
+```
+
+In order to unify the data with other available sources, a rename of the provinces it needed.
+
+```{r}
+meteo_data <- meteo_data %>% 
+      mutate(
+            provincia = case_when(
+                  provincia == "ASTURIAS" ~ "Asturias",
+                  provincia == "BARCELONA" ~ "Barcelona",
+                  provincia == "MADRID" ~ "Madrid",
+                  provincia == "MALAGA" ~ "Málaga",
+                  provincia == "SEVILLA" ~ "Seville",
+                  TRUE ~ provincia
+            )
+      )
+unique(meteo_data$provincia)
+```
+
+The data has missing information.
+
+```{r}
+skim(meteo_data)
+```
+
+An interpolation for each provinces will be carried out in order to have the maximum information available.
+
+## Asturias
+
+```{r}
+meteo_asturias <- meteo_data %>% 
+      filter(provincia == "Asturias")
+```
+
+```{r}
+# NA imputation test
+imp <- na_interpolation(meteo_asturias)
+```
+
+NAs imputed to average temperature:
+
+```{r}
+ggplot_na_imputations(meteo_asturias$tmed, imp$tmed)
+```
+
+NAs imputed to precipitations:
+
+```{r}
+ggplot_na_imputations(meteo_asturias$prec, imp$prec)
+```
+
+NAs imputed to wind speed:
+
+```{r}
+ggplot_na_imputations(meteo_asturias$ws, imp$ws)
+```
+
+Data interpolation test looks good, so we proceed to charge it:
+
+```{r}
+meteo_asturias <- na_interpolation(meteo_asturias)
+```
+
+## Barcelona
+
+```{r}
+meteo_barcelona <- meteo_data %>% 
+      filter(provincia == "Barcelona")
+```
+
+```{r}
+# NA imputation test
+imp <- na_interpolation(meteo_barcelona)
+```
+
+NAs imputed to average temperature:
+
+```{r}
+ggplot_na_imputations(meteo_barcelona$tmed, imp$tmed)
+```
+
+NAs imputed to precipitations:
+
+```{r}
+ggplot_na_imputations(meteo_barcelona$prec, imp$prec)
+```
+
+NAs imputed to wind speed:
+
+```{r}
+ggplot_na_imputations(meteo_barcelona$ws, imp$ws)
+```
+
+Data interpolation test looks good, so we proceed to charge it:
+
+```{r}
+meteo_barcelona <- na_interpolation(meteo_barcelona)
+```
+
+## Madrid
+
+```{r}
+meteo_madrid <- meteo_data %>% 
+      filter(provincia == "Madrid")
+```
+
+```{r}
+# NA imputation test
+imp <- na_interpolation(meteo_madrid)
+```
+
+NAs imputed to average temperature:
+
+```{r}
+print("There are not NAs!")
+```
+
+NAs imputed to precipitations:
+
+```{r}
+ggplot_na_imputations(meteo_madrid$prec, imp$prec)
+```
+
+NAs imputed to wind speed:
+
+```{r}
+ggplot_na_imputations(meteo_madrid$ws, imp$ws)
+```
+
+Data interpolation test looks good, so we proceed to charge it:
+
+```{r}
+meteo_madrid <- na_interpolation(meteo_madrid)
+```
+
+## Malaga
+
+```{r}
+meteo_malaga <- meteo_data %>% 
+      filter(provincia == "Málaga")
+```
+
+```{r}
+# NA imputation test
+imp <- na_interpolation(meteo_malaga)
+```
+
+NAs imputed to average temperature:
+
+```{r}
+ggplot_na_imputations(meteo_malaga$tmed, imp$tmed)
+```
+
+NAs imputed to precipitations:
+
+```{r}
+ggplot_na_imputations(meteo_malaga$prec, imp$prec)
+```
+
+NAs imputed to wind speed: there are not missing data.
+
+Data interpolation test looks good, so we proceed to charge it:
+
+```{r}
+meteo_malaga <- na_interpolation(meteo_malaga)
+```
+
+## Sevilla
+
+```{r}
+meteo_seville <- meteo_data %>% 
+      filter(provincia == "Seville")
+```
+
+```{r}
+# NA imputation test
+imp <- na_interpolation(meteo_seville)
+```
+
+NAs imputed to average temperature:
+
+```{r}
+ggplot_na_imputations(meteo_seville$tmed, imp$tmed)
+```
+
+NAs imputed to precipitations:
+
+```{r}
+ggplot_na_imputations(meteo_seville$prec, imp$prec)
+```
+
+NAs imputed to wind speed:
+
+```{r}
+ggplot_na_imputations(meteo_seville$ws, imp$ws)
+```
+
+Data interpolation test looks good, so we proceed to charge it:
+
+```{r}
+meteo_seville <- na_interpolation(meteo_seville)
+```
+
+## Data combination
+
+```{r}
+meteo_data_completed <- meteo_asturias %>% 
+      rbind(meteo_barcelona) %>% 
+      rbind(meteo_madrid) %>% 
+      rbind(meteo_malaga) %>% 
+      rbind(meteo_seville)
+unique(meteo_data_completed$provincia)
+```
+
+Final statistics:
+
+```{r}
+skim(meteo_data_completed)
+```
+
+The final data looks like:
+
+```{r}
+meteo_data_completed
+```
+
+
+
+
+
+
