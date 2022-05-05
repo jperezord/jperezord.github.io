@@ -1,0 +1,96 @@
+# Task 3: Visual analysis {.unnumbered}
+
+## Introduction
+
+As previously mentioned, the visual analysis will focus on the following provinces:
+
+-   Asturias
+-   Barcelona
+-   Madrid
+-   Málaga
+-   Sevilla
+
+First, we need to load packages and clean data generated during previous tasks:
+
+```{r}
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr,     # get overview of data
+      janitor    # produce and adorn tabulations and cross-tabulations
+)
+
+covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
+covid_data
+```
+
+## Number of cases
+
+Accordign to CNE, in the evolution of the COVID-19 pandemic in Spain, there have been six periods:
+
+First period: From the beginning of the pandemic until June 21, 2020, date on which the state of alarm in Spain ended after the end of the first epidemic outbreak of COVID-19.
+
+Second period: June 22 through December 6, 2020, the turning point of the 14-day cumulative incidence (CI) of COVID-19 cases, between the second and third periods.
+
+Third period: December 7, 2020 through March 14, 2021, AI tipping point at 14 days of COVID-19 cases, between the third and fourth epidemic periods.
+
+Fourth period: March 15, 2021 through June 19, the 14-day AI tipping point for COVID-19 cases, between the fourth and fifth epidemic periods.
+
+Fifth period: June 20, 2021 through October 13, AI tipping point at 14 days of COVID-19 cases, between the fifth and sixth epidemic periods.
+
+Sixth period: From October 14, 2021 to the present, which may vary depending on the epidemiological situation of the pandemic in Spain.
+
+
+```{r}
+covid_data %>% 
+      ggplot(aes(x = fecha, y = num_casos)) +
+      geom_line(aes(color = provincia)) +
+      facet_wrap(~provincia, ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Cases reported by Province",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+The incidence of Covid-19 in Madrid and Barcelona are much higher than in the rest of the provinces, mainly due to the number of inhabitants. The next figure show the same information than the previous one but freeing the y-axis scale.
+
+
+```{r}
+covid_data %>% 
+      ggplot(aes(x = fecha, y = num_casos)) +
+      geom_line(aes(color = provincia)) +
+      facet_wrap(~provincia, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Cases reported by Province",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+
+
+
+
+
+
+
+
+## Asturias
+
+```{r}
+covid_data_asturias <- covid_data %>% 
+      filter(provincia == "Asturias")
+covid_data_asturias
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

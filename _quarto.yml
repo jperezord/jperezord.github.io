@@ -18,6 +18,7 @@ book:
         - ine_data.qmd
         - aemet_data.qmd
     - part: combination.qmd
+    - part: visual.qmd
     - references.qmd
 
 bibliography: references.bib
