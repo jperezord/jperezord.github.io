@@ -106,7 +106,7 @@ meteo_data <- meteo_data %>%
                   provincia == "BARCELONA" ~ "Barcelona",
                   provincia == "MADRID" ~ "Madrid",
                   provincia == "MALAGA" ~ "Málaga",
-                  provincia == "SEVILLA" ~ "Seville",
+                  provincia == "SEVILLA" ~ "Sevilla",
                   TRUE ~ provincia
             )
       )
@@ -253,7 +253,7 @@ NAs imputed to precipitations:
 ggplot_na_imputations(meteo_malaga$prec, imp$prec)
 ```
 
-NAs imputed to wind speed: 
+NAs imputed to wind speed:
 
 ```{r}
 print("There are not NAs!")
@@ -268,37 +268,37 @@ meteo_malaga <- na_interpolation(meteo_malaga)
 ## Sevilla
 
 ```{r}
-meteo_seville <- meteo_data %>% 
-      filter(provincia == "Seville")
+meteo_sevilla <- meteo_data %>% 
+      filter(provincia == "Sevilla")
 ```
 
 ```{r}
 # NA imputation test
-imp <- na_interpolation(meteo_seville)
+imp <- na_interpolation(meteo_sevilla)
 ```
 
 NAs imputed to average temperature:
 
 ```{r}
-ggplot_na_imputations(meteo_seville$tmed, imp$tmed)
+ggplot_na_imputations(meteo_sevilla$tmed, imp$tmed)
 ```
 
 NAs imputed to precipitations:
 
 ```{r}
-ggplot_na_imputations(meteo_seville$prec, imp$prec)
+ggplot_na_imputations(meteo_sevilla$prec, imp$prec)
 ```
 
 NAs imputed to wind speed:
 
 ```{r}
-ggplot_na_imputations(meteo_seville$ws, imp$ws)
+ggplot_na_imputations(meteo_sevilla$ws, imp$ws)
 ```
 
 Data interpolation test looks good, so we proceed to charge it:
 
 ```{r}
-meteo_seville <- na_interpolation(meteo_seville)
+meteo_sevilla <- na_interpolation(meteo_sevilla)
 ```
 
 ## Data combination
@@ -308,7 +308,7 @@ meteo_data_completed <- meteo_asturias %>%
       rbind(meteo_barcelona) %>% 
       rbind(meteo_madrid) %>% 
       rbind(meteo_malaga) %>% 
-      rbind(meteo_seville)
+      rbind(meteo_sevilla)
 unique(meteo_data_completed$provincia)
 ```
 

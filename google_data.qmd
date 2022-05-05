@@ -127,14 +127,47 @@ google_TimeS <- google_data %>%
       as_tsibble(index = fecha, key = c(variables, province))
 ```
 
-Independent imputation of data. For that, we impute the missing values by separating the variables independently.
+For the imputation of missing values the procedure to be followed will be as follows:
+
+-   First, we separate (group) by the source of mobility (pharmacy, etc...)
+-   Secondly, we will interpolate missing data
+-   Finally, we will combine the data again
+
+The interpolation uses either linear, spline or stineman interpolation to replace missing values. In our case, we will use the linear one.
+
+As an example, we will show how interpolation works for "grocery_pharmacy" data in Asturias.
+
+```{r}
+imp <- google_TimeS %>% 
+      filter(variables == "grocery_pharmacy") %>% 
+      select(-variables) %>% 
+      group_by(province) %>% 
+      na_interpolation() %>% 
+      rename("mob_grocery_pharmacy" = value) %>% 
+      filter(province == "Asturias")
+```
+
+```{r}
+interpolation_test <- google_TimeS %>% 
+      filter(variables == "grocery_pharmacy") %>% 
+      select(-variables) %>% 
+      rename("mob_grocery_pharmacy" = value) %>% 
+      filter(province == "Asturias")
+```
+
+```{r}
+ggplot_na_imputations(interpolation_test$mob_grocery_pharmacy, imp$mob_grocery_pharmacy)
+```
+
+The interpolation works fine, so we will proceed to impute missing data for the rest of provinces/variables.
+
 
 ```{r}
 grocery_pharmacy_data <- google_TimeS %>% 
       filter(variables == "grocery_pharmacy") %>% 
       select(-variables) %>% 
       group_by(province) %>% 
-      na_kalman() %>% 
+      na_interpolation() %>% 
       rename("mob_grocery_pharmacy" = value)
 ```
 
@@ -143,7 +176,7 @@ grocery_parks_data <- google_TimeS %>%
       filter(variables == "parks") %>% 
       select(-variables) %>%
       group_by(province) %>% 
-      na_kalman() %>% 
+      na_interpolation() %>% 
       rename("mob_parks" = value)
 ```
 
@@ -152,7 +185,7 @@ grocery_residential_data <- google_TimeS %>%
       filter(variables == "residential") %>% 
       select(-variables) %>%
       group_by(province) %>% 
-      na_kalman() %>% 
+      na_interpolation() %>% 
       rename("mob_residential" = value)
 ```
 
@@ -161,7 +194,7 @@ grocery_retail_recreation_data <- google_TimeS %>%
       filter(variables == "retail_recreation") %>% 
       select(-variables) %>%
       group_by(province) %>% 
-      na_kalman() %>% 
+      na_interpolation() %>% 
       rename("mob_retail_recreation" = value)
 ```
 
@@ -170,7 +203,7 @@ grocery_transit_stations_data <- google_TimeS %>%
       filter(variables == "transit_stations") %>% 
       select(-variables) %>%
       group_by(province) %>% 
-      na_kalman() %>% 
+      na_interpolation() %>% 
       rename("mob_transit_stations" = value)
 ```
 
@@ -179,7 +212,7 @@ grocery_workplaces_data <- google_TimeS %>%
       filter(variables == "workplaces") %>% 
       select(-variables) %>%
       group_by(province) %>% 
-      na_kalman() %>% 
+      na_interpolation() %>% 
       rename("mob_workplaces" = value)
 ```
 

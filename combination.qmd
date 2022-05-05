@@ -1,0 +1,200 @@
+# Task 2: Datasets combination {.unnumbered}
+
+## Introduction
+
+During the first task, data loading and cleaning has been performed. For each of the datasets, the resulting final files were stored in the "/data/clean/" project folder by saving them as a RDS file, which creates a serialized version of the dataset and then saves it with gzip.
+
+By doing this we avoid problems during the reading, since the dataset will be loaded as an R object exactly as when the cleaning of the dataset were finished.
+
+First, we need to load packages:
+
+```{r}
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr,     # get overview of data
+      janitor    # produce and adorn tabulations and cross-tabulations
+)
+```
+
+## CNE + AEMET
+
+Import clean datasets:
+
+```{r}
+cne_clean_data <- readRDS(here("data", "clean", "cne_data.rds"))
+cne_clean_data
+```
+
+```{r}
+aemet_clean_data <- readRDS(here("data", "clean", "aemet_data.rds"))
+aemet_clean_data
+```
+
+In the following analyses we will focus on the provinces:
+
+-   Asturias
+-   Barcelona
+-   Madrid
+-   Málaga
+-   Sevilla
+
+Meteorological data from AEMET already corresponds to those provinces so we will proceed to filter the data from CNE.
+
+```{r}
+# Ref iso code provinces https://es.wikipedia.org/wiki/ISO_3166-2:ES
+cne_clean_data <- cne_clean_data %>% 
+      filter(provincia_iso %in% c("O", "B", "M", "MA", "SE")) %>% 
+      mutate(
+            provincia_iso = case_when(
+                  provincia_iso == "O" ~ "Asturias",
+                  provincia_iso == "B" ~ "Barcelona",
+                  provincia_iso == "M" ~ "Madrid",
+                  provincia_iso == "MA" ~ "Málaga",
+                  provincia_iso == "SE" ~ "Sevilla",
+                  TRUE ~ provincia_iso
+            )
+      ) %>% 
+      rename(provincia = provincia_iso)
+cne_clean_data
+```
+
+```{r}
+covid_data <- left_join(cne_clean_data, aemet_clean_data, by=c("fecha", "provincia"))
+covid_data
+```
+
+Check if missing information:
+
+```{r}
+skim(covid_data)
+```
+
+## CNE/AEMET + GOOGLE
+
+Load clean data:
+
+```{r}
+google_data <- readRDS(here("data", "clean", "google_data.rds"))
+```
+
+Rename provinces to match previous dataset:
+
+```{r}
+google_data <- google_data %>% 
+      filter(province %in% c("Asturias", "Barcelona", "Madrid", "Málaga", "Seville")) %>% 
+      mutate(province = ifelse(province == "Seville", "Sevilla", province)) %>% 
+      select(-CA, -iso_3166_2_code, provincia = province)
+google_data
+```
+
+Statistics for Google data
+
+```{r}
+skim(google_data)
+```
+
+Since everything is right, we will combine the data with the already combined dataset from CNE and AEMET:
+
+```{r}
+covid_data <- left_join(covid_data, google_data, by=c("fecha", "provincia"))
+covid_data
+```
+
+It is important to note that Google provides data as of February 15nd. Before that day, there is not information related to Google´s mobility.
+
+## CNE/AEMET/GOOGLE + INE
+
+Load clean INE data:
+
+```{r}
+ine_data <- readRDS(here("data", "clean", "ine_data.rds"))
+```
+
+Rename provinces to match previous dataset:
+
+```{r}
+ine_data <- ine_data %>% 
+      filter(province %in% c("Asturias", "Barcelona", "Madrid", "Málaga", "Sevilla")) %>% 
+      rename(
+            provincia = province,
+            mob_flujo = flujo
+      )
+ine_data
+```
+
+Combination with previous datasets:
+
+```{r}
+covid_data <- left_join(covid_data, ine_data, by=c("fecha", "provincia"))
+covid_data
+```
+
+Mobility information published by INE is available as of March 16th which we will consider the beginning of our analysis.
+
+## Final covid dataset
+
+The statistics of the final dataset looks like:
+
+```{r}
+skim(covid_data)
+```
+
+The missing information corresponds to the periods for which no data have been provided. These are placed at the beginning of the dataset, so as of March 16, 2020 all the information is available up to December 29, 2021.
+
+```{r}
+covid_data %>% 
+      filter(!is.na(mob_flujo)) %>% 
+      summarise(
+            initial_data_without_nas = min(fecha),
+            final_data_without_nas = max(fecha)
+      )
+```
+
+Statistics for that period:
+
+```{r}
+covid_data %>% 
+      filter(fecha >= as.Date("2020-03-16", format = "%Y-%m-%d") &
+                   fecha <= as.Date("2021-12-29", format = "%Y-%m-%d")) %>% 
+      skim()
+```
+
+## Aditional dataset
+
+In addition, we have the clean dataset corresponding to hospitalizations which provide detail by demographics.
+
+We will not combine it with the previous dataset, but we will treat it additionally in case of needing more detail.
+
+```{r}
+cne_hosp_data <- readRDS(here("data", "clean", "cne_hosp_data.rds"))
+cne_hosp_data
+```
+
+```{r}
+cne_hosp_data <- cne_hosp_data %>% 
+      filter(provincia_iso %in% c("O", "B", "M", "MA", "SE")) %>% 
+      mutate(
+            provincia_iso = case_when(
+                  provincia_iso == "O" ~ "Asturias",
+                  provincia_iso == "B" ~ "Barcelona",
+                  provincia_iso == "M" ~ "Madrid",
+                  provincia_iso == "MA" ~ "Málaga",
+                  provincia_iso == "SE" ~ "Sevilla",
+                  TRUE ~ provincia_iso
+            )
+      ) %>% 
+      rename(provincia = provincia_iso)
+cne_hosp_data
+```
+
+```{r}
+skim(cne_hosp_data)
+```
+
+### Note
+
+Final clean data are stored in the project's folder "/data/clean/" both in rds and csv format.
+
+-   final_covid_data.csv (CNE+AEMET+GOOGLE+INE data)
+-   final_hosp_data.csv (CNE data with demographic detail)

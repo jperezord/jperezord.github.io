@@ -1,4 +1,4 @@
-# Task 1: Data acquisition and exploration {#sec-data}
+# Task 1: Data acquisition and exploration {.unnumbered}
 
 ## COVID-19
 
@@ -14,9 +14,7 @@ In the current work, we will use two datasets from CNE:
 
 -   casos_hosp_uci_def_sexo_edad_provres.csv: Number of hospitalisations, number of admissions to ICU and number of deaths by sex, age and province of residence.
 
-
 ## Mobility data
-
 
 ### INE data
 
@@ -27,7 +25,6 @@ The population scope is made up of the mobile telephones of the resident populat
 Data is available in the Spanish National Institute of Statistics in the following [link](https://www.ine.es/experimental/movilidad/experimental_em4.htm#tablas_resultados). It is also provided a [link](https://www.ine.es/jaxiT3/Tabla.htm?t=48252) for direct access to the download portal via queries.
 
 Data can be downloaded in different formats. We recommend using 'CSV: separado por ;'.
-
 
 ### Google data
 
@@ -45,7 +42,6 @@ Data provided by Google:
 
 -   20XX_ES_Region_Mobility_Report.csv contains information for Spain. Note: information is provided by year in separate files.
 
-
 ## Meteorological data
 
 ### AEMET data
@@ -54,8 +50,6 @@ AEMET's meteorological data are available throug its service [AEMET OpenData](ht
 
 AEMET OpenData is a REST API developed by AEMET that allows the dissemination and reuse of the Agency's meteorological and climatological information, in the sense indicated in Law 18/2015, of July 9, amending Law 37/2007, of November 16, on the reuse of public sector information.
 
-AEMET OpenData allows free download of the data specified in Annex II of the resolution of December 30, 2015 of AEMET, which establishes the public prices to govern the provision of meteorological and climatological services. This resolution has been published in the BOE No. 4 of January 5, 2016. Also available are the data obtained by AEMET in the framework of the collaboration agreement between the State Research Agency and the State Meteorological Agency regarding Spanish activities in Antarctica. 
+AEMET OpenData allows free download of the data specified in Annex II of the resolution of December 30, 2015 of AEMET, which establishes the public prices to govern the provision of meteorological and climatological services. This resolution has been published in the BOE No. 4 of January 5, 2016. Also available are the data obtained by AEMET in the framework of the collaboration agreement between the State Research Agency and the State Meteorological Agency regarding Spanish activities in Antarctica.
 
-In order to access AEMET OpenData, it is necessary to request a free API Key. 
-
-
+In order to access AEMET OpenData, it is necessary to request a free API Key.
