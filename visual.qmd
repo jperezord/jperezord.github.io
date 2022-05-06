@@ -18,7 +18,9 @@ pacman::p_load(
       tidyverse, # data management and ggplot2 graphics
       skimr,     # get overview of data
       janitor,   # produce and adorn tabulations and cross-tabulations
-      lubridate  # manage dates
+      lubridate, # manage dates
+      PerformanceAnalytics,
+      factoextra
 )
 
 covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
@@ -363,7 +365,6 @@ covid_data %>%
             legend.position = "none") +
       ggtitle("Hospitalization vs uci vs deaths vs number of cases")
 ```
-
 
 ## Meteorology
 
@@ -774,10 +775,10 @@ covid_data %>%
       ggtitle("Visits to workplaces vs number of cases")
 ```
 
-
 ### Google mobility vs cases
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 400
 
@@ -815,7 +816,6 @@ p <- covid_data %>%
 p
 # ggplotly(p) # To make the graph interactive
 ```
-
 
 ### General mobility (INE study zones)
 
@@ -869,4 +869,192 @@ covid_data %>%
 
 ## Correlations
 
+From previous visual analysis, we will focus our attention in the following variables:
+
+-   num_casos
+-   num_hosp
+-   tmed
+-   mob_grocery_pharmacy
+-   mob_parks
+-   mob_residential
+-   mob_retail_recreation
+-   mob_transit_stations
+-   mob_workplaces
+-   mob_flujo
+
+### Asturias
+
+```{r}
+#| warning = FALSE
+data_asturias <- covid_data %>% 
+      filter(provincia == "Asturias") %>% 
+      select(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na()
+
+chart.Correlation(data_asturias, histogram=TRUE, pch=19)
+```
+
+### Barcelona
+
+```{r}
+#| warning = FALSE
+data_barcelona <- covid_data %>% 
+      filter(provincia == "Barcelona") %>% 
+      select(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na()
+
+chart.Correlation(data_barcelona, histogram=TRUE, pch=19)
+```
+
+### Madrid
+
+```{r}
+#| warning = FALSE
+data_madrid <- covid_data %>% 
+      filter(provincia == "Madrid") %>% 
+      select(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na()
+
+chart.Correlation(data_madrid, histogram=TRUE, pch=19)
+```
+
+### Málaga
+
+```{r}
+#| warning = FALSE
+data_malaga <- covid_data %>% 
+      filter(provincia == "Málaga") %>% 
+      select(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na()
+
+chart.Correlation(data_malaga, histogram=TRUE, pch=19)
+```
+
+### Sevilla
+
+```{r}
+#| warning = FALSE
+data_sevilla <- covid_data %>% 
+      filter(provincia == "Sevilla") %>% 
+      select(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na()
+
+chart.Correlation(data_sevilla, histogram=TRUE, pch=19)
+```
+
 ## PCA Analysis
+
+### Asturias
+
+```{r}
+pca_asturias <- prcomp(data_asturias, scale = TRUE)
+pca_asturias
+```
+
+```{r}
+summary(pca_asturias)
+```
+
+```{r}
+fviz_contrib(pca_asturias, choice = "var", axes = 1)
+```
+
+```{r}
+fviz_contrib(pca_asturias, choice = "var", axes = 2)
+```
+
+```{r}
+fviz_contrib(pca_asturias, choice = "var", axes = 3)
+```
+
+### Barcelona
+
+```{r}
+pca_barcelona <- prcomp(data_barcelona, scale = TRUE)
+pca_barcelona
+```
+
+```{r}
+summary(pca_barcelona)
+```
+
+```{r}
+fviz_contrib(pca_barcelona, choice = "var", axes = 1)
+```
+
+```{r}
+fviz_contrib(pca_barcelona, choice = "var", axes = 2)
+```
+
+```{r}
+fviz_contrib(pca_barcelona, choice = "var", axes = 3)
+```
+
+### Madrid
+
+```{r}
+pca_madrid <- prcomp(data_madrid, scale = TRUE)
+pca_madrid
+```
+
+```{r}
+summary(pca_madrid)
+```
+
+```{r}
+fviz_contrib(pca_madrid, choice = "var", axes = 1)
+```
+
+```{r}
+fviz_contrib(pca_madrid, choice = "var", axes = 2)
+```
+
+```{r}
+fviz_contrib(pca_madrid, choice = "var", axes = 3)
+```
+
+### Málaga
+
+```{r}
+pca_malaga <- prcomp(data_malaga, scale = TRUE)
+pca_malaga
+```
+
+```{r}
+summary(pca_malaga)
+```
+
+```{r}
+fviz_contrib(pca_malaga, choice = "var", axes = 1)
+```
+
+```{r}
+fviz_contrib(pca_malaga, choice = "var", axes = 2)
+```
+
+```{r}
+fviz_contrib(pca_malaga, choice = "var", axes = 3)
+```
+
+### Sevilla
+
+```{r}
+pca_sevilla <- prcomp(data_sevilla, scale = TRUE)
+pca_sevilla
+```
+
+```{r}
+summary(pca_sevilla)
+```
+
+```{r}
+fviz_contrib(pca_sevilla, choice = "var", axes = 1)
+```
+
+```{r}
+fviz_contrib(pca_sevilla, choice = "var", axes = 2)
+```
+
+```{r}
+fviz_contrib(pca_sevilla, choice = "var", axes = 3)
+```

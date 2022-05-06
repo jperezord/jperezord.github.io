@@ -243,8 +243,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#google-mobility-vs-cases" id="toc-google-mobility-vs-cases" class="nav-link" data-scroll-target="#google-mobility-vs-cases">Google mobility vs cases</a></li>
   <li><a href="#general-mobility-ine-study-zones" id="toc-general-mobility-ine-study-zones" class="nav-link" data-scroll-target="#general-mobility-ine-study-zones">General mobility (INE study zones)</a></li>
   </ul></li>
-  <li><a href="#correlations" id="toc-correlations" class="nav-link" data-scroll-target="#correlations">Correlations</a></li>
-  <li><a href="#pca-analysis" id="toc-pca-analysis" class="nav-link" data-scroll-target="#pca-analysis">PCA Analysis</a></li>
+  <li><a href="#correlations" id="toc-correlations" class="nav-link" data-scroll-target="#correlations">Correlations</a>
+  <ul class="collapse">
+  <li><a href="#asturias" id="toc-asturias" class="nav-link" data-scroll-target="#asturias">Asturias</a></li>
+  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona">Barcelona</a></li>
+  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid">Madrid</a></li>
+  <li><a href="#málaga" id="toc-málaga" class="nav-link" data-scroll-target="#málaga">Málaga</a></li>
+  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla">Sevilla</a></li>
+  </ul></li>
+  <li><a href="#pca-analysis" id="toc-pca-analysis" class="nav-link" data-scroll-target="#pca-analysis">PCA Analysis</a>
+  <ul class="collapse">
+  <li><a href="#asturias-1" id="toc-asturias-1" class="nav-link" data-scroll-target="#asturias-1">Asturias</a></li>
+  <li><a href="#barcelona-1" id="toc-barcelona-1" class="nav-link" data-scroll-target="#barcelona-1">Barcelona</a></li>
+  <li><a href="#madrid-1" id="toc-madrid-1" class="nav-link" data-scroll-target="#madrid-1">Madrid</a></li>
+  <li><a href="#málaga-1" id="toc-málaga-1" class="nav-link" data-scroll-target="#málaga-1">Málaga</a></li>
+  <li><a href="#sevilla-1" id="toc-sevilla-1" class="nav-link" data-scroll-target="#sevilla-1">Sevilla</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -286,11 +300,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      tidyverse, <span class="co"># data management and ggplot2 graphics</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      skimr,     <span class="co"># get overview of data</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      janitor,   <span class="co"># produce and adorn tabulations and cross-tabulations</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      lubridate  <span class="co"># manage dates</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>covid_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      lubridate, <span class="co"># manage dates</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      PerformanceAnalytics,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      factoextra</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>covid_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4,095 × 26
    provincia fecha      num_casos num_casos_prueba_pcr num_casos_prueba_test_ac
@@ -1214,36 +1230,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Mobility variations vs number of cases"</span>)</span>
 <span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 45 row(s) containing missing values (geom_path).
-Removed 45 row(s) containing missing values (geom_path).
-Removed 45 row(s) containing missing values (geom_path).
-Removed 45 row(s) containing missing values (geom_path).
-Removed 45 row(s) containing missing values (geom_path).
-Removed 45 row(s) containing missing values (geom_path).</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="visual_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotly(p) # To make the graph interactive</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotly(p) # To make the graph interactive</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="general-mobility-ine-study-zones" class="level3">
 <h3 class="anchored" data-anchor-id="general-mobility-ine-study-zones">General mobility (INE study zones)</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>covid_data <span class="sc">%&gt;%</span> </span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fecha)) <span class="sc">+</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mob_flujo, <span class="at">color =</span> provincia)) <span class="sc">+</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-06-21"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-12-06"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-03-14"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-06-19"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-10-13"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>provincia, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"General mobility by Province"</span>,</span>
-<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span><span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Mobility (% ref day)"</span>) <span class="sc">+</span></span>
-<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fecha)) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> mob_flujo, <span class="at">color =</span> provincia)) <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-06-21"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-12-06"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-03-14"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-06-19"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-10-13"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>provincia, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"General mobility by Province"</span>,</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span><span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Mobility (% ref day)"</span>) <span class="sc">+</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 825 row(s) containing missing values (geom_path).</code></pre>
 </div>
@@ -1252,35 +1260,35 @@ Removed 45 row(s) containing missing values (geom_path).</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Value used to transform the data</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>coeff <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A few constants for colors</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>temperatureColor <span class="ot">&lt;-</span> <span class="st">"#69b3a2"</span></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>priceColor <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>, <span class="fl">0.9</span>, <span class="dv">1</span>)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>covid_data <span class="sc">%&gt;%</span> </span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fecha)) <span class="sc">+</span></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>( <span class="fu">aes</span>(<span class="at">y =</span> mob_flujo), <span class="at">size=</span><span class="dv">1</span>, <span class="at">color=</span>temperatureColor) <span class="sc">+</span> </span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>( <span class="fu">aes</span>(<span class="at">y =</span> num_casos <span class="sc">/</span> coeff), <span class="at">size=</span><span class="dv">1</span>, <span class="at">color=</span>priceColor) <span class="sc">+</span></span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-06-21"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-12-06"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-03-14"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-06-19"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-10-13"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Features of the first axis</span></span>
-<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">name =</span> <span class="st">"General mobility (%)"</span>,</span>
-<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Add a second axis and specify its features</span></span>
-<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span>.<span class="sc">*</span>coeff, <span class="at">name=</span><span class="st">"Nº of cases"</span>)</span>
-<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>provincia, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
-<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> temperatureColor, <span class="at">size=</span><span class="dv">13</span>),</span>
-<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.y.right =</span> <span class="fu">element_text</span>(<span class="at">color =</span> priceColor, <span class="at">size=</span><span class="dv">13</span>)</span>
-<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"General mobility vs number of cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Value used to transform the data</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>coeff <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A few constants for colors</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>temperatureColor <span class="ot">&lt;-</span> <span class="st">"#69b3a2"</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>priceColor <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="fl">0.2</span>, <span class="fl">0.6</span>, <span class="fl">0.9</span>, <span class="dv">1</span>)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fecha)) <span class="sc">+</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>( <span class="fu">aes</span>(<span class="at">y =</span> mob_flujo), <span class="at">size=</span><span class="dv">1</span>, <span class="at">color=</span>temperatureColor) <span class="sc">+</span> </span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>( <span class="fu">aes</span>(<span class="at">y =</span> num_casos <span class="sc">/</span> coeff), <span class="at">size=</span><span class="dv">1</span>, <span class="at">color=</span>priceColor) <span class="sc">+</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-06-21"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2020-12-06"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-03-14"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-06-19"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">as.Date</span>(<span class="st">"2021-10-13"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>), <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Features of the first axis</span></span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">name =</span> <span class="st">"General mobility (%)"</span>,</span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Add a second axis and specify its features</span></span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span>.<span class="sc">*</span>coeff, <span class="at">name=</span><span class="st">"Nº of cases"</span>)</span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span>provincia, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color =</span> temperatureColor, <span class="at">size=</span><span class="dv">13</span>),</span>
+<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.y.right =</span> <span class="fu">element_text</span>(<span class="at">color =</span> priceColor, <span class="at">size=</span><span class="dv">13</span>)</span>
+<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"General mobility vs number of cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 165 row(s) containing missing values (geom_path).</code></pre>
 </div>
@@ -1292,11 +1300,489 @@ Removed 45 row(s) containing missing values (geom_path).</code></pre>
 </section>
 <section id="correlations" class="level2">
 <h2 class="anchored" data-anchor-id="correlations">Correlations</h2>
+<p>From previous visual analysis, we will focus our attention in the following variables:</p>
+<ul>
+<li>num_casos</li>
+<li>num_hosp</li>
+<li>tmed</li>
+<li>mob_grocery_pharmacy</li>
+<li>mob_parks</li>
+<li>mob_residential</li>
+<li>mob_retail_recreation</li>
+<li>mob_transit_stations</li>
+<li>mob_workplaces</li>
+<li>mob_flujo</li>
+</ul>
+<section id="asturias" class="level3">
+<h3 class="anchored" data-anchor-id="asturias">Asturias</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>()</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Correlation</span>(data_asturias, <span class="at">histogram=</span><span class="cn">TRUE</span>, <span class="at">pch=</span><span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="barcelona" class="level3">
+<h3 class="anchored" data-anchor-id="barcelona">Barcelona</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Barcelona"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>()</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Correlation</span>(data_barcelona, <span class="at">histogram=</span><span class="cn">TRUE</span>, <span class="at">pch=</span><span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="madrid" class="level3">
+<h3 class="anchored" data-anchor-id="madrid">Madrid</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Madrid"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>()</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Correlation</span>(data_madrid, <span class="at">histogram=</span><span class="cn">TRUE</span>, <span class="at">pch=</span><span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="málaga" class="level3">
+<h3 class="anchored" data-anchor-id="málaga">Málaga</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Málaga"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>()</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Correlation</span>(data_malaga, <span class="at">histogram=</span><span class="cn">TRUE</span>, <span class="at">pch=</span><span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="sevilla" class="level3">
+<h3 class="anchored" data-anchor-id="sevilla">Sevilla</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Sevilla"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>()</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chart.Correlation</span>(data_sevilla, <span class="at">histogram=</span><span class="cn">TRUE</span>, <span class="at">pch=</span><span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 <section id="pca-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="pca-analysis">PCA Analysis</h2>
+<section id="asturias-1" class="level3">
+<h3 class="anchored" data-anchor-id="asturias-1">Asturias</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>pca_asturias <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_asturias, <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>pca_asturias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=10):
+ [1] 2.3059001 1.3226315 1.0074444 0.7450691 0.6877792 0.6487611 0.4720477
+ [8] 0.3739715 0.2771883 0.1730609
+
+Rotation (n x k) = (10 x 10):
+                              PC1         PC2         PC3          PC4
+num_casos              0.01450525  0.54489655 -0.51479322 -0.504451200
+num_hosp               0.17409928  0.48500003 -0.37126430  0.690242359
+tmed                  -0.23699079 -0.37307749 -0.45271462  0.180603004
+mob_grocery_pharmacy  -0.35143243  0.28170300  0.11727970  0.126424273
+mob_parks             -0.35125168 -0.17159147 -0.38598591 -0.009257317
+mob_residential        0.41391323 -0.10601760 -0.11975556  0.054838852
+mob_retail_recreation -0.41354502  0.01666112 -0.02232460 -0.211710973
+mob_transit_stations  -0.37337796  0.24040335  0.05162636 -0.093305650
+mob_workplaces        -0.30382828  0.27686746  0.41962650  0.287377141
+mob_flujo             -0.30391699 -0.27186212 -0.18939142  0.285110210
+                               PC5         PC6         PC7          PC8
+num_casos              0.007707022 -0.39838507  0.05559284 -0.036405423
+num_hosp               0.027047134  0.16172768 -0.17598501  0.008142094
+tmed                  -0.642379737 -0.18881088  0.25498953  0.215754643
+mob_grocery_pharmacy   0.158062302  0.20143454  0.82468490 -0.057629741
+mob_parks              0.059354627  0.41906472 -0.19336176 -0.582750644
+mob_residential        0.136078986  0.07056199  0.29416933  0.118367813
+mob_retail_recreation  0.151941611  0.03708067 -0.07486246 -0.043270088
+mob_transit_stations  -0.084870133  0.37541715 -0.26001692  0.682427007
+mob_workplaces        -0.299536399 -0.45193891 -0.13878486 -0.273372087
+mob_flujo              0.647705124 -0.46016524 -0.06644608  0.229818685
+                              PC9         PC10
+num_casos             -0.14106177 -0.017603053
+num_hosp               0.24578351  0.043113614
+tmed                   0.08461699 -0.007038261
+mob_grocery_pharmacy  -0.06341817  0.119971853
+mob_parks             -0.34415326 -0.153430890
+mob_residential       -0.13120769 -0.811682780
+mob_retail_recreation  0.79014122 -0.356541626
+mob_transit_stations  -0.28731159 -0.165588538
+mob_workplaces        -0.19739302 -0.381355987
+mob_flujo             -0.16437188  0.032321955</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3     PC4    PC5     PC6     PC7
+Standard deviation     2.3059 1.3226 1.0074 0.74507 0.6878 0.64876 0.47205
+Proportion of Variance 0.5317 0.1749 0.1015 0.05551 0.0473 0.04209 0.02228
+Cumulative Proportion  0.5317 0.7066 0.8082 0.86366 0.9110 0.95305 0.97534
+                           PC8     PC9   PC10
+Standard deviation     0.37397 0.27719 0.1731
+Proportion of Variance 0.01399 0.00768 0.0030
+Cumulative Proportion  0.98932 0.99700 1.0000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_asturias, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_asturias, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_asturias, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="barcelona-1" class="level3">
+<h3 class="anchored" data-anchor-id="barcelona-1">Barcelona</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>pca_barcelona <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_barcelona, <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>pca_barcelona</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=10):
+ [1] 2.3500494 1.1639307 1.0203223 0.8907862 0.7077661 0.5991284 0.4632802
+ [8] 0.3564024 0.2192014 0.1959267
+
+Rotation (n x k) = (10 x 10):
+                              PC1          PC2         PC3          PC4
+num_casos             -0.04635023  0.570768442  0.53457698 -0.492988960
+num_hosp               0.29831071  0.284686532  0.09436374 -0.034833462
+tmed                  -0.14449540 -0.626623503  0.30664954 -0.452229899
+mob_grocery_pharmacy  -0.34713681  0.337004339  0.02002121  0.151561449
+mob_parks             -0.37335503 -0.193131167  0.18530647 -0.084926570
+mob_residential        0.38430706  0.007416082  0.24886368  0.259624192
+mob_retail_recreation -0.39452627  0.063798737  0.18765830  0.069063116
+mob_transit_stations  -0.40897022  0.127987718 -0.07637794  0.004222074
+mob_workplaces        -0.30468032  0.155504866 -0.55283186 -0.129464416
+mob_flujo             -0.25427521 -0.070430679  0.40981000  0.657343094
+                              PC5         PC6         PC7          PC8
+num_casos              0.19339495  0.32350158 -0.00629119  0.030606330
+num_hosp              -0.85463757 -0.17161237 -0.22533531  0.094962761
+tmed                  -0.33093566  0.09231281  0.39889639 -0.006104091
+mob_grocery_pharmacy  -0.08132938 -0.39493763  0.65121038  0.249245145
+mob_parks              0.08850418 -0.27365929 -0.49626105  0.644319123
+mob_residential        0.14832065 -0.12032335  0.28408811  0.321039366
+mob_retail_recreation -0.07064019 -0.29899673 -0.08915710 -0.584504519
+mob_transit_stations  -0.06330964 -0.11946594 -0.12154825 -0.072176343
+mob_workplaces        -0.20404108  0.48022022  0.12291337  0.248375683
+mob_flujo             -0.18867227  0.52701879 -0.03434211  0.033557108
+                               PC9        PC10
+num_casos             -0.002320569  0.01509282
+num_hosp               0.003777920  0.01349170
+tmed                  -0.092334422  0.04687160
+mob_grocery_pharmacy   0.134095696 -0.27528609
+mob_parks              0.182419504  0.06583257
+mob_residential       -0.196882515  0.68110459
+mob_retail_recreation  0.329721528  0.49758768
+mob_transit_stations  -0.875118234  0.08009707
+mob_workplaces         0.163742743  0.42982550
+mob_flujo              0.008575829 -0.12089009</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_barcelona)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3     PC4     PC5    PC6     PC7
+Standard deviation     2.3500 1.1639 1.0203 0.89079 0.70777 0.5991 0.46328
+Proportion of Variance 0.5523 0.1355 0.1041 0.07935 0.05009 0.0359 0.02146
+Cumulative Proportion  0.5523 0.6877 0.7919 0.87120 0.92130 0.9572 0.97865
+                          PC8    PC9    PC10
+Standard deviation     0.3564 0.2192 0.19593
+Proportion of Variance 0.0127 0.0048 0.00384
+Cumulative Proportion  0.9914 0.9962 1.00000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_barcelona, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_barcelona, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_barcelona, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="madrid-1" class="level3">
+<h3 class="anchored" data-anchor-id="madrid-1">Madrid</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>pca_madrid <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_madrid, <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>pca_madrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=10):
+ [1] 2.2848571 1.2225837 1.0319540 0.9173293 0.7538326 0.6158312 0.4456798
+ [8] 0.3743592 0.2529196 0.1674507
+
+Rotation (n x k) = (10 x 10):
+                              PC1        PC2         PC3         PC4
+num_casos             -0.01423162  0.5854425  0.06882652 -0.70306268
+num_hosp               0.27600601  0.3157810  0.06783645 -0.12215647
+tmed                  -0.06116377 -0.6156756 -0.18467058 -0.61357270
+mob_grocery_pharmacy  -0.37932123  0.2832513 -0.04936637  0.05230846
+mob_parks             -0.36244379 -0.1197542 -0.28139926 -0.13467682
+mob_residential        0.37894331  0.1601416 -0.35460347  0.16002713
+mob_retail_recreation -0.40910449  0.1516826 -0.11182971 -0.05493973
+mob_transit_stations  -0.41730212  0.1056251  0.08377947  0.08242167
+mob_workplaces        -0.30627182 -0.0855751  0.59690452  0.12801981
+mob_flujo             -0.25635724  0.1295295 -0.61104157  0.20402385
+                              PC5         PC6         PC7          PC8
+num_casos              0.24552109 -0.26345562  0.15328157 -0.040875827
+num_hosp              -0.83725304  0.30701841  0.09072498 -0.004431129
+tmed                  -0.25238790 -0.12186856 -0.28247772 -0.112257979
+mob_grocery_pharmacy  -0.04343098  0.12704931 -0.62858714 -0.502353135
+mob_parks              0.09156988  0.51766298  0.59572642 -0.336804286
+mob_residential        0.14343571  0.06769104 -0.09643941 -0.444183532
+mob_retail_recreation -0.03488279  0.25135710 -0.16413678  0.371254042
+mob_transit_stations  -0.05857713  0.08498906 -0.07417955  0.302309594
+mob_workplaces        -0.20465773 -0.32418049  0.23925417 -0.438932910
+mob_flujo             -0.31248859 -0.59773222  0.19870007  0.027020637
+                              PC9        PC10
+num_casos              0.04735181 -0.03037372
+num_hosp               0.02858333  0.01607570
+tmed                   0.09549151 -0.16297889
+mob_grocery_pharmacy  -0.02709125  0.32321617
+mob_parks              0.03477439  0.10523166
+mob_residential        0.17235888 -0.64648380
+mob_retail_recreation -0.54936170 -0.51296756
+mob_transit_stations   0.79984701 -0.23148779
+mob_workplaces        -0.11524111 -0.34062802
+mob_flujo             -0.03656999  0.07761072</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_madrid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3     PC4     PC5     PC6     PC7
+Standard deviation     2.2849 1.2226 1.0320 0.91733 0.75383 0.61583 0.44568
+Proportion of Variance 0.5221 0.1495 0.1065 0.08415 0.05683 0.03792 0.01986
+Cumulative Proportion  0.5221 0.6715 0.7780 0.86217 0.91900 0.95692 0.97678
+                           PC8    PC9   PC10
+Standard deviation     0.37436 0.2529 0.1675
+Proportion of Variance 0.01401 0.0064 0.0028
+Cumulative Proportion  0.99080 0.9972 1.0000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_madrid, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_madrid, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_madrid, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="málaga-1" class="level3">
+<h3 class="anchored" data-anchor-id="málaga-1">Málaga</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>pca_malaga <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_malaga, <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>pca_malaga</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=10):
+ [1] 2.3625399 1.3170000 1.0383164 0.7852519 0.5772466 0.5206302 0.4750268
+ [8] 0.3038546 0.2083302 0.1534463
+
+Rotation (n x k) = (10 x 10):
+                              PC1          PC2         PC3         PC4
+num_casos              0.05640851 -0.681859025 -0.17666101 -0.09250740
+num_hosp              -0.09690841 -0.658078771 -0.17277530  0.16446076
+tmed                   0.22890688  0.259779290 -0.56344513  0.55423432
+mob_grocery_pharmacy   0.34728178 -0.131977546  0.28371284  0.29107154
+mob_parks              0.35909430  0.005032765 -0.42497959  0.05859394
+mob_residential       -0.39614334  0.017773316 -0.22433143 -0.03168938
+mob_retail_recreation  0.40839431 -0.035478728 -0.08152322 -0.13149072
+mob_transit_stations   0.39978838 -0.069319821  0.02511553 -0.12354574
+mob_workplaces         0.32225403 -0.057296167  0.51953797  0.24431420
+mob_flujo              0.31317929  0.086076717 -0.18123857 -0.68979451
+                             PC5         PC6         PC7          PC8
+num_casos              0.2756412  0.63420561 -0.10354687  0.005289358
+num_hosp              -0.4952974 -0.48305689  0.09110537 -0.048777062
+tmed                  -0.2695582  0.28397212 -0.17222092 -0.243272004
+mob_grocery_pharmacy   0.2253090 -0.26286323 -0.72540811  0.169909262
+mob_parks              0.2140875 -0.22819442  0.28231647  0.533739477
+mob_residential        0.1275766 -0.18007259 -0.37864503 -0.221293686
+mob_retail_recreation  0.2195409 -0.15605362  0.13333421 -0.040363776
+mob_transit_stations   0.2150227 -0.20170555  0.16010907 -0.753933044
+mob_workplaces        -0.4019800  0.24819776  0.15745543  0.024861931
+mob_flujo             -0.4869769  0.05969278 -0.36581567  0.070931556
+                              PC9         PC10
+num_casos             -0.05523726 -0.011121973
+num_hosp               0.10487794  0.017325549
+tmed                   0.11543780  0.001126233
+mob_grocery_pharmacy   0.04287048  0.141338298
+mob_parks             -0.47215118  0.039645398
+mob_residential       -0.48214317 -0.563842923
+mob_retail_recreation  0.52031692 -0.667331724
+mob_transit_stations  -0.27513488  0.250600567
+mob_workplaces        -0.40536315 -0.387737889
+mob_flujo             -0.06818165  0.040432668</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_malaga)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3     PC4     PC5     PC6     PC7
+Standard deviation     2.3625 1.3170 1.0383 0.78525 0.57725 0.52063 0.47503
+Proportion of Variance 0.5582 0.1734 0.1078 0.06166 0.03332 0.02711 0.02257
+Cumulative Proportion  0.5582 0.7316 0.8394 0.90108 0.93440 0.96151 0.98407
+                           PC8     PC9    PC10
+Standard deviation     0.30385 0.20833 0.15345
+Proportion of Variance 0.00923 0.00434 0.00235
+Cumulative Proportion  0.99331 0.99765 1.00000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_malaga, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_malaga, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_malaga, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="sevilla-1" class="level3">
+<h3 class="anchored" data-anchor-id="sevilla-1">Sevilla</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>pca_sevilla <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(data_sevilla, <span class="at">scale =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>pca_sevilla</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standard deviations (1, .., p=10):
+ [1] 2.2395871 1.3711914 0.9994651 0.9475874 0.6410011 0.5879385 0.5022399
+ [8] 0.3201419 0.2436278 0.1912779
+
+Rotation (n x k) = (10 x 10):
+                              PC1         PC2         PC3         PC4
+num_casos              0.08150241 -0.58491283 -0.32912474 -0.26142419
+num_hosp              -0.05238738 -0.61727951 -0.20123857 -0.25246638
+tmed                   0.04340192  0.44954399 -0.37052661 -0.70337586
+mob_grocery_pharmacy   0.37471247 -0.17820546  0.20885536  0.11256921
+mob_parks              0.37846238  0.07404912 -0.27887505  0.20297070
+mob_residential       -0.38959386 -0.11207374 -0.17372402  0.37740454
+mob_retail_recreation  0.42745656  0.01046447 -0.13781739  0.07017732
+mob_transit_stations   0.42845576 -0.05429597  0.07728593  0.09157181
+mob_workplaces         0.32651982 -0.07895759  0.51088635 -0.26966048
+mob_flujo              0.28353831  0.12514136 -0.52568667  0.30141396
+                              PC5         PC6          PC7         PC8
+num_casos              0.25454148 -0.55590034 -0.261315069 -0.17160037
+num_hosp              -0.29573128  0.59804282  0.197472850  0.15887408
+tmed                   0.03580312  0.01145557  0.309171717 -0.11350514
+mob_grocery_pharmacy   0.11251170 -0.20047756  0.782393836 -0.20791456
+mob_parks              0.26315130  0.46435105 -0.240775428 -0.61074831
+mob_residential       -0.01775795 -0.01133979  0.288160020 -0.31538551
+mob_retail_recreation  0.23710247  0.05163810  0.042042006  0.35950174
+mob_transit_stations   0.14290967  0.08444293 -0.061462646  0.37786984
+mob_workplaces        -0.48480812 -0.04475291 -0.196033741 -0.37384477
+mob_flujo             -0.67273121 -0.25582555  0.002867798  0.07022755
+                              PC9        PC10
+num_casos              0.05322578 -0.01366919
+num_hosp              -0.04927077 -0.01445777
+tmed                   0.23212479  0.01527527
+mob_grocery_pharmacy  -0.19087770 -0.16397555
+mob_parks             -0.07909801 -0.10100128
+mob_residential        0.59848164  0.34916107
+mob_retail_recreation -0.07771608  0.77286480
+mob_transit_stations   0.69152383 -0.38314075
+mob_workplaces         0.22610807  0.29508158
+mob_flujo             -0.06794530 -0.09580252</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_sevilla)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2     PC3     PC4     PC5     PC6     PC7
+Standard deviation     2.2396 1.3712 0.99947 0.94759 0.64100 0.58794 0.50224
+Proportion of Variance 0.5016 0.1880 0.09989 0.08979 0.04109 0.03457 0.02522
+Cumulative Proportion  0.5016 0.6896 0.78948 0.87928 0.92037 0.95493 0.98016
+                           PC8     PC9    PC10
+Standard deviation     0.32014 0.24363 0.19128
+Proportion of Variance 0.01025 0.00594 0.00366
+Cumulative Proportion  0.99041 0.99634 1.00000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_sevilla, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_sevilla, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_contrib</span>(pca_sevilla, <span class="at">choice =</span> <span class="st">"var"</span>, <span class="at">axes =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="visual_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
