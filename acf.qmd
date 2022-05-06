@@ -1,0 +1,24 @@
+# ACF {#sec-acf}
+
+Load packages:
+
+```{r}
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr,     # get overview of data
+      janitor,   # produce and adorn tabulations and cross-tabulations
+      tsibble,
+      imputeTS
+)
+```
+
+
+
+
+
+
+
+
+
+

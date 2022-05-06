@@ -19,6 +19,12 @@ book:
         - aemet_data.qmd
     - part: combination.qmd
     - part: visual.qmd
+    - part: arima.qmd
+      chapters: 
+        - acf.qmd
+        - stl.qmd
+        - univariate.qmd
+        - multivariate.qmd
     - references.qmd
 
 bibliography: references.bib
