@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>PEC3 - COVID-19 Outbreak prediction - 5&nbsp; ACF</title>
+<title>PEC3 - COVID-19 Outbreak prediction - 5&nbsp; ACF and PACF plots</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./acf.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF</span></a>
+  <a href="./acf.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -243,14 +243,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#asturias" id="toc-asturias" class="nav-link active" data-scroll-target="#asturias"> <span class="header-section-number">5.1</span> Asturias</a></li>
+  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona"> <span class="header-section-number">5.2</span> Barcelona</a></li>
+  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid"> <span class="header-section-number">5.3</span> Madrid</a></li>
+  <li><a href="#málaga" id="toc-málaga" class="nav-link" data-scroll-target="#málaga"> <span class="header-section-number">5.4</span> Málaga</a></li>
+  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla"> <span class="header-section-number">5.5</span> Sevilla</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-acf" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF</span></span></h1>
+<h1 class="title"><span id="sec-acf" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></span></h1>
 </div>
 
 
@@ -266,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>Load packages:</p>
+<p>Load packages and data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>      here,      <span class="co"># file locator</span></span>
@@ -274,11 +284,258 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      skimr,     <span class="co"># get overview of data</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      janitor,   <span class="co"># produce and adorn tabulations and cross-tabulations</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      tsibble,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      imputeTS</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      fable,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      feasts</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="asturias" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="asturias"><span class="header-section-number">5.1</span> Asturias</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>(<span class="at">key =</span> provincia, <span class="at">index =</span> fecha)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>data_asturias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 12 [1D]
+# Key:       provincia [1]
+   provincia fecha      num_casos num_hosp  tmed mob_grocery_pharmacy mob_parks
+   &lt;chr&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Asturias  2020-03-16       105       11   8.6                  -30       -70
+ 2 Asturias  2020-03-17        80       20   8.8                  -39       -71
+ 3 Asturias  2020-03-18        91       24  11.8                  -39       -67
+ 4 Asturias  2020-03-19       101       29  10.9                  -42       -70
+ 5 Asturias  2020-03-20        83       29  11.5                  -40       -75
+ 6 Asturias  2020-03-21        68       33  11                    -49       -84
+ 7 Asturias  2020-03-22        76       30  12.6                  -75       -87
+ 8 Asturias  2020-03-23        70       36  11.8                  -46       -73
+ 9 Asturias  2020-03-24        58       36  12.4                  -49       -72
+10 Asturias  2020-03-25        57       43  11                    -50       -69
+# … with 644 more rows, and 5 more variables: mob_residential &lt;dbl&gt;,
+#   mob_retail_recreation &lt;dbl&gt;, mob_transit_stations &lt;dbl&gt;,
+#   mob_workplaces &lt;dbl&gt;, mob_flujo &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Asturias - ACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">PACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Asturias - PACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="barcelona" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="barcelona"><span class="header-section-number">5.2</span> Barcelona</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Barcelona"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(provincia, fecha,num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>(<span class="at">key =</span> provincia, <span class="at">index =</span> fecha)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>data_barcelona</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 12 [1D]
+# Key:       provincia [1]
+   provincia fecha      num_casos num_hosp  tmed mob_grocery_pharmacy mob_parks
+   &lt;chr&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Barcelona 2020-03-16      1453      319  14.3                  -38       -76
+ 2 Barcelona 2020-03-17      1319      357  15.2                  -34       -75
+ 3 Barcelona 2020-03-18      1429      445  13.4                  -38       -76
+ 4 Barcelona 2020-03-19      1352      506  12                    -41       -78
+ 5 Barcelona 2020-03-20      1635      586  12.5                  -42       -80
+ 6 Barcelona 2020-03-21      1170      515  12.2                  -54       -87
+ 7 Barcelona 2020-03-22      1071      461  13.4                  -76       -90
+ 8 Barcelona 2020-03-23      1246      674  14                    -49       -83
+ 9 Barcelona 2020-03-24      1144      806  13                    -47       -83
+10 Barcelona 2020-03-25      1177      710   9.8                  -49       -83
+# … with 644 more rows, and 5 more variables: mob_residential &lt;dbl&gt;,
+#   mob_retail_recreation &lt;dbl&gt;, mob_transit_stations &lt;dbl&gt;,
+#   mob_workplaces &lt;dbl&gt;, mob_flujo &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Barcelona - ACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">PACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Barcelona - PACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="madrid" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="madrid"><span class="header-section-number">5.3</span> Madrid</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Madrid"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(provincia, fecha, num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>(<span class="at">key =</span> provincia, <span class="at">index =</span> fecha)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>data_madrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 12 [1D]
+# Key:       provincia [1]
+   provincia fecha      num_casos num_hosp  tmed mob_grocery_pharmacy mob_parks
+   &lt;chr&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Madrid    2020-03-16      2914     1073   7.2                  -35       -80
+ 2 Madrid    2020-03-17      2895     1222  11.8                  -38       -82
+ 3 Madrid    2020-03-18      2671     1539  12.6                  -39       -82
+ 4 Madrid    2020-03-19      2499     1547  13.6                  -41       -83
+ 5 Madrid    2020-03-20      3105     1693  10.4                  -43       -86
+ 6 Madrid    2020-03-21      1960     1306   8.8                  -55       -92
+ 7 Madrid    2020-03-22      1673     1238   9.4                  -66       -92
+ 8 Madrid    2020-03-23      2132     1934  12.3                  -47       -85
+ 9 Madrid    2020-03-24      2034     1853  12.7                  -50       -86
+10 Madrid    2020-03-25      1768     1835  12                    -52       -86
+# … with 644 more rows, and 5 more variables: mob_residential &lt;dbl&gt;,
+#   mob_retail_recreation &lt;dbl&gt;, mob_transit_stations &lt;dbl&gt;,
+#   mob_workplaces &lt;dbl&gt;, mob_flujo &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Madrid - ACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">PACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Madrid - PACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="málaga" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="málaga"><span class="header-section-number">5.4</span> Málaga</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Málaga"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(provincia, fecha, num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>(<span class="at">key =</span> provincia, <span class="at">index =</span> fecha)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>data_malaga</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 12 [1D]
+# Key:       provincia [1]
+   provincia fecha      num_casos num_hosp  tmed mob_grocery_pharmacy mob_parks
+   &lt;chr&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Málaga    2020-03-16       151       38  15.2                  -36       -73
+ 2 Málaga    2020-03-17       150       37  14.2                  -48       -78
+ 3 Málaga    2020-03-18       133       41  17.4                  -47       -78
+ 4 Málaga    2020-03-19       144       48  17.4                  -49       -78
+ 5 Málaga    2020-03-20       196       51  17.3                  -49       -82
+ 6 Málaga    2020-03-21       107       59  14.1                  -59       -89
+ 7 Málaga    2020-03-22        89       64  13.2                  -80       -92
+ 8 Málaga    2020-03-23        96       81  11.3                  -54       -83
+ 9 Málaga    2020-03-24        98       91  15.6                  -55       -83
+10 Málaga    2020-03-25        98       74  12.8                  -59       -84
+# … with 644 more rows, and 5 more variables: mob_residential &lt;dbl&gt;,
+#   mob_retail_recreation &lt;dbl&gt;, mob_transit_stations &lt;dbl&gt;,
+#   mob_workplaces &lt;dbl&gt;, mob_flujo &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Malaga - ACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">PACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Malaga - PACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="sevilla" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="sevilla"><span class="header-section-number">5.5</span> Sevilla</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Sevilla"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(provincia, fecha, num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>(<span class="at">key =</span> provincia, <span class="at">index =</span> fecha)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>data_sevilla</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 12 [1D]
+# Key:       provincia [1]
+   provincia fecha      num_casos num_hosp  tmed mob_grocery_pharmacy mob_parks
+   &lt;chr&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Sevilla   2020-03-16        95        9  12.9                  -34       -75
+ 2 Sevilla   2020-03-17       107       15  13.7                  -47       -81
+ 3 Sevilla   2020-03-18        87       26  18.4                  -46       -80
+ 4 Sevilla   2020-03-19       115       35  17.9                  -49       -81
+ 5 Sevilla   2020-03-20       148       37  17.4                  -48       -84
+ 6 Sevilla   2020-03-21       103       47  12.1                  -59       -91
+ 7 Sevilla   2020-03-22       138       38  13.2                  -77       -93
+ 8 Sevilla   2020-03-23       138       71  14.2                  -49       -82
+ 9 Sevilla   2020-03-24        89       66  15.5                  -54       -82
+10 Sevilla   2020-03-25       123       45  17                    -56       -83
+# … with 644 more rows, and 5 more variables: mob_residential &lt;dbl&gt;,
+#   mob_retail_recreation &lt;dbl&gt;, mob_transit_stations &lt;dbl&gt;,
+#   mob_workplaces &lt;dbl&gt;, mob_flujo &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ACF</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Sevilla - ACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PACF</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">PACF</span>(num_casos, <span class="at">lag_max =</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title=</span><span class="st">" Sevilla - PACF Nº Cases"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="acf_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

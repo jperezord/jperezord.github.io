@@ -1,6 +1,6 @@
 # STL analysis {#sec-stl}
 
-Load packages:
+Load packages and data:
 
 ```{r}
 pacman::p_load(
@@ -9,13 +9,499 @@ pacman::p_load(
       skimr,     # get overview of data
       janitor,   # produce and adorn tabulations and cross-tabulations
       tsibble,
-      imputeTS
+      fable,
+      feasts
 )
+
+covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
+```
+
+# Asturias
+
+```{r}
+data_asturias <- covid_data %>% 
+      filter(provincia == "Asturias") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_asturias
+```
+
+```{r}
+data_asturias %>%
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>%
+      autoplot() + 
+      labs(title = "Asturias STL") + 
+      theme_bw()
+```
+
+```{r}
+data_asturias %>% 
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>% 
+      as_tsibble() %>%
+      autoplot(num_casos, color = "grey") +
+      geom_line(aes(y = season_adjust), color = "red") +
+      geom_line(aes(y = trend), color = "blue") +
+      labs(title="Asturias season adjusted and trend") +
+      theme_bw()
+```
+
+```{r}
+lambda_asturias <- data_asturias %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+lambda_asturias
+```
+
+```{r}
+data_asturias %>%
+      gg_tsdisplay(((box_cox(num_casos, lambda_asturias))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Asturias - Variance stb")
+```
+
+```{r}
+data_asturias %>%
+      gg_tsdisplay((difference(box_cox(num_casos, lambda_asturias))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Asturias - Difference once")
+```
+
+```{r}
+data_asturias %>%
+      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_asturias))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title="Asturias - Difference double")
+```
+
+```{r}
+data_asturias %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
+      labs(title="Asturias - Orginal STL season_adjust")
+```
+
+```{r}
+data_asturias %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Asturias - Orginal STL season_adjust")
+```
+
+```{r}
+data_asturias %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(trend) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Asturias - Orginal STL")
 ```
 
 
 
 
+# Barcelona
+
+```{r}
+data_barcelona <- covid_data %>% 
+      filter(provincia == "Barcelona") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_barcelona
+```
+
+```{r}
+data_barcelona %>%
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>%
+      autoplot() + 
+      labs(title = "Barcelona STL") +
+      theme_bw()
+```
+
+```{r}
+data_barcelona %>% 
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>% 
+      as_tsibble() %>%
+      autoplot(num_casos, color = "grey") +
+      geom_line(aes(y = season_adjust), color = "red") +
+      geom_line(aes(y = trend), color = "blue") +
+      labs(title="Barcelona season adjusted and trend") +
+      theme_bw()
+```
+
+```{r}
+lambda_barcelona <- data_barcelona %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+lambda_barcelona
+```
+
+```{r}
+data_barcelona %>%
+      gg_tsdisplay(((box_cox(num_casos, lambda_barcelona))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Barcelona - Variance stb")
+```
+
+```{r}
+data_barcelona %>%
+      gg_tsdisplay((difference(box_cox(num_casos, lambda_barcelona))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Barcelona - Difference once")
+```
+
+```{r}
+data_barcelona %>%
+      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_barcelona))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title="Barcelona - Difference double")
+```
+
+```{r}
+data_barcelona %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
+      labs(title="Barcelona - Orginal STL season_adjust")
+```
+
+```{r}
+data_barcelona %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Barcelona - Orginal STL season_adjust")
+```
+
+```{r}
+data_barcelona %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(trend) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Barcelona - Orginal STL")
+```
 
 
+# Madrid
+
+```{r}
+data_madrid <- covid_data %>% 
+      filter(provincia == "Madrid") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_madrid
+```
+
+```{r}
+data_madrid %>%
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>%
+      autoplot() + 
+      labs(title = "Madrid STL") +
+      theme_bw()
+```
+
+```{r}
+data_madrid %>% 
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>% 
+      as_tsibble() %>%
+      autoplot(num_casos, color = "grey") +
+      geom_line(aes(y = season_adjust), color = "red") +
+      geom_line(aes(y = trend), color = "blue") +
+      labs(title="Madrid season adjusted and trend") +
+      theme_bw()
+```
+
+```{r}
+lambda_madrid <- data_madrid %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+lambda_madrid
+```
+
+```{r}
+data_madrid %>%
+      gg_tsdisplay(((box_cox(num_casos, lambda_madrid))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Madrid - Variance stb")
+```
+
+```{r}
+data_madrid %>%
+      gg_tsdisplay((difference(box_cox(num_casos, lambda_madrid))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Madrid - Difference once")
+```
+
+```{r}
+data_madrid %>%
+      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_madrid))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title="Madrid - Difference double")
+```
+
+```{r}
+data_madrid %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
+      labs(title="Madrid - Orginal STL season_adjust")
+```
+
+```{r}
+data_madrid %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Madrid - Orginal STL season_adjust")
+```
+
+```{r}
+data_madrid %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(trend) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Madrid - Orginal STL")
+```
+
+# Malaga
+
+```{r}
+data_malaga <- covid_data %>% 
+      filter(provincia == "Málaga") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_malaga
+```
+
+```{r}
+data_malaga %>%
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>%
+      autoplot() + 
+      labs(title = "Málaga STL") +
+      theme_bw()
+```
+
+```{r}
+data_malaga %>% 
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>% 
+      as_tsibble() %>%
+      autoplot(num_casos, color = "grey") +
+      geom_line(aes(y = season_adjust), color = "red") +
+      geom_line(aes(y = trend), color = "blue") +
+      labs(title="Málaga season adjusted and trend") +
+      theme_bw()
+```
+
+```{r}
+lambda_malaga <- data_malaga %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+lambda_malaga
+```
+
+```{r}
+data_malaga %>%
+      gg_tsdisplay(((box_cox(num_casos, lambda_malaga))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Málaga - Variance stb")
+```
+
+```{r}
+data_malaga %>%
+      gg_tsdisplay((difference(box_cox(num_casos, lambda_malaga))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Málaga - Difference once")
+```
+
+```{r}
+data_malaga %>%
+      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_malaga))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title="Málaga - Difference double")
+```
+
+```{r}
+data_malaga %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
+      labs(title="Málaga - Orginal STL season_adjust")
+```
+
+```{r}
+data_malaga %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Málaga - Orginal STL season_adjust")
+```
+
+```{r}
+data_malaga %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(trend) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Málaga - Orginal STL")
+```
+
+# Sevilla
+
+```{r}
+data_sevilla <- covid_data %>% 
+      filter(provincia == "Sevilla") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_sevilla
+```
+
+```{r}
+data_sevilla %>%
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>%
+      autoplot() + 
+      labs(title = "Sevilla STL") +
+      theme_bw()
+```
+
+```{r}
+data_sevilla %>% 
+      model(STL(num_casos ~ season(window = 7) + trend(window = 7))) %>%
+      components() %>% 
+      as_tsibble() %>%
+      autoplot(num_casos, color = "grey") +
+      geom_line(aes(y = season_adjust), color = "red") +
+      geom_line(aes(y = trend), color = "blue") +
+      labs(title="Sevilla season adjusted and trend") +
+      theme_bw()
+```
+
+```{r}
+lambda_sevilla <- data_sevilla %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+lambda_sevilla
+```
+
+```{r}
+data_sevilla %>%
+      gg_tsdisplay(((box_cox(num_casos, lambda_sevilla))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Sevilla - Variance stb")
+```
+
+```{r}
+data_sevilla %>%
+      gg_tsdisplay((difference(box_cox(num_casos, lambda_sevilla))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title = "Sevilla - Difference once")
+```
+
+```{r}
+data_sevilla %>%
+      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_sevilla))),
+                   plot_type = 'partial', lag = 30) +
+      labs(title="Sevilla - Difference double")
+```
+
+```{r}
+data_sevilla %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
+      labs(title="Sevilla - Orginal STL season_adjust")
+```
+
+```{r}
+data_sevilla %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(-.model) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Sevilla - Orginal STL season_adjust")
+```
+
+```{r}
+data_sevilla %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(trend) %>%
+      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
+      labs(title="Sevilla - Orginal STL")
+```
 

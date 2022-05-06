@@ -9,12 +9,187 @@ pacman::p_load(
       skimr,     # get overview of data
       janitor,   # produce and adorn tabulations and cross-tabulations
       tsibble,
-      imputeTS
+      fable,
+      feasts,
+      fabletools
 )
+
+covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
 ```
 
 
+# Asturias
+
+```{r}
+data_asturias <- covid_data %>% 
+      filter(provincia == "Asturias") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_asturias
+```
+
+```{r}
+data_asturias_train <- data_asturias %>% 
+      filter(fecha <= as.Date("2021-09-30", format = "%Y-%m-%d"))
+summary(data_asturias_train$fecha)
+```
+
+```{r}
+data_asturias_test <- data_asturias %>% 
+      filter(fecha > as.Date("2021-09-30", format = "%Y-%m-%d"))
+summary(data_asturias_test$fecha)
+```
+
+```{r}
+lambda_asturias <- data_asturias %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_asturias_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_asturias)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_asturias),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_asturias))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(data_asturias_test) +
+      labs(y = "Nº cases", title = "Asturias - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(data_asturias) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_asturias)
+```
 
 
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(data_asturias_test) +
+      labs(y = "Nº cases", title = "Asturias - forecast h14")
+```
 
+```{r}
+fc_h14 %>%
+      autoplot(data_asturias) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_asturias)
+```
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(data_asturias_test) +
+      labs(y = "Nº cases", title = "Asturias - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(data_asturias) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_asturias)
+```
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(data_asturias_test) +
+      labs(y = "Nº cases", title = "Asturias - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(data_asturias) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_asturias)
+```
 

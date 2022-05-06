@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./acf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF</span></a>
+  <a href="./acf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -243,7 +243,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#asturias" id="toc-asturias" class="nav-link active" data-scroll-target="#asturias"> <span class="header-section-number">8</span> Asturias</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -274,11 +280,319 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      skimr,     <span class="co"># get overview of data</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      janitor,   <span class="co"># produce and adorn tabulations and cross-tabulations</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      tsibble,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      imputeTS</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      fable,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      feasts,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      fabletools</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="asturias" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Asturias</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tsibble</span>(<span class="at">key =</span> provincia, <span class="at">index =</span> fecha)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>data_asturias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 654 x 12 [1D]
+# Key:       provincia [1]
+   provincia fecha      num_casos num_hosp  tmed mob_grocery_pharmacy mob_parks
+   &lt;chr&gt;     &lt;date&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Asturias  2020-03-16       105       11   8.6                  -30       -70
+ 2 Asturias  2020-03-17        80       20   8.8                  -39       -71
+ 3 Asturias  2020-03-18        91       24  11.8                  -39       -67
+ 4 Asturias  2020-03-19       101       29  10.9                  -42       -70
+ 5 Asturias  2020-03-20        83       29  11.5                  -40       -75
+ 6 Asturias  2020-03-21        68       33  11                    -49       -84
+ 7 Asturias  2020-03-22        76       30  12.6                  -75       -87
+ 8 Asturias  2020-03-23        70       36  11.8                  -46       -73
+ 9 Asturias  2020-03-24        58       36  12.4                  -49       -72
+10 Asturias  2020-03-25        57       43  11                    -50       -69
+# … with 644 more rows, and 5 more variables: mob_residential &lt;dbl&gt;,
+#   mob_retail_recreation &lt;dbl&gt;, mob_transit_stations &lt;dbl&gt;,
+#   mob_workplaces &lt;dbl&gt;, mob_flujo &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_asturias_train <span class="ot">&lt;-</span> data_asturias <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(fecha <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2021-09-30"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data_asturias_train<span class="sc">$</span>fecha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+"2020-03-16" "2020-08-03" "2020-12-22" "2020-12-22" "2021-05-12" "2021-09-30" </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_asturias_test <span class="ot">&lt;-</span> data_asturias <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(fecha <span class="sc">&gt;</span> <span class="fu">as.Date</span>(<span class="st">"2021-09-30"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data_asturias_test<span class="sc">$</span>fecha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+"2021-10-01" "2021-10-23" "2021-11-14" "2021-11-14" "2021-12-06" "2021-12-29" </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lambda_asturias <span class="ot">&lt;-</span> data_asturias <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">features</span>(num_casos, <span class="at">features =</span> guerrero) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(lambda_guerrero)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fit_model <span class="ot">&lt;-</span> data_asturias_train <span class="sc">%&gt;%</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">model</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">arima_at1 =</span> <span class="fu">ARIMA</span>(<span class="fu">box_cox</span>(num_casos, lambda_asturias)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">arima_at2 =</span> <span class="fu">ARIMA</span>(<span class="fu">box_cox</span>(num_casos, lambda_asturias),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                              <span class="at">stepwise =</span> <span class="cn">FALSE</span>, <span class="at">approx =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">Snaive =</span> <span class="fu">SNAIVE</span>(<span class="fu">box_cox</span>(num_casos, lambda_asturias))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Show and report model</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>fit_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A mable: 1 x 4
+# Key:     provincia [1]
+  provincia                arima_at1      arima_at2   Snaive
+  &lt;chr&gt;                      &lt;model&gt;        &lt;model&gt;  &lt;model&gt;
+1 Asturias  &lt;ARIMA(0,1,1)(1,0,1)[7]&gt; &lt;ARIMA(4,1,2)&gt; &lt;SNAIVE&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(fit_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in report.mdl_df(fit_model): Model reporting is only supported for
+individual models, so a glance will be shown. To see the report for a specific
+model, use `select()` and `filter()` to identify a single model.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 9
+  provincia .model    sigma2 log_lik   AIC  AICc   BIC ar_roots  ma_roots 
+  &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;    &lt;list&gt;   
+1 Asturias  arima_at1   1.47   -906. 1820. 1820. 1838. &lt;cpl [7]&gt; &lt;cpl [8]&gt;
+2 Asturias  arima_at2   1.42   -895. 1804. 1804. 1834. &lt;cpl [4]&gt; &lt;cpl [2]&gt;
+3 Asturias  Snaive      3.58     NA    NA    NA    NA  &lt;NULL&gt;    &lt;NULL&gt;   </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fit_model <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_longer</span>(<span class="sc">-</span>provincia,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">names_to =</span> <span class="st">".model"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">values_to =</span> <span class="st">"orders"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">left_join</span>(<span class="fu">glance</span>(fit_model), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"provincia"</span>, <span class="st">".model"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">arrange</span>(AICc) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(.model<span class="sc">:</span>BIC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A mable: 3 x 7
+# Key:     .model [3]
+  .model                      orders sigma2 log_lik   AIC  AICc   BIC
+  &lt;chr&gt;                      &lt;model&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 arima_at2           &lt;ARIMA(4,1,2)&gt;   1.42   -895. 1804. 1804. 1834.
+2 arima_at1 &lt;ARIMA(0,1,1)(1,0,1)[7]&gt;   1.47   -906. 1820. 1820. 1838.
+3 Snaive                    &lt;SNAIVE&gt;   3.58     NA    NA    NA    NA </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We use a Ljung-Box test &gt;&gt; large p-value, confirms residuals are similar / considered to white noise</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>fit_model <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(Snaive) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">gg_tsresiduals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 7 row(s) containing missing values (geom_path).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 7 rows containing missing values (geom_point).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 7 rows containing non-finite values (stat_bin).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fit_model <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(arima_at1) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">gg_tsresiduals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fit_model <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(arima_at2) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">gg_tsresiduals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(fit_model) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag=</span><span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  provincia .model    lb_stat lb_pvalue
+  &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+1 Asturias  arima_at1   19.8    0.00602
+2 Asturias  arima_at2    5.89   0.552  
+3 Asturias  Snaive     692.     0      </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(fit_model) <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag=</span><span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  provincia .model    lb_stat  lb_pvalue
+  &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+1 Asturias  arima_at1    49.1 0.00000872
+2 Asturias  arima_at2    33.3 0.00259   
+3 Asturias  Snaive      954.  0         </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(fit_model) <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">features</span>(.innov, ljung_box, <span class="at">lag=</span><span class="dv">21</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  provincia .model    lb_stat lb_pvalue
+  &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+1 Asturias  arima_at1    57.2 0.0000339
+2 Asturias  arima_at2    42.3 0.00383  
+3 Asturias  Snaive      992.  0        </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Significant spikes out of 30 is still consistent with white noise</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To be sure, use a Ljung-Box test, which has a large p-value, confirming that</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the residuals are similar to white noise.</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that the alternative models also passed this test.</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>fc_h7  <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">7</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">14</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias_test) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Asturias - forecast h7"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Barcelona - forecast h7"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Accuracy</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(fc_h7, data_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 11
+  .model    provincia .type     ME  RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 arima_at1 Asturias  Test   5.32   8.64  7.03  16.9  51.3 0.160 0.113 0.465
+2 arima_at2 Asturias  Test   5.13   8.72  6.88  14.9  49.9 0.156 0.114 0.439
+3 Snaive    Asturias  Test  -0.556  9.09  8.05 -50.8  89.6 0.183 0.119 0.640</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias_test) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Asturias - forecast h14"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Barcelona - forecast h14"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Accuracy</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(fc_h14, data_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 11
+  .model    provincia .type    ME  RMSE   MAE    MPE  MAPE  MASE RMSSE   ACF1
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 arima_at1 Asturias  Test   5.49  8.51  7.28  11.6   59.9 0.165 0.112 0.0225
+2 arima_at2 Asturias  Test   4.65  8.06  6.56   4.24  56.2 0.149 0.106 0.0544
+3 Snaive    Asturias  Test  -1.83  9.24  7.52 -71.4  102.  0.171 0.121 0.104 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias_test) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Asturias - forecast h21"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Barcelona - forecast h21"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Accuracy</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(fc_h21, data_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 11
+  .model    provincia .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 arima_at1 Asturias  Test   7.15 10.3   8.35  22.2  54.4 0.190 0.134 0.264
+2 arima_at2 Asturias  Test   5.90  9.41  7.36  13.3  49.8 0.167 0.123 0.250
+3 Snaive    Asturias  Test  -1.40 10.1   8.52 -55.9  88.1 0.193 0.132 0.350</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias_test) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Asturias - forecast h90"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">autoplot</span>(data_asturias) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Nº cases"</span>, <span class="at">title =</span> <span class="st">"Barcelona - forecast h90"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="univariate_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Accuracy</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>fabletools<span class="sc">::</span><span class="fu">accuracy</span>(fc_h90, data_asturias)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 11
+  .model    provincia .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
+  &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 arima_at1 Asturias  Test   309.  591.  309.  65.1  72.7  7.03  7.74 0.896
+2 arima_at2 Asturias  Test   310.  594.  310.  61.6  70.4  7.04  7.77 0.897
+3 Snaive    Asturias  Test   294.  582.  298.  30.7  71.0  6.76  7.62 0.893</code></pre>
+</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

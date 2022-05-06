@@ -1,6 +1,6 @@
-# ACF {#sec-acf}
+# ACF and PACF plots {#sec-acf}
 
-Load packages:
+Load packages and data:
 
 ```{r}
 pacman::p_load(
@@ -9,16 +9,141 @@ pacman::p_load(
       skimr,     # get overview of data
       janitor,   # produce and adorn tabulations and cross-tabulations
       tsibble,
-      imputeTS
+      fable,
+      feasts
 )
+
+covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
+```
+
+## Asturias
+
+```{r}
+data_asturias <- covid_data %>% 
+      filter(provincia == "Asturias") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_asturias
+```
+
+```{r}
+# ACF
+data_asturias %>%
+      ACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Asturias - ACF Nº Cases")
+
+# PACF
+data_asturias %>%
+      PACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Asturias - PACF Nº Cases")
+```
+
+## Barcelona
+
+```{r}
+data_barcelona <- covid_data %>% 
+      filter(provincia == "Barcelona") %>% 
+      select(provincia, fecha,num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_barcelona
+```
+
+```{r}
+# ACF
+data_barcelona %>%
+      ACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Barcelona - ACF Nº Cases")
+
+data_barcelona %>%
+      PACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Barcelona - PACF Nº Cases")
+```
+
+## Madrid
+
+```{r}
+data_madrid <- covid_data %>% 
+      filter(provincia == "Madrid") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_madrid
 ```
 
 
+```{r}
+# ACF
+data_madrid %>%
+      ACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Madrid - ACF Nº Cases")
+
+# PACF
+data_madrid %>%
+      PACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Madrid - PACF Nº Cases")
+```
+
+## Málaga
+
+```{r}
+data_malaga <- covid_data %>% 
+      filter(provincia == "Málaga") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_malaga
+```
+
+```{r}
+# ACF
+data_malaga %>%
+      ACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Malaga - ACF Nº Cases")
+
+# PACF
+data_malaga %>%
+      PACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Malaga - PACF Nº Cases")
+```
+
+## Sevilla
+
+```{r}
+data_sevilla <- covid_data %>% 
+      filter(provincia == "Sevilla") %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed, mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na() %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_sevilla
+```
 
 
+```{r}
+# ACF
+data_sevilla %>%
+      ACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Sevilla - ACF Nº Cases")
 
-
-
-
-
+# PACF
+data_sevilla %>%
+      PACF(num_casos, lag_max = 30) %>%
+      autoplot() +
+      labs(title=" Sevilla - PACF Nº Cases")
+```
 
