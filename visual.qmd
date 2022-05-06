@@ -31,17 +31,17 @@ covid_data
 
 Accordign to CNE, in the evolution of the COVID-19 pandemic in Spain, there have been six periods:
 
-First period: From the beginning of the pandemic until June 21, 2020, date on which the state of alarm in Spain ended after the end of the first epidemic outbreak of COVID-19.
+-   First period: From the beginning of the pandemic until June 21, 2020, date on which the state of alarm in Spain ended after the end of the first epidemic outbreak of COVID-19.
 
-Second period: June 22 through December 6, 2020, the turning point of the 14-day cumulative incidence (CI) of COVID-19 cases, between the second and third periods.
+-   Second period: June 22 through December 6, 2020, the turning point of the 14-day cumulative incidence (CI) of COVID-19 cases, between the second and third periods.
 
-Third period: December 7, 2020 through March 14, 2021, AI tipping point at 14 days of COVID-19 cases, between the third and fourth epidemic periods.
+-   Third period: December 7, 2020 through March 14, 2021, AI tipping point at 14 days of COVID-19 cases, between the third and fourth epidemic periods.
 
-Fourth period: March 15, 2021 through June 19, the 14-day AI tipping point for COVID-19 cases, between the fourth and fifth epidemic periods.
+-   Fourth period: March 15, 2021 through June 19, the 14-day AI tipping point for COVID-19 cases, between the fourth and fifth epidemic periods.
 
-Fifth period: June 20, 2021 through October 13, AI tipping point at 14 days of COVID-19 cases, between the fifth and sixth epidemic periods.
+-   Fifth period: June 20, 2021 through October 13, AI tipping point at 14 days of COVID-19 cases, between the fifth and sixth epidemic periods.
 
-Sixth period: From October 14, 2021 to the present, which may vary depending on the epidemiological situation of the pandemic in Spain.
+-   Sixth period: From October 14, 2021 to the present, which may vary depending on the epidemiological situation of the pandemic in Spain.
 
 In the following plots, those periods are marked with vertical dashed lines.
 
@@ -115,7 +115,6 @@ covid_data %>%
       pull(num_casos) %>% 
       qqnorm()
 ```
-
 
 ### Number of PCR positives:
 
@@ -203,7 +202,7 @@ covid_data %>%
             axis.title.y = element_text(color = temperatureColor, size=13),
             axis.title.y.right = element_text(color = priceColor, size=13)
       ) +
-      ggtitle("Temperature variation vs number of cases")
+      ggtitle("Hospitalization cases vs number of cases")
 ```
 
 ### Number of UCI hospitalizations:
@@ -258,8 +257,7 @@ covid_data %>%
       ggtitle("UCI hospitalization vs number of cases")
 ```
 
-
-### Number of deaths:
+### Number of deaths
 
 ```{r}
 covid_data %>% 
@@ -275,6 +273,95 @@ covid_data %>%
       labs(title="Deaths reported by Province",
            x ="Date", y = "Nº of deaths") +
       theme_bw()
+```
+
+```{r}
+# Value used to transform the data
+coeff <- 200
+
+# A few constants for colors
+temperatureColor <- "#69b3a2"
+priceColor <- rgb(0.2, 0.6, 0.9, 1)
+
+covid_data %>% 
+      ggplot(aes(x = fecha)) +
+      geom_line( aes(y = num_def), size=1, color=temperatureColor) + 
+      geom_line( aes(y = num_casos / coeff), size=1, color=priceColor) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      scale_y_continuous(
+            # Features of the first axis
+            name = "Number of deaths",
+            # Add a second axis and specify its features
+            sec.axis = sec_axis(~.*coeff, name="Nº of cases")
+      ) +
+      facet_wrap(~provincia, scales = "free_y", ncol=1) +
+      theme_bw() +
+      theme(
+            axis.title.y = element_text(color = temperatureColor, size=13),
+            axis.title.y.right = element_text(color = priceColor, size=13)
+      ) +
+      ggtitle("Number of deaths vs number of cases")
+```
+
+### hospitalizations vs uci vs deaths
+
+```{r}
+covid_data %>% 
+      ggplot() +
+      # geom_line(aes(x = fecha, y = num_uci, color = provincia)) +
+      # geom_line(aes(x = fecha, y = num_hosp, color = provincia)) +
+      # geom_line(aes(x = fecha, y = num_def, color = provincia)) +
+      geom_line(aes(x = fecha, y = num_uci, color = "red")) +
+      geom_line(aes(x = fecha, y = num_hosp, color = "black")) +
+      geom_line(aes(x = fecha, y = num_def, color = "blue")) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~provincia, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Hospitalization vs uci vs deaths reported by Province",
+           x ="Date", y = "Nº of cases reported (hosp/uci/deaths)") +
+      theme_bw() +
+      theme(legend.position = "none") 
+```
+
+```{r}
+# Value used to transform the data
+coeff <- 50
+
+# A few constants for colors
+priceColor <- rgb(0.2, 0.6, 0.9, 1)
+
+covid_data %>% 
+      ggplot(aes(x = fecha)) +
+      geom_line(aes(x = fecha, y = num_uci, color = "red")) +
+      geom_line(aes(x = fecha, y = num_hosp, color = "black")) +
+      geom_line(aes(x = fecha, y = num_def, color = "blue")) +
+      geom_line( aes(y = num_casos / coeff), size=1, color=priceColor) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      scale_y_continuous(
+            # Features of the first axis
+            name = "Nº of cases reported (hosp/uci/deaths)",
+            # Add a second axis and specify its features
+            sec.axis = sec_axis(~.*coeff, name="Nº of cases")
+      ) +
+      facet_wrap(~provincia, scales = "free_y", ncol=1) +
+      theme_bw() +
+      theme(
+            axis.title.y = element_text(size=13),
+            axis.title.y.right = element_text(color = priceColor, size=13),
+            legend.position = "none") +
+      ggtitle("Hospitalization vs uci vs deaths vs number of cases")
 ```
 
 
@@ -687,6 +774,49 @@ covid_data %>%
       ggtitle("Visits to workplaces vs number of cases")
 ```
 
+
+### Google mobility vs cases
+
+```{r}
+# Value used to transform the data
+coeff <- 400
+
+# A few constants for colors
+priceColor <- rgb(0.2, 0.6, 0.9, 1)
+
+p <- covid_data %>% 
+      ggplot(aes(x = fecha)) +
+      geom_line(aes(x = fecha, y = mob_grocery_pharmacy, color = "red")) +
+      geom_line(aes(x = fecha, y = mob_parks, color = "black")) +
+      geom_line(aes(x = fecha, y = mob_residential, color = "blue")) +
+      geom_line(aes(x = fecha, y = mob_retail_recreation, color = "green")) +
+      geom_line(aes(x = fecha, y = mob_transit_stations, color = "brown")) +
+      geom_line(aes(x = fecha, y = mob_workplaces, color = "yellow")) +
+      geom_line( aes(y = num_casos / coeff), size=1, color=priceColor) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      scale_y_continuous(
+            # Features of the first axis
+            name = "Mobility variations (% ref day)",
+            # Add a second axis and specify its features
+            sec.axis = sec_axis(~.*coeff, name="Nº of cases")
+      ) +
+      facet_wrap(~provincia, scales = "free_y", ncol=1) +
+      theme_bw() +
+      theme(
+            axis.title.y = element_text(size=13),
+            axis.title.y.right = element_text(color = priceColor, size=13),
+            legend.position = "none") +
+      ggtitle("Mobility variations vs number of cases")
+
+p
+# ggplotly(p) # To make the graph interactive
+```
+
+
 ### General mobility (INE study zones)
 
 ```{r}
@@ -737,14 +867,6 @@ covid_data %>%
       ggtitle("General mobility vs number of cases")
 ```
 
-## Normality
-
-
-
 ## Correlations
 
-
-
 ## PCA Analysis
-
-
