@@ -1,4 +1,4 @@
-# STL analysis {#sec-stl}
+# STL decomposition / Transformations {#sec-stl}
 
 Load packages and data:
 
@@ -59,22 +59,28 @@ lambda_asturias
 
 ```{r}
 data_asturias %>%
-      gg_tsdisplay(((box_cox(num_casos, lambda_asturias))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            box_cox(num_casos, lambda_asturias),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Asturias - Variance stb")
 ```
 
 ```{r}
 data_asturias %>%
-      gg_tsdisplay((difference(box_cox(num_casos, lambda_asturias))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_asturias)), 
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Asturias - Difference once")
 ```
 
 ```{r}
 data_asturias %>%
-      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_asturias))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_asturias)) %>% difference(),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title="Asturias - Difference double")
 ```
 
@@ -85,7 +91,6 @@ data_asturias %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
       labs(title="Asturias - Orginal STL season_adjust")
 ```
@@ -97,9 +102,8 @@ data_asturias %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Asturias - Orginal STL season_adjust")
+      labs(title="Asturias - Orginal STL trend")
 ```
 
 ```{r}
@@ -110,9 +114,22 @@ data_asturias %>%
       ) %>%
       components() %>%
       select(trend) %>%
-      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Asturias - Orginal STL")
+      gg_tsdisplay(difference(trend), plot_type = 'partial', lag = 30) +
+      labs(title="Asturias - Orginal STL trend first difference")
 ```
+
+```{r}
+data_asturias %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      select(trend) %>%
+      gg_tsdisplay(difference(difference(trend)), plot_type = 'partial', lag = 30) +
+      labs(title="Asturias - Orginal STL trend second difference")
+```
+
 
 # Barcelona
 
@@ -157,22 +174,28 @@ lambda_barcelona
 
 ```{r}
 data_barcelona %>%
-      gg_tsdisplay(((box_cox(num_casos, lambda_barcelona))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            box_cox(num_casos, lambda_barcelona),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Barcelona - Variance stb")
 ```
 
 ```{r}
 data_barcelona %>%
-      gg_tsdisplay((difference(box_cox(num_casos, lambda_barcelona))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_barcelona)),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Barcelona - Difference once")
 ```
 
 ```{r}
 data_barcelona %>%
-      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_barcelona))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_barcelona)) %>% difference(),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title="Barcelona - Difference double")
 ```
 
@@ -183,7 +206,6 @@ data_barcelona %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
       labs(title="Barcelona - Orginal STL season_adjust")
 ```
@@ -195,9 +217,8 @@ data_barcelona %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Barcelona - Orginal STL season_adjust")
+      labs(title="Barcelona - Orginal STL trend")
 ```
 
 ```{r}
@@ -207,9 +228,19 @@ data_barcelona %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(trend) %>%
-      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Barcelona - Orginal STL")
+      gg_tsdisplay(difference(trend), plot_type = 'partial', lag = 30) +
+      labs(title="Barcelona - Orginal STL trend first difference")
+```
+
+```{r}
+data_barcelona %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      gg_tsdisplay(difference(difference(trend)), plot_type = 'partial', lag = 30) +
+      labs(title="Barcelona - Orginal STL trend second difference")
 ```
 
 # Madrid
@@ -255,22 +286,28 @@ lambda_madrid
 
 ```{r}
 data_madrid %>%
-      gg_tsdisplay(((box_cox(num_casos, lambda_madrid))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            box_cox(num_casos, lambda_madrid),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Madrid - Variance stb")
 ```
 
 ```{r}
 data_madrid %>%
-      gg_tsdisplay((difference(box_cox(num_casos, lambda_madrid))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_madrid)),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Madrid - Difference once")
 ```
 
 ```{r}
 data_madrid %>%
-      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_madrid))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_madrid)) %>% difference(),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title="Madrid - Difference double")
 ```
 
@@ -281,7 +318,6 @@ data_madrid %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
       labs(title="Madrid - Orginal STL season_adjust")
 ```
@@ -293,9 +329,8 @@ data_madrid %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Madrid - Orginal STL season_adjust")
+      labs(title="Madrid - Orginal STL trend")
 ```
 
 ```{r}
@@ -305,9 +340,19 @@ data_madrid %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(trend) %>%
-      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Madrid - Orginal STL")
+      gg_tsdisplay(difference(trend), plot_type = 'partial', lag = 30) +
+      labs(title="Madrid - Orginal STL trend first difference")
+```
+
+```{r}
+data_madrid %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      gg_tsdisplay(difference(difference(trend)), plot_type = 'partial', lag = 30) +
+      labs(title="Madrid - Orginal STL trend second difference")
 ```
 
 # Malaga
@@ -353,22 +398,28 @@ lambda_malaga
 
 ```{r}
 data_malaga %>%
-      gg_tsdisplay(((box_cox(num_casos, lambda_malaga))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            box_cox(num_casos, lambda_malaga),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Málaga - Variance stb")
 ```
 
 ```{r}
 data_malaga %>%
-      gg_tsdisplay((difference(box_cox(num_casos, lambda_malaga))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_malaga)),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Málaga - Difference once")
 ```
 
 ```{r}
 data_malaga %>%
-      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_malaga))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_malaga)) %>% difference(),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title="Málaga - Difference double")
 ```
 
@@ -379,7 +430,6 @@ data_malaga %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
       labs(title="Málaga - Orginal STL season_adjust")
 ```
@@ -391,9 +441,8 @@ data_malaga %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Málaga - Orginal STL season_adjust")
+      labs(title="Málaga - Orginal STL trend")
 ```
 
 ```{r}
@@ -403,9 +452,19 @@ data_malaga %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(trend) %>%
-      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Málaga - Orginal STL")
+      gg_tsdisplay(difference(trend), plot_type = 'partial', lag = 30) +
+      labs(title="Málaga - Orginal STL trend first difference")
+```
+
+```{r}
+data_malaga %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      gg_tsdisplay(difference(difference(trend)), plot_type = 'partial', lag = 30) +
+      labs(title="Málaga - Orginal STL trend second difference")
 ```
 
 # Sevilla
@@ -451,22 +510,28 @@ lambda_sevilla
 
 ```{r}
 data_sevilla %>%
-      gg_tsdisplay(((box_cox(num_casos, lambda_sevilla))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            box_cox(num_casos, lambda_sevilla),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Sevilla - Variance stb")
 ```
 
 ```{r}
 data_sevilla %>%
-      gg_tsdisplay((difference(box_cox(num_casos, lambda_sevilla))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_sevilla)),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title = "Sevilla - Difference once")
 ```
 
 ```{r}
 data_sevilla %>%
-      gg_tsdisplay(difference(difference(box_cox(num_casos, lambda_sevilla))),
-                   plot_type = 'partial', lag = 30) +
+      gg_tsdisplay(
+            difference(box_cox(num_casos, lambda_sevilla)) %>% difference(),
+            plot_type = 'partial', lag = 30
+      ) +
       labs(title="Sevilla - Difference double")
 ```
 
@@ -477,7 +542,6 @@ data_sevilla %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(season_adjust, plot_type = 'partial', lag = 30) +
       labs(title="Sevilla - Orginal STL season_adjust")
 ```
@@ -489,9 +553,8 @@ data_sevilla %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(-.model) %>%
       gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Sevilla - Orginal STL season_adjust")
+      labs(title="Sevilla - Orginal STL trend")
 ```
 
 ```{r}
@@ -501,7 +564,17 @@ data_sevilla %>%
                 robust = TRUE)
       ) %>%
       components() %>%
-      select(trend) %>%
-      gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
-      labs(title="Sevilla - Orginal STL")
+      gg_tsdisplay(difference(trend), plot_type = 'partial', lag = 30) +
+      labs(title="Sevilla - Orginal STL trend first difference")
+```
+
+```{r}
+data_sevilla %>% 
+      model(
+            STL(num_casos ~ season(window = 7) + trend(window = 7), 
+                robust = TRUE)
+      ) %>%
+      components() %>%
+      gg_tsdisplay(difference(difference(trend)), plot_type = 'partial', lag = 30) +
+      labs(title="Sevilla - Orginal STL trend second difference")
 ```

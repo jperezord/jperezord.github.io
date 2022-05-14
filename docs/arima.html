@@ -155,7 +155,7 @@ ul.task-list{list-style: none;}
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./stl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL analysis</span></a>
+  <a href="./stl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL decomposition / Transformations</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -218,6 +218,7 @@ ul.task-list{list-style: none;}
 <p>Are covid series stationary?</p>
 <p>For covid outbreaks, and according to what we have seen in the visual section, the cycles seems aperiodic. They could be caused when the level of infections is out of control and the containment policies in place are not sufficient. Then the implementation of additional policies against the spread of the virus allows the level of infection to decrease again.</p>
 <p>ACF plots are useful for identifying what kind of time series we are facing. For a stationary time series, the ACF will drop to zero relatively quickly, while the ACF of non-stationary data decreases slowly. <strong>ACF</strong> is an (complete) auto-correlation function which gives us values of auto-correlation of any series with its lagged values while <strong>PACF</strong> is a partial auto-correlation function. Basically instead of finding correlations of present with lags like ACF, it finds correlation of the residuals (which remains after removing the effects which are already explained by the earlier lag(s)) with the next lag value hence ‘partial’ and not ‘complete’ as we remove already found variations before we find the next correlation.</p>
+<p>On the other hand, STL is a versatile and robust method for decomposing time series that we will apply in one of the sections.</p>
 <section id="non-seasonal-arima" class="level2">
 <h2 class="anchored" data-anchor-id="non-seasonal-arima">Non seasonal ARIMA</h2>
 <p>Non seasonal ARIMA models are a combination of:</p>
