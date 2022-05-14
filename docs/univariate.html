@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>PEC3 - COVID-19 Outbreak prediction - 7&nbsp; Univariate prediction</title>
+<title>PEC3 - COVID-19 Outbreak prediction - Univariate prediction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Univariate prediction</span></h1>
+      <h1 class="quarto-secondary-nav-title">Univariate prediction</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -173,22 +173,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./cne_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CNE data</span></a>
+  <a href="./cne_data.html" class="sidebar-item-text sidebar-link">CNE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./google_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">GOOGLE data</span></a>
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ine_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></a>
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./aemet_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">AEMET data</span></a>
+  <a href="./aemet_data.html" class="sidebar-item-text sidebar-link">AEMET data</a>
   </div>
 </li>
     </ul>
@@ -213,22 +213,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./acf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></a>
+  <a href="./acf.html" class="sidebar-item-text sidebar-link">ACF and PACF plots</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./stl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL decomposition / Transformations</span></a>
+  <a href="./stl.html" class="sidebar-item-text sidebar-link">STL decomposition / Transformations</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./univariate.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Univariate prediction</span></a>
+  <a href="./univariate.html" class="sidebar-item-text sidebar-link active">Univariate prediction</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./multivariate.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Multivariate data</span></a>
+  <a href="./multivariate.html" class="sidebar-item-text sidebar-link">Multivariate data</a>
   </div>
 </li>
     </ul>
@@ -247,80 +247,80 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#before-sixth-epidemiological-period" id="toc-before-sixth-epidemiological-period" class="nav-link active" data-scroll-target="#before-sixth-epidemiological-period"> <span class="header-section-number">8</span> Before sixth epidemiological period</a>
+  <li><a href="#before-sixth-epidemiological-period" id="toc-before-sixth-epidemiological-period" class="nav-link active" data-scroll-target="#before-sixth-epidemiological-period">Before sixth epidemiological period</a>
   <ul class="collapse">
-  <li><a href="#asturias" id="toc-asturias" class="nav-link" data-scroll-target="#asturias"> <span class="header-section-number">8.1</span> Asturias</a>
+  <li><a href="#asturias" id="toc-asturias" class="nav-link" data-scroll-target="#asturias">Asturias</a>
   <ul class="collapse">
-  <li><a href="#days" id="toc-days" class="nav-link" data-scroll-target="#days"> <span class="header-section-number">8.1.1</span> 7 days</a></li>
-  <li><a href="#days-1" id="toc-days-1" class="nav-link" data-scroll-target="#days-1"> <span class="header-section-number">8.1.2</span> 14 days</a></li>
-  <li><a href="#days-2" id="toc-days-2" class="nav-link" data-scroll-target="#days-2"> <span class="header-section-number">8.1.3</span> 21 days</a></li>
-  <li><a href="#days-3" id="toc-days-3" class="nav-link" data-scroll-target="#days-3"> <span class="header-section-number">8.1.4</span> 90 days</a></li>
+  <li><a href="#days" id="toc-days" class="nav-link" data-scroll-target="#days">7 days</a></li>
+  <li><a href="#days-1" id="toc-days-1" class="nav-link" data-scroll-target="#days-1">14 days</a></li>
+  <li><a href="#days-2" id="toc-days-2" class="nav-link" data-scroll-target="#days-2">21 days</a></li>
+  <li><a href="#days-3" id="toc-days-3" class="nav-link" data-scroll-target="#days-3">90 days</a></li>
   </ul></li>
-  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona"> <span class="header-section-number">8.2</span> Barcelona</a>
+  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona">Barcelona</a>
   <ul class="collapse">
-  <li><a href="#days-4" id="toc-days-4" class="nav-link" data-scroll-target="#days-4"> <span class="header-section-number">8.2.1</span> 7 days</a></li>
-  <li><a href="#days-5" id="toc-days-5" class="nav-link" data-scroll-target="#days-5"> <span class="header-section-number">8.2.2</span> 14 days</a></li>
-  <li><a href="#days-6" id="toc-days-6" class="nav-link" data-scroll-target="#days-6"> <span class="header-section-number">8.2.3</span> 21 days</a></li>
-  <li><a href="#days-7" id="toc-days-7" class="nav-link" data-scroll-target="#days-7"> <span class="header-section-number">8.2.4</span> 90 days</a></li>
+  <li><a href="#days-4" id="toc-days-4" class="nav-link" data-scroll-target="#days-4">7 days</a></li>
+  <li><a href="#days-5" id="toc-days-5" class="nav-link" data-scroll-target="#days-5">14 days</a></li>
+  <li><a href="#days-6" id="toc-days-6" class="nav-link" data-scroll-target="#days-6">21 days</a></li>
+  <li><a href="#days-7" id="toc-days-7" class="nav-link" data-scroll-target="#days-7">90 days</a></li>
   </ul></li>
-  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid"> <span class="header-section-number">8.3</span> Madrid</a>
+  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid">Madrid</a>
   <ul class="collapse">
-  <li><a href="#days-8" id="toc-days-8" class="nav-link" data-scroll-target="#days-8"> <span class="header-section-number">8.3.1</span> 7 days</a></li>
-  <li><a href="#days-9" id="toc-days-9" class="nav-link" data-scroll-target="#days-9"> <span class="header-section-number">8.3.2</span> 14 days</a></li>
-  <li><a href="#days-10" id="toc-days-10" class="nav-link" data-scroll-target="#days-10"> <span class="header-section-number">8.3.3</span> 21 days</a></li>
-  <li><a href="#days-11" id="toc-days-11" class="nav-link" data-scroll-target="#days-11"> <span class="header-section-number">8.3.4</span> 90 days</a></li>
+  <li><a href="#days-8" id="toc-days-8" class="nav-link" data-scroll-target="#days-8">7 days</a></li>
+  <li><a href="#days-9" id="toc-days-9" class="nav-link" data-scroll-target="#days-9">14 days</a></li>
+  <li><a href="#days-10" id="toc-days-10" class="nav-link" data-scroll-target="#days-10">21 days</a></li>
+  <li><a href="#days-11" id="toc-days-11" class="nav-link" data-scroll-target="#days-11">90 days</a></li>
   </ul></li>
-  <li><a href="#málaga" id="toc-málaga" class="nav-link" data-scroll-target="#málaga"> <span class="header-section-number">8.4</span> Málaga</a>
+  <li><a href="#málaga" id="toc-málaga" class="nav-link" data-scroll-target="#málaga">Málaga</a>
   <ul class="collapse">
-  <li><a href="#days-12" id="toc-days-12" class="nav-link" data-scroll-target="#days-12"> <span class="header-section-number">8.4.1</span> 7 days</a></li>
-  <li><a href="#days-13" id="toc-days-13" class="nav-link" data-scroll-target="#days-13"> <span class="header-section-number">8.4.2</span> 14 days</a></li>
-  <li><a href="#days-14" id="toc-days-14" class="nav-link" data-scroll-target="#days-14"> <span class="header-section-number">8.4.3</span> 21 days</a></li>
-  <li><a href="#days-15" id="toc-days-15" class="nav-link" data-scroll-target="#days-15"> <span class="header-section-number">8.4.4</span> 90 days</a></li>
+  <li><a href="#days-12" id="toc-days-12" class="nav-link" data-scroll-target="#days-12">7 days</a></li>
+  <li><a href="#days-13" id="toc-days-13" class="nav-link" data-scroll-target="#days-13">14 days</a></li>
+  <li><a href="#days-14" id="toc-days-14" class="nav-link" data-scroll-target="#days-14">21 days</a></li>
+  <li><a href="#days-15" id="toc-days-15" class="nav-link" data-scroll-target="#days-15">90 days</a></li>
   </ul></li>
-  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla"> <span class="header-section-number">8.5</span> Sevilla</a>
+  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla">Sevilla</a>
   <ul class="collapse">
-  <li><a href="#days-16" id="toc-days-16" class="nav-link" data-scroll-target="#days-16"> <span class="header-section-number">8.5.1</span> 7 days</a></li>
-  <li><a href="#days-17" id="toc-days-17" class="nav-link" data-scroll-target="#days-17"> <span class="header-section-number">8.5.2</span> 14 days</a></li>
-  <li><a href="#days-18" id="toc-days-18" class="nav-link" data-scroll-target="#days-18"> <span class="header-section-number">8.5.3</span> 21 days</a></li>
-  <li><a href="#days-19" id="toc-days-19" class="nav-link" data-scroll-target="#days-19"> <span class="header-section-number">8.5.4</span> 90 days</a></li>
+  <li><a href="#days-16" id="toc-days-16" class="nav-link" data-scroll-target="#days-16">7 days</a></li>
+  <li><a href="#days-17" id="toc-days-17" class="nav-link" data-scroll-target="#days-17">14 days</a></li>
+  <li><a href="#days-18" id="toc-days-18" class="nav-link" data-scroll-target="#days-18">21 days</a></li>
+  <li><a href="#days-19" id="toc-days-19" class="nav-link" data-scroll-target="#days-19">90 days</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#end-of-sixth-epidemiological-period" id="toc-end-of-sixth-epidemiological-period" class="nav-link" data-scroll-target="#end-of-sixth-epidemiological-period"> <span class="header-section-number">9</span> End of sixth epidemiological period</a>
+  <li><a href="#end-of-sixth-epidemiological-period" id="toc-end-of-sixth-epidemiological-period" class="nav-link" data-scroll-target="#end-of-sixth-epidemiological-period">End of sixth epidemiological period</a>
   <ul class="collapse">
-  <li><a href="#asturias-1" id="toc-asturias-1" class="nav-link" data-scroll-target="#asturias-1"> <span class="header-section-number">9.1</span> Asturias</a>
+  <li><a href="#asturias-1" id="toc-asturias-1" class="nav-link" data-scroll-target="#asturias-1">Asturias</a>
   <ul class="collapse">
-  <li><a href="#days-20" id="toc-days-20" class="nav-link" data-scroll-target="#days-20"> <span class="header-section-number">9.1.1</span> 7 days</a></li>
-  <li><a href="#days-21" id="toc-days-21" class="nav-link" data-scroll-target="#days-21"> <span class="header-section-number">9.1.2</span> 14 days</a></li>
-  <li><a href="#days-22" id="toc-days-22" class="nav-link" data-scroll-target="#days-22"> <span class="header-section-number">9.1.3</span> 21 days</a></li>
-  <li><a href="#days-23" id="toc-days-23" class="nav-link" data-scroll-target="#days-23"> <span class="header-section-number">9.1.4</span> 90 days</a></li>
+  <li><a href="#days-20" id="toc-days-20" class="nav-link" data-scroll-target="#days-20">7 days</a></li>
+  <li><a href="#days-21" id="toc-days-21" class="nav-link" data-scroll-target="#days-21">14 days</a></li>
+  <li><a href="#days-22" id="toc-days-22" class="nav-link" data-scroll-target="#days-22">21 days</a></li>
+  <li><a href="#days-23" id="toc-days-23" class="nav-link" data-scroll-target="#days-23">90 days</a></li>
   </ul></li>
-  <li><a href="#barcelona-1" id="toc-barcelona-1" class="nav-link" data-scroll-target="#barcelona-1"> <span class="header-section-number">9.2</span> Barcelona</a>
+  <li><a href="#barcelona-1" id="toc-barcelona-1" class="nav-link" data-scroll-target="#barcelona-1">Barcelona</a>
   <ul class="collapse">
-  <li><a href="#days-24" id="toc-days-24" class="nav-link" data-scroll-target="#days-24"> <span class="header-section-number">9.2.1</span> 7 days</a></li>
-  <li><a href="#days-25" id="toc-days-25" class="nav-link" data-scroll-target="#days-25"> <span class="header-section-number">9.2.2</span> 14 days</a></li>
-  <li><a href="#days-26" id="toc-days-26" class="nav-link" data-scroll-target="#days-26"> <span class="header-section-number">9.2.3</span> 21 days</a></li>
-  <li><a href="#days-27" id="toc-days-27" class="nav-link" data-scroll-target="#days-27"> <span class="header-section-number">9.2.4</span> 90 days</a></li>
+  <li><a href="#days-24" id="toc-days-24" class="nav-link" data-scroll-target="#days-24">7 days</a></li>
+  <li><a href="#days-25" id="toc-days-25" class="nav-link" data-scroll-target="#days-25">14 days</a></li>
+  <li><a href="#days-26" id="toc-days-26" class="nav-link" data-scroll-target="#days-26">21 days</a></li>
+  <li><a href="#days-27" id="toc-days-27" class="nav-link" data-scroll-target="#days-27">90 days</a></li>
   </ul></li>
-  <li><a href="#madrid-1" id="toc-madrid-1" class="nav-link" data-scroll-target="#madrid-1"> <span class="header-section-number">9.3</span> Madrid</a>
+  <li><a href="#madrid-1" id="toc-madrid-1" class="nav-link" data-scroll-target="#madrid-1">Madrid</a>
   <ul class="collapse">
-  <li><a href="#days-28" id="toc-days-28" class="nav-link" data-scroll-target="#days-28"> <span class="header-section-number">9.3.1</span> 7 days</a></li>
-  <li><a href="#days-29" id="toc-days-29" class="nav-link" data-scroll-target="#days-29"> <span class="header-section-number">9.3.2</span> 14 days</a></li>
-  <li><a href="#days-30" id="toc-days-30" class="nav-link" data-scroll-target="#days-30"> <span class="header-section-number">9.3.3</span> 21 days</a></li>
-  <li><a href="#days-31" id="toc-days-31" class="nav-link" data-scroll-target="#days-31"> <span class="header-section-number">9.3.4</span> 90 days</a></li>
+  <li><a href="#days-28" id="toc-days-28" class="nav-link" data-scroll-target="#days-28">7 days</a></li>
+  <li><a href="#days-29" id="toc-days-29" class="nav-link" data-scroll-target="#days-29">14 days</a></li>
+  <li><a href="#days-30" id="toc-days-30" class="nav-link" data-scroll-target="#days-30">21 days</a></li>
+  <li><a href="#days-31" id="toc-days-31" class="nav-link" data-scroll-target="#days-31">90 days</a></li>
   </ul></li>
-  <li><a href="#málaga-1" id="toc-málaga-1" class="nav-link" data-scroll-target="#málaga-1"> <span class="header-section-number">9.4</span> Málaga</a>
+  <li><a href="#málaga-1" id="toc-málaga-1" class="nav-link" data-scroll-target="#málaga-1">Málaga</a>
   <ul class="collapse">
-  <li><a href="#days-32" id="toc-days-32" class="nav-link" data-scroll-target="#days-32"> <span class="header-section-number">9.4.1</span> 7 days</a></li>
-  <li><a href="#days-33" id="toc-days-33" class="nav-link" data-scroll-target="#days-33"> <span class="header-section-number">9.4.2</span> 14 days</a></li>
-  <li><a href="#days-34" id="toc-days-34" class="nav-link" data-scroll-target="#days-34"> <span class="header-section-number">9.4.3</span> 21 days</a></li>
-  <li><a href="#days-35" id="toc-days-35" class="nav-link" data-scroll-target="#days-35"> <span class="header-section-number">9.4.4</span> 90 days</a></li>
+  <li><a href="#days-32" id="toc-days-32" class="nav-link" data-scroll-target="#days-32">7 days</a></li>
+  <li><a href="#days-33" id="toc-days-33" class="nav-link" data-scroll-target="#days-33">14 days</a></li>
+  <li><a href="#days-34" id="toc-days-34" class="nav-link" data-scroll-target="#days-34">21 days</a></li>
+  <li><a href="#days-35" id="toc-days-35" class="nav-link" data-scroll-target="#days-35">90 days</a></li>
   </ul></li>
-  <li><a href="#sevilla-1" id="toc-sevilla-1" class="nav-link" data-scroll-target="#sevilla-1"> <span class="header-section-number">9.5</span> Sevilla</a>
+  <li><a href="#sevilla-1" id="toc-sevilla-1" class="nav-link" data-scroll-target="#sevilla-1">Sevilla</a>
   <ul class="collapse">
-  <li><a href="#days-36" id="toc-days-36" class="nav-link" data-scroll-target="#days-36"> <span class="header-section-number">9.5.1</span> 7 days</a></li>
-  <li><a href="#days-37" id="toc-days-37" class="nav-link" data-scroll-target="#days-37"> <span class="header-section-number">9.5.2</span> 14 days</a></li>
-  <li><a href="#days-38" id="toc-days-38" class="nav-link" data-scroll-target="#days-38"> <span class="header-section-number">9.5.3</span> 21 days</a></li>
-  <li><a href="#days-39" id="toc-days-39" class="nav-link" data-scroll-target="#days-39"> <span class="header-section-number">9.5.4</span> 90 days</a></li>
+  <li><a href="#days-36" id="toc-days-36" class="nav-link" data-scroll-target="#days-36">7 days</a></li>
+  <li><a href="#days-37" id="toc-days-37" class="nav-link" data-scroll-target="#days-37">14 days</a></li>
+  <li><a href="#days-38" id="toc-days-38" class="nav-link" data-scroll-target="#days-38">21 days</a></li>
+  <li><a href="#days-39" id="toc-days-39" class="nav-link" data-scroll-target="#days-39">90 days</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -331,7 +331,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-univariate" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Univariate prediction</span></span></h1>
+<h1 class="title d-none d-lg-block">Univariate prediction</h1>
 </div>
 
 
@@ -363,12 +363,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="before-sixth-epidemiological-period" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Before sixth epidemiological period</h1>
+<section id="before-sixth-epidemiological-period" class="level1">
+<h1>Before sixth epidemiological period</h1>
 <p>On one hand, we are going to train the model with data previous the start of the sixth wave of coronavirus (14 oct 2021).</p>
 <p>On the other hand, we are going to train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons,</p>
-<section id="asturias" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="asturias"><span class="header-section-number">8.1</span> Asturias</h2>
+<section id="asturias" class="level2">
+<h2 class="anchored" data-anchor-id="asturias">Asturias</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>) <span class="sc">%&gt;%</span> </span>
@@ -562,8 +562,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days" class="level3" data-number="8.1.1">
-<h3 data-number="8.1.1" class="anchored" data-anchor-id="days"><span class="header-section-number">8.1.1</span> 7 days</h3>
+<section id="days" class="level3">
+<h3 class="anchored" data-anchor-id="days">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -601,8 +601,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-1" class="level3" data-number="8.1.2">
-<h3 data-number="8.1.2" class="anchored" data-anchor-id="days-1"><span class="header-section-number">8.1.2</span> 14 days</h3>
+<section id="days-1" class="level3">
+<h3 class="anchored" data-anchor-id="days-1">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -640,8 +640,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-2" class="level3" data-number="8.1.3">
-<h3 data-number="8.1.3" class="anchored" data-anchor-id="days-2"><span class="header-section-number">8.1.3</span> 21 days</h3>
+<section id="days-2" class="level3">
+<h3 class="anchored" data-anchor-id="days-2">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -679,8 +679,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-3" class="level3" data-number="8.1.4">
-<h3 data-number="8.1.4" class="anchored" data-anchor-id="days-3"><span class="header-section-number">8.1.4</span> 90 days</h3>
+<section id="days-3" class="level3">
+<h3 class="anchored" data-anchor-id="days-3">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -719,8 +719,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="barcelona" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="barcelona"><span class="header-section-number">8.2</span> Barcelona</h2>
+<section id="barcelona" class="level2">
+<h2 class="anchored" data-anchor-id="barcelona">Barcelona</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Barcelona"</span>) <span class="sc">%&gt;%</span> </span>
@@ -914,8 +914,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-4" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="days-4"><span class="header-section-number">8.2.1</span> 7 days</h3>
+<section id="days-4" class="level3">
+<h3 class="anchored" data-anchor-id="days-4">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -953,8 +953,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-5" class="level3" data-number="8.2.2">
-<h3 data-number="8.2.2" class="anchored" data-anchor-id="days-5"><span class="header-section-number">8.2.2</span> 14 days</h3>
+<section id="days-5" class="level3">
+<h3 class="anchored" data-anchor-id="days-5">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -992,8 +992,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-6" class="level3" data-number="8.2.3">
-<h3 data-number="8.2.3" class="anchored" data-anchor-id="days-6"><span class="header-section-number">8.2.3</span> 21 days</h3>
+<section id="days-6" class="level3">
+<h3 class="anchored" data-anchor-id="days-6">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -1031,8 +1031,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-7" class="level3" data-number="8.2.4">
-<h3 data-number="8.2.4" class="anchored" data-anchor-id="days-7"><span class="header-section-number">8.2.4</span> 90 days</h3>
+<section id="days-7" class="level3">
+<h3 class="anchored" data-anchor-id="days-7">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -1071,8 +1071,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="madrid" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="madrid"><span class="header-section-number">8.3</span> Madrid</h2>
+<section id="madrid" class="level2">
+<h2 class="anchored" data-anchor-id="madrid">Madrid</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Madrid"</span>) <span class="sc">%&gt;%</span> </span>
@@ -1266,8 +1266,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb114-10"><a href="#cb114-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-8" class="level3" data-number="8.3.1">
-<h3 data-number="8.3.1" class="anchored" data-anchor-id="days-8"><span class="header-section-number">8.3.1</span> 7 days</h3>
+<section id="days-8" class="level3">
+<h3 class="anchored" data-anchor-id="days-8">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -1305,8 +1305,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-9" class="level3" data-number="8.3.2">
-<h3 data-number="8.3.2" class="anchored" data-anchor-id="days-9"><span class="header-section-number">8.3.2</span> 14 days</h3>
+<section id="days-9" class="level3">
+<h3 class="anchored" data-anchor-id="days-9">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -1344,8 +1344,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-10" class="level3" data-number="8.3.3">
-<h3 data-number="8.3.3" class="anchored" data-anchor-id="days-10"><span class="header-section-number">8.3.3</span> 21 days</h3>
+<section id="days-10" class="level3">
+<h3 class="anchored" data-anchor-id="days-10">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -1383,8 +1383,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-11" class="level3" data-number="8.3.4">
-<h3 data-number="8.3.4" class="anchored" data-anchor-id="days-11"><span class="header-section-number">8.3.4</span> 90 days</h3>
+<section id="days-11" class="level3">
+<h3 class="anchored" data-anchor-id="days-11">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -1423,8 +1423,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="málaga" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="málaga"><span class="header-section-number">8.4</span> Málaga</h2>
+<section id="málaga" class="level2">
+<h2 class="anchored" data-anchor-id="málaga">Málaga</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Málaga"</span>) <span class="sc">%&gt;%</span> </span>
@@ -1618,8 +1618,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb157-9"><a href="#cb157-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb157-10"><a href="#cb157-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-12" class="level3" data-number="8.4.1">
-<h3 data-number="8.4.1" class="anchored" data-anchor-id="days-12"><span class="header-section-number">8.4.1</span> 7 days</h3>
+<section id="days-12" class="level3">
+<h3 class="anchored" data-anchor-id="days-12">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -1657,8 +1657,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-13" class="level3" data-number="8.4.2">
-<h3 data-number="8.4.2" class="anchored" data-anchor-id="days-13"><span class="header-section-number">8.4.2</span> 14 days</h3>
+<section id="days-13" class="level3">
+<h3 class="anchored" data-anchor-id="days-13">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb162-2"><a href="#cb162-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -1696,8 +1696,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-14" class="level3" data-number="8.4.3">
-<h3 data-number="8.4.3" class="anchored" data-anchor-id="days-14"><span class="header-section-number">8.4.3</span> 21 days</h3>
+<section id="days-14" class="level3">
+<h3 class="anchored" data-anchor-id="days-14">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb166"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb166-2"><a href="#cb166-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -1735,8 +1735,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-15" class="level3" data-number="8.4.4">
-<h3 data-number="8.4.4" class="anchored" data-anchor-id="days-15"><span class="header-section-number">8.4.4</span> 90 days</h3>
+<section id="days-15" class="level3">
+<h3 class="anchored" data-anchor-id="days-15">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb170"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -1775,8 +1775,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="sevilla" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="sevilla"><span class="header-section-number">8.5</span> Sevilla</h2>
+<section id="sevilla" class="level2">
+<h2 class="anchored" data-anchor-id="sevilla">Sevilla</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Sevilla"</span>) <span class="sc">%&gt;%</span> </span>
@@ -1970,8 +1970,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb200-9"><a href="#cb200-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb200-10"><a href="#cb200-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-16" class="level3" data-number="8.5.1">
-<h3 data-number="8.5.1" class="anchored" data-anchor-id="days-16"><span class="header-section-number">8.5.1</span> 7 days</h3>
+<section id="days-16" class="level3">
+<h3 class="anchored" data-anchor-id="days-16">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb201"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb201-2"><a href="#cb201-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -2009,8 +2009,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-17" class="level3" data-number="8.5.2">
-<h3 data-number="8.5.2" class="anchored" data-anchor-id="days-17"><span class="header-section-number">8.5.2</span> 14 days</h3>
+<section id="days-17" class="level3">
+<h3 class="anchored" data-anchor-id="days-17">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb205"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb205-1"><a href="#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb205-2"><a href="#cb205-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -2048,8 +2048,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-18" class="level3" data-number="8.5.3">
-<h3 data-number="8.5.3" class="anchored" data-anchor-id="days-18"><span class="header-section-number">8.5.3</span> 21 days</h3>
+<section id="days-18" class="level3">
+<h3 class="anchored" data-anchor-id="days-18">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb209"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb209-2"><a href="#cb209-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -2087,8 +2087,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-19" class="level3" data-number="8.5.4">
-<h3 data-number="8.5.4" class="anchored" data-anchor-id="days-19"><span class="header-section-number">8.5.4</span> 90 days</h3>
+<section id="days-19" class="level3">
+<h3 class="anchored" data-anchor-id="days-19">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb213"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb213-2"><a href="#cb213-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -2128,12 +2128,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 </section>
 </section>
-<section id="end-of-sixth-epidemiological-period" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> End of sixth epidemiological period</h1>
+<section id="end-of-sixth-epidemiological-period" class="level1">
+<h1>End of sixth epidemiological period</h1>
 <p>We are going to keep train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons.</p>
 <p>But, instead of predict the last wave, we are going to predict the deleration of infections as to 31 jan 2022.</p>
-<section id="asturias-1" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="asturias-1"><span class="header-section-number">9.1</span> Asturias</h2>
+<section id="asturias-1" class="level2">
+<h2 class="anchored" data-anchor-id="asturias-1">Asturias</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb217"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb217-1"><a href="#cb217-1" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb217-2"><a href="#cb217-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>) <span class="sc">%&gt;%</span> </span>
@@ -2327,8 +2327,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb243-9"><a href="#cb243-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb243-10"><a href="#cb243-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-20" class="level3" data-number="9.1.1">
-<h3 data-number="9.1.1" class="anchored" data-anchor-id="days-20"><span class="header-section-number">9.1.1</span> 7 days</h3>
+<section id="days-20" class="level3">
+<h3 class="anchored" data-anchor-id="days-20">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb244"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb244-1"><a href="#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb244-2"><a href="#cb244-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -2366,8 +2366,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-21" class="level3" data-number="9.1.2">
-<h3 data-number="9.1.2" class="anchored" data-anchor-id="days-21"><span class="header-section-number">9.1.2</span> 14 days</h3>
+<section id="days-21" class="level3">
+<h3 class="anchored" data-anchor-id="days-21">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb248"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb248-1"><a href="#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb248-2"><a href="#cb248-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -2405,8 +2405,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-22" class="level3" data-number="9.1.3">
-<h3 data-number="9.1.3" class="anchored" data-anchor-id="days-22"><span class="header-section-number">9.1.3</span> 21 days</h3>
+<section id="days-22" class="level3">
+<h3 class="anchored" data-anchor-id="days-22">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb252"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb252-1"><a href="#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb252-2"><a href="#cb252-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -2444,8 +2444,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-23" class="level3" data-number="9.1.4">
-<h3 data-number="9.1.4" class="anchored" data-anchor-id="days-23"><span class="header-section-number">9.1.4</span> 90 days</h3>
+<section id="days-23" class="level3">
+<h3 class="anchored" data-anchor-id="days-23">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb256"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb256-1"><a href="#cb256-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb256-2"><a href="#cb256-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -2488,8 +2488,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="barcelona-1" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="barcelona-1"><span class="header-section-number">9.2</span> Barcelona</h2>
+<section id="barcelona-1" class="level2">
+<h2 class="anchored" data-anchor-id="barcelona-1">Barcelona</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb261"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb261-1"><a href="#cb261-1" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb261-2"><a href="#cb261-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Barcelona"</span>) <span class="sc">%&gt;%</span> </span>
@@ -2683,8 +2683,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb287-9"><a href="#cb287-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb287-10"><a href="#cb287-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-24" class="level3" data-number="9.2.1">
-<h3 data-number="9.2.1" class="anchored" data-anchor-id="days-24"><span class="header-section-number">9.2.1</span> 7 days</h3>
+<section id="days-24" class="level3">
+<h3 class="anchored" data-anchor-id="days-24">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb288"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb288-1"><a href="#cb288-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb288-2"><a href="#cb288-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -2722,8 +2722,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-25" class="level3" data-number="9.2.2">
-<h3 data-number="9.2.2" class="anchored" data-anchor-id="days-25"><span class="header-section-number">9.2.2</span> 14 days</h3>
+<section id="days-25" class="level3">
+<h3 class="anchored" data-anchor-id="days-25">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb292"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb292-1"><a href="#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb292-2"><a href="#cb292-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -2761,8 +2761,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-26" class="level3" data-number="9.2.3">
-<h3 data-number="9.2.3" class="anchored" data-anchor-id="days-26"><span class="header-section-number">9.2.3</span> 21 days</h3>
+<section id="days-26" class="level3">
+<h3 class="anchored" data-anchor-id="days-26">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb296"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb296-1"><a href="#cb296-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb296-2"><a href="#cb296-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -2800,8 +2800,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-27" class="level3" data-number="9.2.4">
-<h3 data-number="9.2.4" class="anchored" data-anchor-id="days-27"><span class="header-section-number">9.2.4</span> 90 days</h3>
+<section id="days-27" class="level3">
+<h3 class="anchored" data-anchor-id="days-27">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb300"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb300-1"><a href="#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb300-2"><a href="#cb300-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -2844,8 +2844,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="madrid-1" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="madrid-1"><span class="header-section-number">9.3</span> Madrid</h2>
+<section id="madrid-1" class="level2">
+<h2 class="anchored" data-anchor-id="madrid-1">Madrid</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb305"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb305-1"><a href="#cb305-1" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb305-2"><a href="#cb305-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Madrid"</span>) <span class="sc">%&gt;%</span> </span>
@@ -3039,8 +3039,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb331-9"><a href="#cb331-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb331-10"><a href="#cb331-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-28" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="days-28"><span class="header-section-number">9.3.1</span> 7 days</h3>
+<section id="days-28" class="level3">
+<h3 class="anchored" data-anchor-id="days-28">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb332"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb332-1"><a href="#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb332-2"><a href="#cb332-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -3078,8 +3078,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-29" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="days-29"><span class="header-section-number">9.3.2</span> 14 days</h3>
+<section id="days-29" class="level3">
+<h3 class="anchored" data-anchor-id="days-29">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb336"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb336-1"><a href="#cb336-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb336-2"><a href="#cb336-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -3117,8 +3117,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-30" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3" class="anchored" data-anchor-id="days-30"><span class="header-section-number">9.3.3</span> 21 days</h3>
+<section id="days-30" class="level3">
+<h3 class="anchored" data-anchor-id="days-30">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb340"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb340-1"><a href="#cb340-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb340-2"><a href="#cb340-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -3156,8 +3156,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-31" class="level3" data-number="9.3.4">
-<h3 data-number="9.3.4" class="anchored" data-anchor-id="days-31"><span class="header-section-number">9.3.4</span> 90 days</h3>
+<section id="days-31" class="level3">
+<h3 class="anchored" data-anchor-id="days-31">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb344"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb344-1"><a href="#cb344-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb344-2"><a href="#cb344-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -3200,8 +3200,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="málaga-1" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="málaga-1"><span class="header-section-number">9.4</span> Málaga</h2>
+<section id="málaga-1" class="level2">
+<h2 class="anchored" data-anchor-id="málaga-1">Málaga</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb349"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb349-1"><a href="#cb349-1" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb349-2"><a href="#cb349-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Málaga"</span>) <span class="sc">%&gt;%</span> </span>
@@ -3395,8 +3395,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb375-9"><a href="#cb375-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb375-10"><a href="#cb375-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-32" class="level3" data-number="9.4.1">
-<h3 data-number="9.4.1" class="anchored" data-anchor-id="days-32"><span class="header-section-number">9.4.1</span> 7 days</h3>
+<section id="days-32" class="level3">
+<h3 class="anchored" data-anchor-id="days-32">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb376"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb376-1"><a href="#cb376-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb376-2"><a href="#cb376-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -3434,8 +3434,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-33" class="level3" data-number="9.4.2">
-<h3 data-number="9.4.2" class="anchored" data-anchor-id="days-33"><span class="header-section-number">9.4.2</span> 14 days</h3>
+<section id="days-33" class="level3">
+<h3 class="anchored" data-anchor-id="days-33">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb380"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb380-1"><a href="#cb380-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb380-2"><a href="#cb380-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -3473,8 +3473,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-34" class="level3" data-number="9.4.3">
-<h3 data-number="9.4.3" class="anchored" data-anchor-id="days-34"><span class="header-section-number">9.4.3</span> 21 days</h3>
+<section id="days-34" class="level3">
+<h3 class="anchored" data-anchor-id="days-34">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb384"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb384-1"><a href="#cb384-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb384-2"><a href="#cb384-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -3512,8 +3512,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-35" class="level3" data-number="9.4.4">
-<h3 data-number="9.4.4" class="anchored" data-anchor-id="days-35"><span class="header-section-number">9.4.4</span> 90 days</h3>
+<section id="days-35" class="level3">
+<h3 class="anchored" data-anchor-id="days-35">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb388"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb388-1"><a href="#cb388-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb388-2"><a href="#cb388-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -3556,8 +3556,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="sevilla-1" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="sevilla-1"><span class="header-section-number">9.5</span> Sevilla</h2>
+<section id="sevilla-1" class="level2">
+<h2 class="anchored" data-anchor-id="sevilla-1">Sevilla</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb393"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb393-1"><a href="#cb393-1" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb393-2"><a href="#cb393-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Sevilla"</span>) <span class="sc">%&gt;%</span> </span>
@@ -3751,8 +3751,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb419-9"><a href="#cb419-9" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">21</span>)</span>
 <span id="cb419-10"><a href="#cb419-10" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="ot">&lt;-</span> fabletools<span class="sc">::</span><span class="fu">forecast</span>(fit_model, <span class="at">h =</span> <span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="days-36" class="level3" data-number="9.5.1">
-<h3 data-number="9.5.1" class="anchored" data-anchor-id="days-36"><span class="header-section-number">9.5.1</span> 7 days</h3>
+<section id="days-36" class="level3">
+<h3 class="anchored" data-anchor-id="days-36">7 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb420"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb420-1"><a href="#cb420-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb420-2"><a href="#cb420-2" aria-hidden="true" tabindex="-1"></a>fc_h7 <span class="sc">%&gt;%</span></span>
@@ -3790,8 +3790,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-37" class="level3" data-number="9.5.2">
-<h3 data-number="9.5.2" class="anchored" data-anchor-id="days-37"><span class="header-section-number">9.5.2</span> 14 days</h3>
+<section id="days-37" class="level3">
+<h3 class="anchored" data-anchor-id="days-37">14 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb424"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb424-1"><a href="#cb424-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb424-2"><a href="#cb424-2" aria-hidden="true" tabindex="-1"></a>fc_h14 <span class="sc">%&gt;%</span></span>
@@ -3829,8 +3829,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-38" class="level3" data-number="9.5.3">
-<h3 data-number="9.5.3" class="anchored" data-anchor-id="days-38"><span class="header-section-number">9.5.3</span> 21 days</h3>
+<section id="days-38" class="level3">
+<h3 class="anchored" data-anchor-id="days-38">21 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb428"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb428-1"><a href="#cb428-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb428-2"><a href="#cb428-2" aria-hidden="true" tabindex="-1"></a>fc_h21 <span class="sc">%&gt;%</span></span>
@@ -3868,8 +3868,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="days-39" class="level3" data-number="9.5.4">
-<h3 data-number="9.5.4" class="anchored" data-anchor-id="days-39"><span class="header-section-number">9.5.4</span> 90 days</h3>
+<section id="days-39" class="level3">
+<h3 class="anchored" data-anchor-id="days-39">90 days</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb432"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb432-1"><a href="#cb432-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
 <span id="cb432-2"><a href="#cb432-2" aria-hidden="true" tabindex="-1"></a>fc_h90 <span class="sc">%&gt;%</span></span>
@@ -3999,12 +3999,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./stl.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL decomposition / Transformations</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">STL decomposition / Transformations</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./multivariate.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Multivariate data</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">Multivariate data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,4 +1,4 @@
-# STL decomposition / Transformations {#sec-stl}
+# STL decomposition / Transformations {.unnumbered}
 
 Load packages and data:
 
@@ -129,7 +129,6 @@ data_asturias %>%
       gg_tsdisplay(difference(difference(trend)), plot_type = 'partial', lag = 30) +
       labs(title="Asturias - Orginal STL trend second difference")
 ```
-
 
 # Barcelona
 

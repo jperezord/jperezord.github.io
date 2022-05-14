@@ -1,10 +1,4 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
-
-# AEMET data {#sec-aemet}
+# AEMET data {.unnumbered}
 
 Load packages:
 

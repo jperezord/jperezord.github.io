@@ -1,4 +1,4 @@
-# ACF and PACF plots {#sec-acf}
+# ACF and PACF plots {.unnumbered}
 
 Load packages and data:
 

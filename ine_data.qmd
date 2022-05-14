@@ -1,10 +1,4 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
-
-# INE data {#sec-ine}
+# INE data {.unnumbered}
 
 Load packages:
 
@@ -26,7 +20,6 @@ Data can be downloaded in different formats. In our case we have used 'CSV: sepa
 ![Downloading process](images/consulta_descarga_ine.png){fig-align="center"}
 
 The technical project carried out for INE study is available in the following [link](https://www.ine.es/experimental/movilidad/exp_em_proyecto.pdf).
-
 
 ```{r}
 ine_data <- read_csv2(
@@ -145,7 +138,3 @@ ine_data <- ine_data %>%
       pivot_longer(!fecha, names_to = "province", values_to = "flujo")
 ine_data
 ```
-
-
-
-

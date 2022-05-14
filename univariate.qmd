@@ -1,4 +1,4 @@
-# Univariate prediction {#sec-univariate}
+# Univariate prediction {.unnumbered}
 
 Load packages:
 
@@ -22,7 +22,7 @@ covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
 
 On one hand, we are going to train the model with data previous the start of the sixth wave of coronavirus (14 oct 2021).
 
-On the other hand, we are going to train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons, 
+On the other hand, we are going to train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons,
 
 ## Asturias
 
@@ -239,7 +239,6 @@ fc_h90 %>%
 # Accuracy
 fabletools::accuracy(fc_h90, data_asturias)
 ```
-
 
 ## Barcelona
 
@@ -1111,8 +1110,6 @@ We are going to keep train the model with data as of June 14th which is consider
 
 But, instead of predict the last wave, we are going to predict the deleration of infections as to 31 jan 2022.
 
-
-
 ## Asturias
 
 ```{r}
@@ -1328,7 +1325,6 @@ fc_h90 %>%
 # Accuracy
 fabletools::accuracy(fc_h90, data_asturias)
 ```
-
 
 ## Barcelona
 

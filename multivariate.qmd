@@ -1,4 +1,4 @@
-# Multivariate data {#sec-multivariate}
+# Multivariate data {.unnumbered}
 
 Load packages:
 
@@ -12,9 +12,3 @@ pacman::p_load(
       imputeTS
 )
 ```
-
-
-
-
-
-

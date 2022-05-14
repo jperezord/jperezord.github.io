@@ -1,10 +1,4 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
-
-# GOOGLE data {#sec-google}
+# GOOGLE data {.unnumbered}
 
 Load packages:
 
@@ -160,7 +154,6 @@ ggplot_na_imputations(interpolation_test$mob_grocery_pharmacy, imp$mob_grocery_p
 ```
 
 The interpolation works fine, so we will proceed to impute missing data for the rest of provinces/variables.
-
 
 ```{r}
 grocery_pharmacy_data <- google_TimeS %>% 

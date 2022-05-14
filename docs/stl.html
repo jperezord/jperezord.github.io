@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>PEC3 - COVID-19 Outbreak prediction - 6&nbsp; STL decomposition / Transformations</title>
+<title>PEC3 - COVID-19 Outbreak prediction - STL decomposition / Transformations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -127,7 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL decomposition / Transformations</span></h1>
+      <h1 class="quarto-secondary-nav-title">STL decomposition / Transformations</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -173,22 +173,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./cne_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">CNE data</span></a>
+  <a href="./cne_data.html" class="sidebar-item-text sidebar-link">CNE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./google_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">GOOGLE data</span></a>
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ine_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">INE data</span></a>
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./aemet_data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">AEMET data</span></a>
+  <a href="./aemet_data.html" class="sidebar-item-text sidebar-link">AEMET data</a>
   </div>
 </li>
     </ul>
@@ -213,22 +213,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./acf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></a>
+  <a href="./acf.html" class="sidebar-item-text sidebar-link">ACF and PACF plots</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./stl.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL decomposition / Transformations</span></a>
+  <a href="./stl.html" class="sidebar-item-text sidebar-link active">STL decomposition / Transformations</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./univariate.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Univariate prediction</span></a>
+  <a href="./univariate.html" class="sidebar-item-text sidebar-link">Univariate prediction</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./multivariate.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Multivariate data</span></a>
+  <a href="./multivariate.html" class="sidebar-item-text sidebar-link">Multivariate data</a>
   </div>
 </li>
     </ul>
@@ -247,11 +247,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#asturias" id="toc-asturias" class="nav-link active" data-scroll-target="#asturias"> <span class="header-section-number">7</span> Asturias</a></li>
-  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona"> <span class="header-section-number">8</span> Barcelona</a></li>
-  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid"> <span class="header-section-number">9</span> Madrid</a></li>
-  <li><a href="#malaga" id="toc-malaga" class="nav-link" data-scroll-target="#malaga"> <span class="header-section-number">10</span> Malaga</a></li>
-  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla"> <span class="header-section-number">11</span> Sevilla</a></li>
+  <li><a href="#asturias" id="toc-asturias" class="nav-link active" data-scroll-target="#asturias">Asturias</a></li>
+  <li><a href="#barcelona" id="toc-barcelona" class="nav-link" data-scroll-target="#barcelona">Barcelona</a></li>
+  <li><a href="#madrid" id="toc-madrid" class="nav-link" data-scroll-target="#madrid">Madrid</a></li>
+  <li><a href="#malaga" id="toc-malaga" class="nav-link" data-scroll-target="#malaga">Malaga</a></li>
+  <li><a href="#sevilla" id="toc-sevilla" class="nav-link" data-scroll-target="#sevilla">Sevilla</a></li>
   </ul>
 </nav>
     </div>
@@ -260,7 +260,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-stl" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">STL decomposition / Transformations</span></span></h1>
+<h1 class="title d-none d-lg-block">STL decomposition / Transformations</h1>
 </div>
 
 
@@ -290,8 +290,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="asturias" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Asturias</h1>
+<section id="asturias" class="level1">
+<h1>Asturias</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_asturias <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Asturias"</span>) <span class="sc">%&gt;%</span> </span>
@@ -467,8 +467,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="barcelona" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Barcelona</h1>
+<section id="barcelona" class="level1">
+<h1>Barcelona</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data_barcelona <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Barcelona"</span>) <span class="sc">%&gt;%</span> </span>
@@ -642,8 +642,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="madrid" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Madrid</h1>
+<section id="madrid" class="level1">
+<h1>Madrid</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data_madrid <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Madrid"</span>) <span class="sc">%&gt;%</span> </span>
@@ -817,8 +817,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="malaga" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Malaga</h1>
+<section id="malaga" class="level1">
+<h1>Malaga</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>data_malaga <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Málaga"</span>) <span class="sc">%&gt;%</span> </span>
@@ -992,8 +992,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="sevilla" class="level1" data-number="11">
-<h1 data-number="11"><span class="header-section-number">11</span> Sevilla</h1>
+<section id="sevilla" class="level1">
+<h1>Sevilla</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>data_sevilla <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(provincia <span class="sc">==</span> <span class="st">"Sevilla"</span>) <span class="sc">%&gt;%</span> </span>
@@ -1253,12 +1253,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./acf.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">ACF and PACF plots</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">ACF and PACF plots</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./univariate.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Univariate prediction</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">Univariate prediction</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
