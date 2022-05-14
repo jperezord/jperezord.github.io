@@ -23,7 +23,8 @@ data_asturias <- covid_data %>%
       filter(provincia == "Asturias") %>% 
       select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
              mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
-      drop_na() %>% 
+      # Drop NAs dates except for mob_flujo since the data finish in 2021 while other sources are ut to 31/03/2022
+      drop_na(-mob_flujo) %>%  
       as_tsibble(key = provincia, index = fecha)
 data_asturias
 ```
@@ -113,9 +114,6 @@ data_asturias %>%
       labs(title="Asturias - Orginal STL")
 ```
 
-
-
-
 # Barcelona
 
 ```{r}
@@ -123,7 +121,8 @@ data_barcelona <- covid_data %>%
       filter(provincia == "Barcelona") %>% 
       select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
              mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
-      drop_na() %>% 
+      # Drop NAs dates except for mob_flujo since the data finish in 2021 while other sources are ut to 31/03/2022
+      drop_na(-mob_flujo) %>%  
       as_tsibble(key = provincia, index = fecha)
 data_barcelona
 ```
@@ -213,7 +212,6 @@ data_barcelona %>%
       labs(title="Barcelona - Orginal STL")
 ```
 
-
 # Madrid
 
 ```{r}
@@ -221,7 +219,8 @@ data_madrid <- covid_data %>%
       filter(provincia == "Madrid") %>% 
       select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
              mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
-      drop_na() %>% 
+      # Drop NAs dates except for mob_flujo since the data finish in 2021 while other sources are ut to 31/03/2022
+      drop_na(-mob_flujo) %>%  
       as_tsibble(key = provincia, index = fecha)
 data_madrid
 ```
@@ -318,7 +317,8 @@ data_malaga <- covid_data %>%
       filter(provincia == "Málaga") %>% 
       select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
              mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
-      drop_na() %>% 
+      # Drop NAs dates except for mob_flujo since the data finish in 2021 while other sources are ut to 31/03/2022
+      drop_na(-mob_flujo) %>%  
       as_tsibble(key = provincia, index = fecha)
 data_malaga
 ```
@@ -415,7 +415,8 @@ data_sevilla <- covid_data %>%
       filter(provincia == "Sevilla") %>% 
       select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
              mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
-      drop_na() %>% 
+      # Drop NAs dates except for mob_flujo since the data finish in 2021 while other sources are ut to 31/03/2022
+      drop_na(-mob_flujo) %>%  
       as_tsibble(key = provincia, index = fecha)
 data_sevilla
 ```
@@ -504,4 +505,3 @@ data_sevilla %>%
       gg_tsdisplay(trend, plot_type = 'partial', lag = 30) +
       labs(title="Sevilla - Orginal STL")
 ```
-

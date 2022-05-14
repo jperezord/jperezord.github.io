@@ -111,7 +111,7 @@ Load clean INE data:
 ine_data <- readRDS(here("data", "clean", "ine_data.rds"))
 ```
 
-Rename provinces to match previous dataset:
+Rename provinces to match previous datasets:
 
 ```{r}
 ine_data <- ine_data %>% 

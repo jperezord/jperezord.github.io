@@ -180,7 +180,15 @@ ul.task-list{list-style: none;}
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#non-seasonal-arima" id="toc-non-seasonal-arima" class="nav-link active" data-scroll-target="#non-seasonal-arima">Non seasonal ARIMA</a></li>
+  <li><a href="#seasonal-arima" id="toc-seasonal-arima" class="nav-link" data-scroll-target="#seasonal-arima">Seasonal ARIMA</a></li>
+  <li><a href="#dynamic-regression-models" id="toc-dynamic-regression-models" class="nav-link" data-scroll-target="#dynamic-regression-models">Dynamic regression models</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -203,9 +211,43 @@ ul.task-list{list-style: none;}
 
 </header>
 
-<p>info ARIMA</p>
+<p>In addition to time series regression models and exponential smoothing, ARIMA provides another approach to time series forecasting.</p>
+<p>The main objective of ARIMA models is to describe the autorrelations in the data, while exponential smoothing aim to describe the trend and seasonality in the data.</p>
+<p>Depending on how statistical properties vary over the time, series can be stationary (not depend on time observed) or non-sationary (those with trends or with seasonality).</p>
+<p>In general, a stationary time series will have no predictable patterns in the long-term since we cannot be sure where the peaks and troughs of the cycles will be.</p>
+<p>Are covid series stationary?</p>
+<p>For covid outbreaks, and according to what we have seen in the visual section, the cycles seems aperiodic. They could be caused when the level of infections is out of control and the containment policies in place are not sufficient. Then the implementation of additional policies against the spread of the virus allows the level of infection to decrease again.</p>
+<p>ACF plots are useful for identifying what kind of time series we are facing. For a stationary time series, the ACF will drop to zero relatively quickly, while the ACF of non-stationary data decreases slowly. <strong>ACF</strong> is an (complete) auto-correlation function which gives us values of auto-correlation of any series with its lagged values while <strong>PACF</strong> is a partial auto-correlation function. Basically instead of finding correlations of present with lags like ACF, it finds correlation of the residuals (which remains after removing the effects which are already explained by the earlier lag(s)) with the next lag value hence ‘partial’ and not ‘complete’ as we remove already found variations before we find the next correlation.</p>
+<section id="non-seasonal-arima" class="level2">
+<h2 class="anchored" data-anchor-id="non-seasonal-arima">Non seasonal ARIMA</h2>
+<p>Non seasonal ARIMA models are a combination of:</p>
+<ul>
+<li><p>Autoregressive models (AR) which forecast the variable of interest using a linear combination of predictors.</p></li>
+<li><p>Moving average models (MA) which forecast the variable of interest by using past values.</p></li>
+<li><p>Reverse of differencing (I)</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/non_seasonal_arima_eq.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="seasonal-arima" class="level2">
+<h2 class="anchored" data-anchor-id="seasonal-arima">Seasonal ARIMA</h2>
+<p>Seasonal ARIMA models includes additional seasonal terms similar to the non-seasonal.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/seasonal_arima_eq.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="dynamic-regression-models" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-regression-models">Dynamic regression models</h2>
+<p>Up to this point the models showed do not allow the inclusion of information from other information sources which may be relevant. However, ARIMA models can be extended in order to allow other information to be included.</p>
+<p>For doing that, we will allow the errors from a regression to contain autocorrelation. The error series will be assumed to follow an ARIMA model.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
