@@ -1,4 +1,4 @@
-# Univariate data {#sec-univariate}
+# Univariate prediction {#sec-univariate}
 
 Load packages:
 
@@ -11,34 +11,41 @@ pacman::p_load(
       tsibble,
       fable,
       feasts,
-      fabletools
+      fabletools,
+      lubridate
 )
 
 covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
 ```
 
+# Before sixth epidemiological period
 
-# Asturias
+On one hand, we are going to train the model with data previous the start of the sixth wave of coronavirus (14 oct 2021).
+
+On the other hand, we are going to train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons, 
+
+## Asturias
 
 ```{r}
 data_asturias <- covid_data %>% 
       filter(provincia == "Asturias") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
       select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
              mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
-      drop_na() %>% 
+      drop_na(-mob_flujo) %>% 
       as_tsibble(key = provincia, index = fecha)
 data_asturias
 ```
 
 ```{r}
 data_asturias_train <- data_asturias %>% 
-      filter(fecha <= as.Date("2021-09-30", format = "%Y-%m-%d"))
+      filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d"))
 summary(data_asturias_train$fecha)
 ```
 
 ```{r}
 data_asturias_test <- data_asturias %>% 
-      filter(fecha > as.Date("2021-09-30", format = "%Y-%m-%d"))
+      filter(fecha > as.Date("2021-10-14", format = "%Y-%m-%d"))
 summary(data_asturias_test$fecha)
 ```
 
@@ -59,7 +66,7 @@ fit_model <- data_asturias_train %>%
 fit_model
 ```
 
-```{r}
+```{r warning=FALSE}
 report(fit_model)
 ```
 
@@ -108,6 +115,11 @@ augment(fit_model) %>%
 ```
 
 ```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
 # Significant spikes out of 30 is still consistent with white noise
 # To be sure, use a Ljung-Box test, which has a large p-value, confirming that
 # the residuals are similar to white noise.
@@ -120,17 +132,26 @@ fc_h21 <- fabletools::forecast(fit_model, h = 21)
 fc_h90 <- fabletools::forecast(fit_model, h = 90)
 ```
 
+### 7 days
+
 ```{r}
 # Plots
 fc_h7 %>%
-      autoplot(data_asturias_test) +
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
+      ) +
       labs(y = "Nº cases", title = "Asturias - forecast h7")
 ```
 
 ```{r}
 fc_h7 %>%
-      autoplot(data_asturias) +
-      labs(y = "Nº cases", title = "Barcelona - forecast h7")
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h7")
 ```
 
 ```{r}
@@ -138,18 +159,26 @@ fc_h7 %>%
 fabletools::accuracy(fc_h7, data_asturias)
 ```
 
+### 14 days
 
 ```{r}
 # Plots
 fc_h14 %>%
-      autoplot(data_asturias_test) +
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
+      ) +
       labs(y = "Nº cases", title = "Asturias - forecast h14")
 ```
 
 ```{r}
 fc_h14 %>%
-      autoplot(data_asturias) +
-      labs(y = "Nº cases", title = "Barcelona - forecast h14")
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h14")
 ```
 
 ```{r}
@@ -157,17 +186,26 @@ fc_h14 %>%
 fabletools::accuracy(fc_h14, data_asturias)
 ```
 
+### 21 days
+
 ```{r}
 # Plots
 fc_h21 %>%
-      autoplot(data_asturias_test) +
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
+      ) +
       labs(y = "Nº cases", title = "Asturias - forecast h21")
 ```
 
 ```{r}
 fc_h21 %>%
-      autoplot(data_asturias) +
-      labs(y = "Nº cases", title = "Barcelona - forecast h21")
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h21")
 ```
 
 ```{r}
@@ -175,17 +213,26 @@ fc_h21 %>%
 fabletools::accuracy(fc_h21, data_asturias)
 ```
 
+### 90 days
+
 ```{r}
 # Plots
 fc_h90 %>%
-      autoplot(data_asturias_test) +
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
+      ) +
       labs(y = "Nº cases", title = "Asturias - forecast h90")
 ```
 
 ```{r}
 fc_h90 %>%
-      autoplot(data_asturias) +
-      labs(y = "Nº cases", title = "Barcelona - forecast h90")
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h90")
 ```
 
 ```{r}
@@ -193,3 +240,1956 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_asturias)
 ```
 
+
+## Barcelona
+
+```{r}
+data_barcelona <- covid_data %>% 
+      filter(provincia == "Barcelona") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_barcelona
+```
+
+```{r}
+data_barcelona_train <- data_barcelona %>% 
+      filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_barcelona_train$fecha)
+```
+
+```{r}
+data_barcelona_test <- data_barcelona %>% 
+      filter(fecha > as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_barcelona_test$fecha)
+```
+
+```{r}
+lambda_Barcelona <- data_barcelona %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_barcelona_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Barcelona)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Barcelona),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Barcelona))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_barcelona)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_barcelona)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_barcelona)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_barcelona)
+```
+
+## Madrid
+
+```{r}
+data_madrid <- covid_data %>% 
+      filter(provincia == "Madrid") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_madrid
+```
+
+```{r}
+data_madrid_train <- data_madrid %>% 
+      filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_madrid_train$fecha)
+```
+
+```{r}
+data_madrid_test <- data_madrid %>% 
+      filter(fecha > as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_madrid_test$fecha)
+```
+
+```{r}
+lambda_Madrid <- data_madrid %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_madrid_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Madrid)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Madrid),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Madrid))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_madrid)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_madrid)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_madrid)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_madrid)
+```
+
+## Málaga
+
+```{r}
+data_malaga <- covid_data %>% 
+      filter(provincia == "Málaga") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_malaga
+```
+
+```{r}
+data_malaga_train <- data_malaga %>% 
+      filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_malaga_train$fecha)
+```
+
+```{r}
+data_malaga_test <- data_malaga %>% 
+      filter(fecha > as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_malaga_test$fecha)
+```
+
+```{r}
+lambda_Malaga <- data_malaga %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_malaga_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Malaga)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Malaga),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Malaga))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_malaga)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_malaga)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_malaga)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_malaga)
+```
+
+## Sevilla
+
+```{r}
+data_sevilla <- covid_data %>% 
+      filter(provincia == "Sevilla") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_sevilla
+```
+
+```{r}
+data_sevilla_train <- data_sevilla %>% 
+      filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_sevilla_train$fecha)
+```
+
+```{r}
+data_sevilla_test <- data_sevilla %>% 
+      filter(fecha > as.Date("2021-10-14", format = "%Y-%m-%d"))
+summary(data_sevilla_test$fecha)
+```
+
+```{r}
+lambda_Sevilla <- data_sevilla %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_sevilla_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Sevilla)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Sevilla),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Sevilla))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_sevilla)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_sevilla)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_sevilla)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_sevilla)
+```
+
+# End of sixth epidemiological period
+
+We are going to keep train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons.
+
+But, instead of predict the last wave, we are going to predict the deleration of infections as to 31 jan 2022.
+
+
+
+## Asturias
+
+```{r}
+data_asturias <- covid_data %>% 
+      filter(provincia == "Asturias") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_asturias
+```
+
+```{r}
+data_asturias_train <- data_asturias %>% 
+      filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_asturias_train$fecha)
+```
+
+```{r}
+data_asturias_test <- data_asturias %>% 
+      filter(fecha > as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_asturias_test$fecha)
+```
+
+```{r}
+lambda_asturias <- data_asturias %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_asturias_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_asturias)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_asturias),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_asturias))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_asturias)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_asturias)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_asturias)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_asturias_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_asturias %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Asturias - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_asturias)
+```
+
+
+## Barcelona
+
+```{r}
+data_barcelona <- covid_data %>% 
+      filter(provincia == "Barcelona") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_barcelona
+```
+
+```{r}
+data_barcelona_train <- data_barcelona %>% 
+      filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_barcelona_train$fecha)
+```
+
+```{r}
+data_barcelona_test <- data_barcelona %>% 
+      filter(fecha > as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_barcelona_test$fecha)
+```
+
+```{r}
+lambda_Barcelona <- data_barcelona %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_barcelona_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Barcelona)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Barcelona),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Barcelona))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_barcelona)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_barcelona)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_barcelona)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_barcelona_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_barcelona %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Barcelona - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_barcelona)
+```
+
+## Madrid
+
+```{r}
+data_madrid <- covid_data %>% 
+      filter(provincia == "Madrid") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_madrid
+```
+
+```{r}
+data_madrid_train <- data_madrid %>% 
+      filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_madrid_train$fecha)
+```
+
+```{r}
+data_madrid_test <- data_madrid %>% 
+      filter(fecha > as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_madrid_test$fecha)
+```
+
+```{r}
+lambda_Madrid <- data_madrid %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_madrid_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Madrid)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Madrid),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Madrid))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_madrid)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_madrid)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_madrid)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_madrid_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_madrid %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Madrid - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_madrid)
+```
+
+## Málaga
+
+```{r}
+data_malaga <- covid_data %>% 
+      filter(provincia == "Málaga") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_malaga
+```
+
+```{r}
+data_malaga_train <- data_malaga %>% 
+      filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_malaga_train$fecha)
+```
+
+```{r}
+data_malaga_test <- data_malaga %>% 
+      filter(fecha > as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_malaga_test$fecha)
+```
+
+```{r}
+lambda_Malaga <- data_malaga %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_malaga_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Malaga)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Malaga),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Malaga))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_malaga)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_malaga)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_malaga)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_malaga_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_malaga %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Malaga - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_malaga)
+```
+
+## Sevilla
+
+```{r}
+data_sevilla <- covid_data %>% 
+      filter(provincia == "Sevilla") %>% 
+      filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
+      select(provincia, fecha, num_casos, num_hosp, tmed,mob_grocery_pharmacy, mob_parks,
+             mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces, mob_flujo) %>% 
+      drop_na(-mob_flujo) %>% 
+      as_tsibble(key = provincia, index = fecha)
+data_sevilla
+```
+
+```{r}
+data_sevilla_train <- data_sevilla %>% 
+      filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_sevilla_train$fecha)
+```
+
+```{r}
+data_sevilla_test <- data_sevilla %>% 
+      filter(fecha > as.Date("2022-01-31", format = "%Y-%m-%d"))
+summary(data_sevilla_test$fecha)
+```
+
+```{r}
+lambda_Sevilla <- data_sevilla %>%
+      features(num_casos, features = guerrero) %>%
+      pull(lambda_guerrero)
+
+fit_model <- data_sevilla_train %>%
+      model(
+            arima_at1 = ARIMA(box_cox(num_casos, lambda_Sevilla)),
+            arima_at2 = ARIMA(box_cox(num_casos, lambda_Sevilla),
+                              stepwise = FALSE, approx = FALSE),
+            Snaive = SNAIVE(box_cox(num_casos, lambda_Sevilla))
+      )
+
+# Show and report model
+fit_model
+```
+
+```{r warning=FALSE}
+report(fit_model)
+```
+
+```{r}
+fit_model %>% 
+      pivot_longer(-provincia,
+                   names_to = ".model",
+                   values_to = "orders") %>% 
+      left_join(glance(fit_model), by = c("provincia", ".model")) %>% 
+      arrange(AICc) %>% 
+      select(.model:BIC)
+```
+
+```{r}
+# We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
+fit_model %>% 
+      select(Snaive) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at1) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+fit_model %>% 
+      select(arima_at2) %>% 
+      gg_tsresiduals()
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=7)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=14)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=21)
+```
+
+```{r}
+augment(fit_model) %>%
+      features(.innov, ljung_box, lag=90)
+```
+
+```{r}
+# Significant spikes out of 30 is still consistent with white noise
+# To be sure, use a Ljung-Box test, which has a large p-value, confirming that
+# the residuals are similar to white noise.
+# Note that the alternative models also passed this test.
+# 
+# Forecast
+fc_h7  <- fabletools::forecast(fit_model, h = 7)
+fc_h14 <- fabletools::forecast(fit_model, h = 14)
+fc_h21 <- fabletools::forecast(fit_model, h = 21)
+fc_h90 <- fabletools::forecast(fit_model, h = 90)
+```
+
+### 7 days
+
+```{r}
+# Plots
+fc_h7 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h7")
+```
+
+```{r}
+fc_h7 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(9) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h7")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h7, data_sevilla)
+```
+
+### 14 days
+
+```{r}
+# Plots
+fc_h14 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h14")
+```
+
+```{r}
+fc_h14 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(16) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h14")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h14, data_sevilla)
+```
+
+### 21 days
+
+```{r}
+# Plots
+fc_h21 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h21")
+```
+
+```{r}
+fc_h21 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(23) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h21")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h21, data_sevilla)
+```
+
+### 90 days
+
+```{r}
+# Plots
+fc_h90 %>%
+      autoplot(
+            data_sevilla_test %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h90")
+```
+
+```{r}
+fc_h90 %>%
+      autoplot(
+            data_sevilla %>% 
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                               fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
+      ) +
+      labs(y = "Nº cases", title = "Sevilla - forecast h90")
+```
+
+```{r}
+# Accuracy
+fabletools::accuracy(fc_h90, data_sevilla)
+```
