@@ -2,62 +2,66 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jperezord.github.io/index.html</loc>
-    <lastmod>2022-05-14T18:51:54.069Z</lastmod>
+    <lastmod>2022-05-15T11:07:52.198Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/intro.html</loc>
-    <lastmod>2022-05-14T18:51:45.295Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.387Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/data.html</loc>
-    <lastmod>2022-05-14T18:51:45.296Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.388Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/cne_data.html</loc>
-    <lastmod>2022-05-14T18:51:45.300Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.392Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/google_data.html</loc>
-    <lastmod>2022-05-14T18:51:45.325Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.438Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/ine_data.html</loc>
-    <lastmod>2022-05-14T18:51:45.329Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.445Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/aemet_data.html</loc>
-    <lastmod>2022-05-14T18:51:45.334Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.451Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/combination.html</loc>
-    <lastmod>2022-05-14T18:51:45.342Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.462Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/visual.html</loc>
-    <lastmod>2022-05-14T18:51:45.357Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.501Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/arima.html</loc>
-    <lastmod>2022-05-14T18:51:45.358Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.502Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/acf.html</loc>
-    <lastmod>2022-05-14T18:51:45.363Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.505Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/stl.html</loc>
-    <lastmod>2022-05-14T18:52:10.353Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.513Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/univariate.html</loc>
-    <lastmod>2022-05-14T18:51:45.400Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.554Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/multivariate.html</loc>
-    <lastmod>2022-05-14T18:51:45.401Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.585Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jperezord.github.io/multivariate_google.html</loc>
+    <lastmod>2022-05-15T11:07:45.624Z</lastmod>
   </url>
   <url>
     <loc>https://jperezord.github.io/references.html</loc>
-    <lastmod>2022-05-14T18:51:45.402Z</lastmod>
+    <lastmod>2022-05-15T11:07:45.625Z</lastmod>
   </url>
 </urlset>

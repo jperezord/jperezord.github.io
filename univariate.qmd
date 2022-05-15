@@ -22,7 +22,7 @@ covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
 
 On one hand, we are going to train the model with data previous the start of the sixth wave of coronavirus (14 oct 2021).
 
-On the other hand, we are going to train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain. There are two reasons,
+On the other hand, we are going to train the model with data as of June 14th which is considered the beginning of the second epidemiological period in Spain.
 
 ## Asturias
 

@@ -25,6 +25,7 @@ book:
         - stl.qmd
         - univariate.qmd
         - multivariate.qmd
+        - multivariate_google.qmd
     - references.qmd
 
 bibliography: references.bib
