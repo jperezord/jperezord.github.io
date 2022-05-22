@@ -87,7 +87,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
-<link href="./google_data.html" rel="next">
+<link href="./ine_data.html" rel="next">
 <link href="./data.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -178,12 +178,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,6 +228,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./multivariate_temp.html" class="sidebar-item-text sidebar-link">Multivariate (temperature) prediction</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./multivariate.html" class="sidebar-item-text sidebar-link">Multivariate (INE mobility + temp) prediction</a>
   </div>
 </li>
@@ -238,21 +243,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
     </ul>
   </li>
-        <li class="sidebar-item sidebar-item-section">
-    <div class="sidebar-item-container"> 
-        <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
-      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
-        <i class="bi bi-chevron-right ms-2"></i>
-      </a>
-    </div>
-    <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lstm_uni.html" class="sidebar-item-text sidebar-link">LSTM univariate prediction</a>
+  <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
   </div>
 </li>
-    </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
@@ -309,7 +304,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Number of cases by diagnostic technique and province of residence [<a href="https://cnecovid.isciii.es/covid19/resources/metadata_tecnica_ccaa_prov_res.pdf">link</a>]:</p>
 <ul>
 <li>provincia_iso: ISO code of the province of residence.</li>
-<li>fecha: date [From pandemic onset to May 10, the date of symptom onset or, if not, the date of diagnosis minus 6 days. symptoms or, in the absence of symptoms, the date of diagnosis minus 6 days. From May 11, the date of symptom onset, or in the absence thereof, the date of diagnosis minus 3 days, or the date of diagnosis for cases date of diagnosis minus 3 days, or the date of diagnosis for asymptomatic cases. asymptomatic cases.</li>
+<li>fecha: date. From pandemic onset to May 10, the date of symptom or, if not, the date of diagnosis/symptoms minus 6 days. From May 11, the date of symptom onset, or in the absence thereof, the date of diagnosis minus 3 days.</li>
 <li>num_casos: Number of cases by diagnostic technique and province of residence.</li>
 <li>num_casos_prueba_pcr: Number of cases with PCR laboratory test or molecular techniques.</li>
 <li>num_casos_prueba_test_ac: Number of cases with laboratory test of rapid antibody test.</li>
@@ -880,11 +875,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Number of cases, hospitalisations, admissions to ICU and deaths by sex, age and province of residence [<a href="https://cnecovid.isciii.es/covid19/resources/metadata_diag_ccaa_decl_prov_edad_sexo.pdf">link</a>]:</p>
 <ul>
 <li>provincia_iso:ISO code of the province of residence.</li>
-<li>fecha:
-<ul>
-<li><p>Cases: For cases prior to 11-May, the date of diagnosis is used, in its absence the date of declaration to the community and, in its absence, the key date (key date). the date of declaration to the community and, in its absence, the key date (date used for statistics by the Autonomous used for statistics by the Autonomous Regions). In cases after 10 May, in the absence of a diagnosis date, the date used is the date of diagnosis. date of diagnosis, the key date is used.</p></li>
-<li><p>Hospitalisations, ICU admissions, deaths: hospitalised cases are represented by date of hospitalisation (failing this, date of diagnosis, and if not, date of death).</p></li>
-</ul></li>
+<li>fecha: date. For cases the date of diagnosis is used and for hospitalisations, ICU admissions and deaths the hospitalised cases are represented by date of hospitalisation (failing this, date of diagnosis, and if not, date of death).</li>
 <li>sexo: sex of cases: H (male), M (female), NC (not stated)</li>
 <li>grupo_edad: age group to which the case belongs: 0-9, 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, ≥80 years. NC: not stated</li>
 <li>num_casos: number of reported cases confirmed as having a positive diagnostic test for active infection (PDIA) as infection (PDIA) as set out in the Early Detection Strategy, surveillance and control strategy for COVID-19 and in addition cases notified before 11-May that required hospitalisation, ICU admission or required hospitalisation, ICU admission or died with a clinical diagnosis of COVID19, according to the case definitions in force at the time.</li>
@@ -1609,8 +1600,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./google_data.html" class="pagination-link">
-        <span class="nav-page-text">GOOGLE data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ine_data.html" class="pagination-link">
+        <span class="nav-page-text">INE data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

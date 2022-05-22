@@ -178,12 +178,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,6 +228,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./multivariate_temp.html" class="sidebar-item-text sidebar-link">Multivariate (temperature) prediction</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./multivariate.html" class="sidebar-item-text sidebar-link">Multivariate (INE mobility + temp) prediction</a>
   </div>
 </li>
@@ -238,21 +243,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
     </ul>
   </li>
-        <li class="sidebar-item sidebar-item-section">
-    <div class="sidebar-item-container"> 
-        <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
-      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
-        <i class="bi bi-chevron-right ms-2"></i>
-      </a>
-    </div>
-    <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lstm_uni.html" class="sidebar-item-text sidebar-link">LSTM univariate prediction</a>
+  <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
   </div>
 </li>
-    </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
@@ -302,8 +297,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>During the first task, data loading and cleaning has been performed. For each of the datasets, the resulting final files were stored in the “/data/clean/” project folder by saving them as a RDS file, which creates a serialized version of the dataset and then saves it with gzip.</p>
-<p>By doing this we avoid problems during the reading, since the dataset will be loaded as an R object exactly as when the cleaning of the dataset were finished.</p>
+<p>During the first task, data loading and cleaning has been performed. For each of the datasets, the final files were stored in the “/data/clean/” project folder by saving them as a RDS file, which creates a serialized version of the dataset and then saves it with gzip.</p>
+<p>By doing this we avoid problems in further reading, since the dataset will be loaded as an R object exactly as when the cleaning of the dataset were finished.</p>
 <p>First, we need to load packages:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>

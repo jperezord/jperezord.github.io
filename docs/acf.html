@@ -178,12 +178,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link">GOOGLE data</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,6 +228,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./multivariate_temp.html" class="sidebar-item-text sidebar-link">Multivariate (temperature) prediction</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./multivariate.html" class="sidebar-item-text sidebar-link">Multivariate (INE mobility + temp) prediction</a>
   </div>
 </li>
@@ -238,21 +243,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
     </ul>
   </li>
-        <li class="sidebar-item sidebar-item-section">
-    <div class="sidebar-item-container"> 
-        <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
-      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
-        <i class="bi bi-chevron-right ms-2"></i>
-      </a>
-    </div>
-    <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lstm_uni.html" class="sidebar-item-text sidebar-link">LSTM univariate prediction</a>
+  <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
   </div>
 </li>
-    </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
@@ -310,6 +305,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>, <span class="st">"final_covid_data.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The ACF and PACF plots should be considered together.</p>
+<p>For the AR process in the ARIMA, we expect that the ACF plot will gradually decrease and simultaneously the PACF should have a sharp drop after p significant lags.</p>
+<p>To define a MA process in the ARIMA, we expect the opposite from the ACF and PACF plots, meaning that: the ACF should show a sharp drop after a certain q number of lags while PACF should show a geometric or gradual decreasing trend.</p>
+<p>On the other hand, if both ACF and PACF plots demonstrate a gradual decreasing pattern, then the ARMA process should be considered for modeling.</p>
 <section id="asturias" class="level2">
 <h2 class="anchored" data-anchor-id="asturias">Asturias</h2>
 <div class="cell">

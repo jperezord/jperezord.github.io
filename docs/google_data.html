@@ -87,8 +87,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
-<link href="./ine_data.html" rel="next">
-<link href="./cne_data.html" rel="prev">
+<link href="./aemet_data.html" rel="next">
+<link href="./ine_data.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -178,12 +178,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./google_data.html" class="sidebar-item-text sidebar-link active">GOOGLE data</a>
+  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ine_data.html" class="sidebar-item-text sidebar-link">INE data</a>
+  <a href="./google_data.html" class="sidebar-item-text sidebar-link active">GOOGLE data</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,6 +228,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./multivariate_temp.html" class="sidebar-item-text sidebar-link">Multivariate (temperature) prediction</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./multivariate.html" class="sidebar-item-text sidebar-link">Multivariate (INE mobility + temp) prediction</a>
   </div>
 </li>
@@ -238,21 +243,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
     </ul>
   </li>
-        <li class="sidebar-item sidebar-item-section">
-    <div class="sidebar-item-container"> 
-        <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
-      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
-        <i class="bi bi-chevron-right ms-2"></i>
-      </a>
-    </div>
-    <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lstm_uni.html" class="sidebar-item-text sidebar-link">LSTM univariate prediction</a>
+  <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
   </div>
 </li>
-    </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
@@ -297,7 +292,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      imputeTS</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Data is avaible in the following <a href="https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip">link</a></p>
+<p>The data published by Google offers information related to mobility using the Google ecosystem application services such as Android. The dataset information is available worldwide <a href="https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip">link</a>, but in our case, only the information relating to Spain was extracted.</p>
+<p>It provides detail information about:</p>
+<ul>
+<li><p>CA: autonomous communities codes.</p></li>
+<li><p>province: province names.</p></li>
+<li><p>iso_3166_2_code: province iso code</p></li>
+<li><p>fecha: date.</p></li>
+<li><p>mob_grocery_pharmacy: Mobility trends for places like grocery markets, food warehouses, farmers markets, specialty food shops, drug, stores, and pharmacies.</p></li>
+<li><p>mob_parks: Mobility trends for places like national parks, public beaches, marinas, dog parks, plazas, and public garden.</p></li>
+<li><p>mob_residential: Mobility trends for places of residence.</p></li>
+<li><p>mob_retail_recreation: Mobility trends for places like restaurants, cafes, shopping centers, theme parks, museums, libraries, and movie theaters.</p></li>
+<li><p>mob_transit_stations: Mobility trends for places like public transport hubs such as subway, bus, and train stations.</p></li>
+<li><p>mob_workplaces: Mobility trends for places of work.</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List local google raw files</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>google_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(</span>
@@ -7275,13 +7283,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./cne_data.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">CNE data</span>
+      <a href="./ine_data.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">INE data</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ine_data.html" class="pagination-link">
-        <span class="nav-page-text">INE data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./aemet_data.html" class="pagination-link">
+        <span class="nav-page-text">AEMET data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
