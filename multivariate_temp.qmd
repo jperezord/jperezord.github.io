@@ -1,4 +1,4 @@
-# Multivariate (Google mobility + temp) prediction {.unnumbered}
+# Multivariate (temperature) prediction {.unnumbered}
 
 Load packages:
 
@@ -32,7 +32,7 @@ The temporal limits of our prediction will be:
 data_asturias <- covid_data %>% 
       filter(provincia == "Asturias") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_asturias
@@ -62,59 +62,15 @@ lambda_asturias_tmed <- data_asturias %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_asturias_tmed
-
-# Lamba for mobility
-lambda_asturias_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_grocery
-
-lambda_asturias_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_parks
-
-lambda_asturias_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_resd
-
-lambda_asturias_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_retail
-
-lambda_asturias_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_transit
-
-lambda_asturias_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_work
 ```
 
 ```{r}
 fit_model <- data_asturias_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_asturias_casos) ~ 
-                                    box_cox(tmed, lambda_asturias_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_asturias_grocery) +
-                                    box_cox(mob_parks, lambda_asturias_parks) +
-                                    box_cox(mob_residential, lambda_asturias_resd) +
-                                    box_cox(mob_retail_recreation, lambda_asturias_retail) +
-                                    box_cox(mob_transit_stations, lambda_asturias_transit) +
-                                    box_cox(mob_workplaces, lambda_asturias_work)
-                              ),
+                                    box_cox(tmed, lambda_asturias_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_asturias_casos) ~ 
-                                    box_cox(tmed, lambda_asturias_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_asturias_grocery) +
-                                    box_cox(mob_parks, lambda_asturias_parks) +
-                                    box_cox(mob_residential, lambda_asturias_resd) +
-                                    box_cox(mob_retail_recreation, lambda_asturias_retail) +
-                                    box_cox(mob_transit_stations, lambda_asturias_transit) +
-                                    box_cox(mob_workplaces, lambda_asturias_work),
+                                    box_cox(tmed, lambda_asturias_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_asturias_casos))
       )
@@ -181,17 +137,17 @@ augment(fit_model) %>%
 ```{r}
 # To predict future values of infections, we need to pass the model future/prediction values of the complementary variables tmed and mobility
 # We are going to select those from the test dataset
-data_fc_h7 <- data_asturias_test %>% 
-      select(-num_casos) %>% 
+data_fc_h7 <- data_asturias_test %>%
+      select(-num_casos) %>%
       slice(1:7)
-data_fc_h14 <- data_asturias_test %>% 
-      select(-num_casos) %>% 
+data_fc_h14 <- data_asturias_test %>%
+      select(-num_casos) %>%
       slice(1:14)
-data_fc_h21 <- data_asturias_test %>% 
-      select(-num_casos) %>% 
+data_fc_h21 <- data_asturias_test %>%
+      select(-num_casos) %>%
       slice(1:21)
-data_fc_h90 <- data_asturias_test %>% 
-      select(-num_casos) %>% 
+data_fc_h90 <- data_asturias_test %>%
+      select(-num_casos) %>%
       slice(1:90)
 ```
 
@@ -215,7 +171,7 @@ fc_h90 <- fabletools::forecast(fit_model, new_data = data_fc_h90)
 fc_h7 %>%
       autoplot(
             data_asturias_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h7")
 ```
@@ -224,7 +180,7 @@ fc_h7 %>%
 fc_h7 %>%
       autoplot(
             data_asturias %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h7")
@@ -242,7 +198,7 @@ fabletools::accuracy(fc_h7, data_asturias)
 fc_h14 %>%
       autoplot(
             data_asturias_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h14")
 ```
@@ -251,7 +207,7 @@ fc_h14 %>%
 fc_h14 %>%
       autoplot(
             data_asturias %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h14")
@@ -269,7 +225,7 @@ fabletools::accuracy(fc_h14, data_asturias)
 fc_h21 %>%
       autoplot(
             data_asturias_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h21")
 ```
@@ -278,7 +234,7 @@ fc_h21 %>%
 fc_h21 %>%
       autoplot(
             data_asturias %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h21")
@@ -296,7 +252,7 @@ fabletools::accuracy(fc_h21, data_asturias)
 fc_h90 %>%
       autoplot(
             data_asturias_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h90")
 ```
@@ -305,7 +261,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_asturias %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h90")
@@ -323,7 +279,7 @@ fabletools::accuracy(fc_h90, data_asturias)
 data_Barcelona <- covid_data %>% 
       filter(provincia == "Barcelona") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Barcelona
@@ -343,69 +299,25 @@ summary(data_Barcelona_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Barcelona_casos <- data_asturias %>%
+lambda_Barcelona_casos <- data_Barcelona %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Barcelona_casos
 
 # Lamba for average temp
-lambda_Barcelona_tmed <- data_asturias %>%
+lambda_Barcelona_tmed <- data_Barcelona %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Barcelona_tmed
-
-# Lamba for mobility
-lambda_Barcelona_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_grocery
-
-lambda_Barcelona_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_parks
-
-lambda_Barcelona_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_resd
-
-lambda_Barcelona_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_retail
-
-lambda_Barcelona_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_transit
-
-lambda_Barcelona_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_work
 ```
 
 ```{r}
 fit_model <- data_Barcelona_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Barcelona_casos) ~ 
-                                    box_cox(tmed, lambda_Barcelona_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Barcelona_grocery) +
-                                    box_cox(mob_parks, lambda_Barcelona_parks) +
-                                    box_cox(mob_residential, lambda_Barcelona_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Barcelona_retail) +
-                                    box_cox(mob_transit_stations, lambda_Barcelona_transit) +
-                                    box_cox(mob_workplaces, lambda_Barcelona_work)
-                              ),
+                                    box_cox(tmed, lambda_Barcelona_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Barcelona_casos) ~ 
-                                    box_cox(tmed, lambda_Barcelona_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Barcelona_grocery) +
-                                    box_cox(mob_parks, lambda_Barcelona_parks) +
-                                    box_cox(mob_residential, lambda_Barcelona_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Barcelona_retail) +
-                                    box_cox(mob_transit_stations, lambda_Barcelona_transit) +
-                                    box_cox(mob_workplaces, lambda_Barcelona_work),
+                                    box_cox(tmed, lambda_Barcelona_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Barcelona_casos))
       )
@@ -469,6 +381,7 @@ augment(fit_model) %>%
       features(.innov, ljung_box, lag=90)
 ```
 
+
 ```{r}
 # To predict future values of infections, we need to pass the model future/prediction values of the complementary variables tmed and mobility
 # We are going to select those from the test dataset
@@ -506,7 +419,7 @@ fc_h90 <- fabletools::forecast(fit_model, new_data = data_fc_h90)
 fc_h7 %>%
       autoplot(
             data_Barcelona_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h7")
 ```
@@ -515,7 +428,7 @@ fc_h7 %>%
 fc_h7 %>%
       autoplot(
             data_Barcelona %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h7")
@@ -533,7 +446,7 @@ fabletools::accuracy(fc_h7, data_Barcelona)
 fc_h14 %>%
       autoplot(
             data_Barcelona_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h14")
 ```
@@ -542,7 +455,7 @@ fc_h14 %>%
 fc_h14 %>%
       autoplot(
             data_Barcelona %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h14")
@@ -560,7 +473,7 @@ fabletools::accuracy(fc_h14, data_Barcelona)
 fc_h21 %>%
       autoplot(
             data_Barcelona_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h21")
 ```
@@ -569,7 +482,7 @@ fc_h21 %>%
 fc_h21 %>%
       autoplot(
             data_Barcelona %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h21")
@@ -587,7 +500,7 @@ fabletools::accuracy(fc_h21, data_Barcelona)
 fc_h90 %>%
       autoplot(
             data_Barcelona_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h90")
 ```
@@ -596,7 +509,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_Barcelona %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h90")
@@ -607,13 +520,14 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Barcelona)
 ```
 
+
 ## Madrid
 
 ```{r}
 data_Madrid <- covid_data %>% 
       filter(provincia == "Madrid") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Madrid
@@ -633,69 +547,25 @@ summary(data_Madrid_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Madrid_casos <- data_asturias %>%
+lambda_Madrid_casos <- data_Madrid %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Madrid_casos
 
 # Lamba for average temp
-lambda_Madrid_tmed <- data_asturias %>%
+lambda_Madrid_tmed <- data_Madrid %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Madrid_tmed
-
-# Lamba for mobility
-lambda_Madrid_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_grocery
-
-lambda_Madrid_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_parks
-
-lambda_Madrid_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_resd
-
-lambda_Madrid_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_retail
-
-lambda_Madrid_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_transit
-
-lambda_Madrid_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_work
 ```
 
 ```{r}
 fit_model <- data_Madrid_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Madrid_casos) ~ 
-                                    box_cox(tmed, lambda_Madrid_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Madrid_grocery) +
-                                    box_cox(mob_parks, lambda_Madrid_parks) +
-                                    box_cox(mob_residential, lambda_Madrid_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Madrid_retail) +
-                                    box_cox(mob_transit_stations, lambda_Madrid_transit) +
-                                    box_cox(mob_workplaces, lambda_Madrid_work)
-                              ),
+                                    box_cox(tmed, lambda_Madrid_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Madrid_casos) ~ 
-                                    box_cox(tmed, lambda_Madrid_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Madrid_grocery) +
-                                    box_cox(mob_parks, lambda_Madrid_parks) +
-                                    box_cox(mob_residential, lambda_Madrid_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Madrid_retail) +
-                                    box_cox(mob_transit_stations, lambda_Madrid_transit) +
-                                    box_cox(mob_workplaces, lambda_Madrid_work),
+                                    box_cox(tmed, lambda_Madrid_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Madrid_casos))
       )
@@ -796,7 +666,7 @@ fc_h90 <- fabletools::forecast(fit_model, new_data = data_fc_h90)
 fc_h7 %>%
       autoplot(
             data_Madrid_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h7")
 ```
@@ -805,7 +675,7 @@ fc_h7 %>%
 fc_h7 %>%
       autoplot(
             data_Madrid %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h7")
@@ -823,7 +693,7 @@ fabletools::accuracy(fc_h7, data_Madrid)
 fc_h14 %>%
       autoplot(
             data_Madrid_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h14")
 ```
@@ -832,7 +702,7 @@ fc_h14 %>%
 fc_h14 %>%
       autoplot(
             data_Madrid %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h14")
@@ -850,7 +720,7 @@ fabletools::accuracy(fc_h14, data_Madrid)
 fc_h21 %>%
       autoplot(
             data_Madrid_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h21")
 ```
@@ -859,7 +729,7 @@ fc_h21 %>%
 fc_h21 %>%
       autoplot(
             data_Madrid %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h21")
@@ -877,7 +747,7 @@ fabletools::accuracy(fc_h21, data_Madrid)
 fc_h90 %>%
       autoplot(
             data_Madrid_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h90")
 ```
@@ -886,7 +756,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_Madrid %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h90")
@@ -897,13 +767,14 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Madrid)
 ```
 
+
 ## Malaga
 
 ```{r}
 data_Malaga <- covid_data %>% 
       filter(provincia == "Málaga") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Malaga
@@ -923,69 +794,25 @@ summary(data_Malaga_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Malaga_casos <- data_asturias %>%
+lambda_Malaga_casos <- data_Malaga %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Malaga_casos
 
 # Lamba for average temp
-lambda_Malaga_tmed <- data_asturias %>%
+lambda_Malaga_tmed <- data_Malaga %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Malaga_tmed
-
-# Lamba for mobility
-lambda_Malaga_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_grocery
-
-lambda_Malaga_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_parks
-
-lambda_Malaga_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_resd
-
-lambda_Malaga_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_retail
-
-lambda_Malaga_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_transit
-
-lambda_Malaga_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_work
 ```
 
 ```{r}
 fit_model <- data_Malaga_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Malaga_casos) ~ 
-                                    box_cox(tmed, lambda_Malaga_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Malaga_grocery) +
-                                    box_cox(mob_parks, lambda_Malaga_parks) +
-                                    box_cox(mob_residential, lambda_Malaga_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Malaga_retail) +
-                                    box_cox(mob_transit_stations, lambda_Malaga_transit) +
-                                    box_cox(mob_workplaces, lambda_Malaga_work)
-                              ),
+                                    box_cox(tmed, lambda_Malaga_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Malaga_casos) ~ 
-                                    box_cox(tmed, lambda_Malaga_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Malaga_grocery) +
-                                    box_cox(mob_parks, lambda_Malaga_parks) +
-                                    box_cox(mob_residential, lambda_Malaga_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Malaga_retail) +
-                                    box_cox(mob_transit_stations, lambda_Malaga_transit) +
-                                    box_cox(mob_workplaces, lambda_Malaga_work),
+                                    box_cox(tmed, lambda_Malaga_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Malaga_casos))
       )
@@ -1086,7 +913,7 @@ fc_h90 <- fabletools::forecast(fit_model, new_data = data_fc_h90)
 fc_h7 %>%
       autoplot(
             data_Malaga_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h7")
 ```
@@ -1095,7 +922,7 @@ fc_h7 %>%
 fc_h7 %>%
       autoplot(
             data_Malaga %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h7")
@@ -1113,7 +940,7 @@ fabletools::accuracy(fc_h7, data_Malaga)
 fc_h14 %>%
       autoplot(
             data_Malaga_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h14")
 ```
@@ -1122,7 +949,7 @@ fc_h14 %>%
 fc_h14 %>%
       autoplot(
             data_Malaga %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h14")
@@ -1140,7 +967,7 @@ fabletools::accuracy(fc_h14, data_Malaga)
 fc_h21 %>%
       autoplot(
             data_Malaga_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h21")
 ```
@@ -1149,7 +976,7 @@ fc_h21 %>%
 fc_h21 %>%
       autoplot(
             data_Malaga %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h21")
@@ -1167,7 +994,7 @@ fabletools::accuracy(fc_h21, data_Malaga)
 fc_h90 %>%
       autoplot(
             data_Malaga_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h90")
 ```
@@ -1176,7 +1003,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_Malaga %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h90")
@@ -1187,14 +1014,13 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Malaga)
 ```
 
-
 ## Sevilla
 
 ```{r}
 data_Sevilla <- covid_data %>% 
       filter(provincia == "Sevilla") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Sevilla
@@ -1214,69 +1040,25 @@ summary(data_Sevilla_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Sevilla_casos <- data_asturias %>%
+lambda_Sevilla_casos <- data_Sevilla %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Sevilla_casos
 
 # Lamba for average temp
-lambda_Sevilla_tmed <- data_asturias %>%
+lambda_Sevilla_tmed <- data_Sevilla %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Sevilla_tmed
-
-# Lamba for mobility
-lambda_Sevilla_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_grocery
-
-lambda_Sevilla_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_parks
-
-lambda_Sevilla_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_resd
-
-lambda_Sevilla_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_retail
-
-lambda_Sevilla_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_transit
-
-lambda_Sevilla_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_work
 ```
 
 ```{r}
 fit_model <- data_Sevilla_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Sevilla_casos) ~ 
-                                    box_cox(tmed, lambda_Sevilla_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Sevilla_grocery) +
-                                    box_cox(mob_parks, lambda_Sevilla_parks) +
-                                    box_cox(mob_residential, lambda_Sevilla_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Sevilla_retail) +
-                                    box_cox(mob_transit_stations, lambda_Sevilla_transit) +
-                                    box_cox(mob_workplaces, lambda_Sevilla_work)
-                              ),
+                                    box_cox(tmed, lambda_Sevilla_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Sevilla_casos) ~ 
-                                    box_cox(tmed, lambda_Sevilla_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Sevilla_grocery) +
-                                    box_cox(mob_parks, lambda_Sevilla_parks) +
-                                    box_cox(mob_residential, lambda_Sevilla_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Sevilla_retail) +
-                                    box_cox(mob_transit_stations, lambda_Sevilla_transit) +
-                                    box_cox(mob_workplaces, lambda_Sevilla_work),
+                                    box_cox(tmed, lambda_Sevilla_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Sevilla_casos))
       )
@@ -1377,7 +1159,7 @@ fc_h90 <- fabletools::forecast(fit_model, new_data = data_fc_h90)
 fc_h7 %>%
       autoplot(
             data_Sevilla_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h7")
 ```
@@ -1386,7 +1168,7 @@ fc_h7 %>%
 fc_h7 %>%
       autoplot(
             data_Sevilla %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(7) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(9) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h7")
@@ -1404,7 +1186,7 @@ fabletools::accuracy(fc_h7, data_Sevilla)
 fc_h14 %>%
       autoplot(
             data_Sevilla_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h14")
 ```
@@ -1413,7 +1195,7 @@ fc_h14 %>%
 fc_h14 %>%
       autoplot(
             data_Sevilla %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(14) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(16) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h14")
@@ -1431,7 +1213,7 @@ fabletools::accuracy(fc_h14, data_Sevilla)
 fc_h21 %>%
       autoplot(
             data_Sevilla_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h21")
 ```
@@ -1440,7 +1222,7 @@ fc_h21 %>%
 fc_h21 %>%
       autoplot(
             data_Sevilla %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(21) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(23) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h21")
@@ -1458,7 +1240,7 @@ fabletools::accuracy(fc_h21, data_Sevilla)
 fc_h90 %>%
       autoplot(
             data_Sevilla_test %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90))
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h90")
 ```
@@ -1467,7 +1249,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_Sevilla %>% 
-                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(90) &
+                  filter(fecha <= as.Date("2021-10-14", format = "%Y-%m-%d")+days(92) &
                                fecha > as.Date("2021-07-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h90")
@@ -1478,6 +1260,7 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Sevilla)
 ```
 
+
 # Middel of sixth epidemiological period
 
 ## Asturias
@@ -1486,7 +1269,7 @@ fabletools::accuracy(fc_h90, data_Sevilla)
 data_asturias <- covid_data %>% 
       filter(provincia == "Asturias") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_asturias
@@ -1516,59 +1299,15 @@ lambda_asturias_tmed <- data_asturias %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_asturias_tmed
-
-# Lamba for mobility
-lambda_asturias_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_grocery
-
-lambda_asturias_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_parks
-
-lambda_asturias_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_resd
-
-lambda_asturias_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_retail
-
-lambda_asturias_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_transit
-
-lambda_asturias_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_asturias_work
 ```
 
 ```{r}
 fit_model <- data_asturias_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_asturias_casos) ~ 
-                                    box_cox(tmed, lambda_asturias_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_asturias_grocery) +
-                                    box_cox(mob_parks, lambda_asturias_parks) +
-                                    box_cox(mob_residential, lambda_asturias_resd) +
-                                    box_cox(mob_retail_recreation, lambda_asturias_retail) +
-                                    box_cox(mob_transit_stations, lambda_asturias_transit) +
-                                    box_cox(mob_workplaces, lambda_asturias_work)
-                              ),
+                                    box_cox(tmed, lambda_asturias_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_asturias_casos) ~ 
-                                    box_cox(tmed, lambda_asturias_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_asturias_grocery) +
-                                    box_cox(mob_parks, lambda_asturias_parks) +
-                                    box_cox(mob_residential, lambda_asturias_resd) +
-                                    box_cox(mob_retail_recreation, lambda_asturias_retail) +
-                                    box_cox(mob_transit_stations, lambda_asturias_transit) +
-                                    box_cox(mob_workplaces, lambda_asturias_work),
+                                    box_cox(tmed, lambda_asturias_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_asturias_casos))
       )
@@ -1776,7 +1515,7 @@ fabletools::accuracy(fc_h57, data_asturias)
 data_Barcelona <- covid_data %>% 
       filter(provincia == "Barcelona") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Barcelona
@@ -1796,69 +1535,25 @@ summary(data_Barcelona_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Barcelona_casos <- data_asturias %>%
+lambda_Barcelona_casos <- data_Barcelona %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Barcelona_casos
 
 # Lamba for average temp
-lambda_Barcelona_tmed <- data_asturias %>%
+lambda_Barcelona_tmed <- data_Barcelona %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Barcelona_tmed
-
-# Lamba for mobility
-lambda_Barcelona_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_grocery
-
-lambda_Barcelona_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_parks
-
-lambda_Barcelona_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_resd
-
-lambda_Barcelona_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_retail
-
-lambda_Barcelona_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_transit
-
-lambda_Barcelona_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Barcelona_work
 ```
 
 ```{r}
 fit_model <- data_Barcelona_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Barcelona_casos) ~ 
-                                    box_cox(tmed, lambda_Barcelona_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Barcelona_grocery) +
-                                    box_cox(mob_parks, lambda_Barcelona_parks) +
-                                    box_cox(mob_residential, lambda_Barcelona_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Barcelona_retail) +
-                                    box_cox(mob_transit_stations, lambda_Barcelona_transit) +
-                                    box_cox(mob_workplaces, lambda_Barcelona_work)
-                              ),
+                                    box_cox(tmed, lambda_Barcelona_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Barcelona_casos) ~ 
-                                    box_cox(tmed, lambda_Barcelona_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Barcelona_grocery) +
-                                    box_cox(mob_parks, lambda_Barcelona_parks) +
-                                    box_cox(mob_residential, lambda_Barcelona_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Barcelona_retail) +
-                                    box_cox(mob_transit_stations, lambda_Barcelona_transit) +
-                                    box_cox(mob_workplaces, lambda_Barcelona_work),
+                                    box_cox(tmed, lambda_Barcelona_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Barcelona_casos))
       )
@@ -2066,7 +1761,7 @@ fabletools::accuracy(fc_h57, data_Barcelona)
 data_Madrid <- covid_data %>% 
       filter(provincia == "Madrid") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Madrid
@@ -2086,69 +1781,25 @@ summary(data_Madrid_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Madrid_casos <- data_asturias %>%
+lambda_Madrid_casos <- data_Madrid %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Madrid_casos
 
 # Lamba for average temp
-lambda_Madrid_tmed <- data_asturias %>%
+lambda_Madrid_tmed <- data_Madrid %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Madrid_tmed
-
-# Lamba for mobility
-lambda_Madrid_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_grocery
-
-lambda_Madrid_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_parks
-
-lambda_Madrid_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_resd
-
-lambda_Madrid_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_retail
-
-lambda_Madrid_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_transit
-
-lambda_Madrid_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Madrid_work
 ```
 
 ```{r}
 fit_model <- data_Madrid_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Madrid_casos) ~ 
-                                    box_cox(tmed, lambda_Madrid_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Madrid_grocery) +
-                                    box_cox(mob_parks, lambda_Madrid_parks) +
-                                    box_cox(mob_residential, lambda_Madrid_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Madrid_retail) +
-                                    box_cox(mob_transit_stations, lambda_Madrid_transit) +
-                                    box_cox(mob_workplaces, lambda_Madrid_work)
-                              ),
+                                    box_cox(tmed, lambda_Madrid_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Madrid_casos) ~ 
-                                    box_cox(tmed, lambda_Madrid_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Madrid_grocery) +
-                                    box_cox(mob_parks, lambda_Madrid_parks) +
-                                    box_cox(mob_residential, lambda_Madrid_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Madrid_retail) +
-                                    box_cox(mob_transit_stations, lambda_Madrid_transit) +
-                                    box_cox(mob_workplaces, lambda_Madrid_work),
+                                    box_cox(tmed, lambda_Madrid_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Madrid_casos))
       )
@@ -2356,7 +2007,7 @@ fabletools::accuracy(fc_h57, data_Madrid)
 data_Malaga <- covid_data %>% 
       filter(provincia == "Málaga") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Malaga
@@ -2376,69 +2027,25 @@ summary(data_Malaga_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Malaga_casos <- data_asturias %>%
+lambda_Malaga_casos <- data_Malaga %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Malaga_casos
 
 # Lamba for average temp
-lambda_Malaga_tmed <- data_asturias %>%
+lambda_Malaga_tmed <- data_Malaga %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Malaga_tmed
-
-# Lamba for mobility
-lambda_Malaga_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_grocery
-
-lambda_Malaga_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_parks
-
-lambda_Malaga_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_resd
-
-lambda_Malaga_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_retail
-
-lambda_Malaga_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_transit
-
-lambda_Malaga_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Malaga_work
 ```
 
 ```{r}
 fit_model <- data_Malaga_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Malaga_casos) ~ 
-                                    box_cox(tmed, lambda_Malaga_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Malaga_grocery) +
-                                    box_cox(mob_parks, lambda_Malaga_parks) +
-                                    box_cox(mob_residential, lambda_Malaga_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Malaga_retail) +
-                                    box_cox(mob_transit_stations, lambda_Malaga_transit) +
-                                    box_cox(mob_workplaces, lambda_Malaga_work)
-                              ),
+                                    box_cox(tmed, lambda_Malaga_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Malaga_casos) ~ 
-                                    box_cox(tmed, lambda_Malaga_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Malaga_grocery) +
-                                    box_cox(mob_parks, lambda_Malaga_parks) +
-                                    box_cox(mob_residential, lambda_Malaga_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Malaga_retail) +
-                                    box_cox(mob_transit_stations, lambda_Malaga_transit) +
-                                    box_cox(mob_workplaces, lambda_Malaga_work),
+                                    box_cox(tmed, lambda_Malaga_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Malaga_casos))
       )
@@ -2646,7 +2253,7 @@ fabletools::accuracy(fc_h57, data_Malaga)
 data_Sevilla <- covid_data %>% 
       filter(provincia == "Sevilla") %>% 
       filter(fecha > as.Date("2020-06-14", format = "%Y-%m-%d")) %>% 
-      select(provincia, fecha, num_casos, tmed, mob_grocery_pharmacy, mob_parks, mob_residential, mob_retail_recreation, mob_transit_stations, mob_workplaces) %>% 
+      select(provincia, fecha, num_casos, tmed) %>% 
       drop_na() %>% 
       as_tsibble(key = provincia, index = fecha)
 data_Sevilla
@@ -2666,69 +2273,25 @@ summary(data_Sevilla_test$fecha)
 
 ```{r}
 # Lamba for num_casos
-lambda_Sevilla_casos <- data_asturias %>%
+lambda_Sevilla_casos <- data_Sevilla %>%
       features(num_casos, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Sevilla_casos
 
 # Lamba for average temp
-lambda_Sevilla_tmed <- data_asturias %>%
+lambda_Sevilla_tmed <- data_Sevilla %>%
       features(tmed, features = guerrero) %>%
       pull(lambda_guerrero)
 lambda_Sevilla_tmed
-
-# Lamba for mobility
-lambda_Sevilla_grocery <- data_asturias %>%
-      features(mob_grocery_pharmacy, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_grocery
-
-lambda_Sevilla_parks <- data_asturias %>%
-      features(mob_parks, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_parks
-
-lambda_Sevilla_resd <- data_asturias %>%
-      features(mob_residential, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_resd
-
-lambda_Sevilla_retail <- data_asturias %>%
-      features(mob_retail_recreation, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_retail
-
-lambda_Sevilla_transit <- data_asturias %>%
-      features(mob_transit_stations, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_transit
-
-lambda_Sevilla_work <- data_asturias %>%
-      features(mob_workplaces, features = guerrero) %>%
-      pull(lambda_guerrero)
-lambda_Sevilla_work
 ```
 
 ```{r}
 fit_model <- data_Sevilla_train %>%
       model(
             arima_at1 = ARIMA(box_cox(num_casos, lambda_Sevilla_casos) ~ 
-                                    box_cox(tmed, lambda_Sevilla_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Sevilla_grocery) +
-                                    box_cox(mob_parks, lambda_Sevilla_parks) +
-                                    box_cox(mob_residential, lambda_Sevilla_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Sevilla_retail) +
-                                    box_cox(mob_transit_stations, lambda_Sevilla_transit) +
-                                    box_cox(mob_workplaces, lambda_Sevilla_work)
-                              ),
+                                    box_cox(tmed, lambda_Sevilla_tmed)),
             arima_at2 = ARIMA(box_cox(num_casos, lambda_Sevilla_casos) ~ 
-                                    box_cox(tmed, lambda_Sevilla_tmed) + 
-                                    box_cox(mob_grocery_pharmacy, lambda_Sevilla_grocery) +
-                                    box_cox(mob_parks, lambda_Sevilla_parks) +
-                                    box_cox(mob_residential, lambda_Sevilla_resd) +
-                                    box_cox(mob_retail_recreation, lambda_Sevilla_retail) +
-                                    box_cox(mob_transit_stations, lambda_Sevilla_transit) +
-                                    box_cox(mob_workplaces, lambda_Sevilla_work),
+                                    box_cox(tmed, lambda_Sevilla_tmed),
                               stepwise = FALSE, approx = FALSE),
             Snaive = SNAIVE(box_cox(num_casos, lambda_Sevilla_casos))
       )

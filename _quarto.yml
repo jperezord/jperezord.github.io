@@ -24,11 +24,10 @@ book:
         - acf.qmd
         - stl.qmd
         - univariate.qmd
+        - multivariate_temp.qmd
         - multivariate.qmd
         - multivariate_google.qmd
     - part: lstm.qmd
-      chapters: 
-        - lstm_uni.qmd
     - references.qmd
 
 bibliography: references.bib
