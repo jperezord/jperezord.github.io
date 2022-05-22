@@ -2,9 +2,9 @@
 
 ## Introduction
 
-During the first task, data loading and cleaning has been performed. For each of the datasets, the resulting final files were stored in the "/data/clean/" project folder by saving them as a RDS file, which creates a serialized version of the dataset and then saves it with gzip.
+During the first task, data loading and cleaning has been performed. For each of the datasets, the final files were stored in the "/data/clean/" project folder by saving them as a RDS file, which creates a serialized version of the dataset and then saves it with gzip.
 
-By doing this we avoid problems during the reading, since the dataset will be loaded as an R object exactly as when the cleaning of the dataset were finished.
+By doing this we avoid problems in further reading, since the dataset will be loaded as an R object exactly as when the cleaning of the dataset were finished.
 
 First, we need to load packages:
 

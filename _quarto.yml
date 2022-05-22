@@ -14,8 +14,8 @@ book:
     - part: data.qmd
       chapters: 
         - cne_data.qmd
-        - google_data.qmd
         - ine_data.qmd
+        - google_data.qmd
         - aemet_data.qmd
     - part: combination.qmd
     - part: visual.qmd
@@ -26,6 +26,9 @@ book:
         - univariate.qmd
         - multivariate.qmd
         - multivariate_google.qmd
+    - part: lstm.qmd
+      chapters: 
+        - lstm_uni.qmd
     - references.qmd
 
 bibliography: references.bib

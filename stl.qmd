@@ -67,6 +67,7 @@ data_asturias %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_asturias %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_asturias)), 
@@ -76,6 +77,7 @@ data_asturias %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_asturias %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_asturias)) %>% difference(),
@@ -107,6 +109,7 @@ data_asturias %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_asturias %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -119,6 +122,7 @@ data_asturias %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_asturias %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -181,6 +185,7 @@ data_barcelona %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_barcelona %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_barcelona)),
@@ -190,6 +195,7 @@ data_barcelona %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_barcelona %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_barcelona)) %>% difference(),
@@ -221,6 +227,7 @@ data_barcelona %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_barcelona %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -232,6 +239,7 @@ data_barcelona %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_barcelona %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -293,6 +301,7 @@ data_madrid %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_madrid %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_madrid)),
@@ -302,6 +311,7 @@ data_madrid %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_madrid %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_madrid)) %>% difference(),
@@ -333,6 +343,7 @@ data_madrid %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_madrid %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -344,6 +355,7 @@ data_madrid %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_madrid %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -405,6 +417,7 @@ data_malaga %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_malaga %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_malaga)),
@@ -414,6 +427,7 @@ data_malaga %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_malaga %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_malaga)) %>% difference(),
@@ -445,6 +459,7 @@ data_malaga %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_malaga %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -456,6 +471,7 @@ data_malaga %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_malaga %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -517,6 +533,7 @@ data_sevilla %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_sevilla %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_sevilla)),
@@ -526,6 +543,7 @@ data_sevilla %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_sevilla %>%
       gg_tsdisplay(
             difference(box_cox(num_casos, lambda_sevilla)) %>% difference(),
@@ -557,6 +575,7 @@ data_sevilla %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_sevilla %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 
@@ -568,6 +587,7 @@ data_sevilla %>%
 ```
 
 ```{r}
+#| warning = FALSE
 data_sevilla %>% 
       model(
             STL(num_casos ~ season(window = 7) + trend(window = 7), 

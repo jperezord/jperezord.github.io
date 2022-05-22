@@ -18,6 +18,12 @@ pacman::p_load(
 covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
 ```
 
+For each period to study, we will train three different models:
+
+-   Attempt 1: using ARIMA function from fable package with stepwise (much faster)
+-   Attempt 2: using ARIMA function from fable package without stepwise
+-   Attempt 3: using Snaive function from fable package
+
 # Before sixth epidemiological period
 
 On one hand, we are going to train the model with data previous the start of the sixth wave of coronavirus (14 oct 2021).
@@ -67,7 +73,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -81,6 +87,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -283,7 +290,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -297,6 +304,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -499,7 +507,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -513,6 +521,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -715,7 +724,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -729,6 +738,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -931,7 +941,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -945,6 +955,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -1153,7 +1164,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -1167,6 +1178,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -1202,7 +1214,7 @@ augment(fit_model) %>%
 
 ```{r}
 augment(fit_model) %>%
-      features(.innov, ljung_box, lag=90)
+      features(.innov, ljung_box, lag=57)
 ```
 
 ```{r}
@@ -1215,7 +1227,7 @@ augment(fit_model) %>%
 fc_h7  <- fabletools::forecast(fit_model, h = 7)
 fc_h14 <- fabletools::forecast(fit_model, h = 14)
 fc_h21 <- fabletools::forecast(fit_model, h = 21)
-fc_h90 <- fabletools::forecast(fit_model, h = 90)
+fc_h90 <- fabletools::forecast(fit_model, h = 57)
 ```
 
 ### 7 days
@@ -1299,14 +1311,14 @@ fc_h21 %>%
 fabletools::accuracy(fc_h21, data_asturias)
 ```
 
-### 90 days
+### 57 days
 
 ```{r}
 # Plots
 fc_h90 %>%
       autoplot(
             data_asturias_test %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h90")
 ```
@@ -1315,7 +1327,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_asturias %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59) &
                                fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Asturias - forecast h90")
@@ -1369,7 +1381,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -1383,6 +1395,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -1418,7 +1431,7 @@ augment(fit_model) %>%
 
 ```{r}
 augment(fit_model) %>%
-      features(.innov, ljung_box, lag=90)
+      features(.innov, ljung_box, lag=57)
 ```
 
 ```{r}
@@ -1431,7 +1444,7 @@ augment(fit_model) %>%
 fc_h7  <- fabletools::forecast(fit_model, h = 7)
 fc_h14 <- fabletools::forecast(fit_model, h = 14)
 fc_h21 <- fabletools::forecast(fit_model, h = 21)
-fc_h90 <- fabletools::forecast(fit_model, h = 90)
+fc_h90 <- fabletools::forecast(fit_model, h = 57)
 ```
 
 ### 7 days
@@ -1515,14 +1528,14 @@ fc_h21 %>%
 fabletools::accuracy(fc_h21, data_barcelona)
 ```
 
-### 90 days
+### 57 days
 
 ```{r}
 # Plots
 fc_h90 %>%
       autoplot(
             data_barcelona_test %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h90")
 ```
@@ -1531,7 +1544,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_barcelona %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59) &
                                fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Barcelona - forecast h90")
@@ -1585,7 +1598,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -1599,6 +1612,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -1634,7 +1648,7 @@ augment(fit_model) %>%
 
 ```{r}
 augment(fit_model) %>%
-      features(.innov, ljung_box, lag=90)
+      features(.innov, ljung_box, lag=57)
 ```
 
 ```{r}
@@ -1647,7 +1661,7 @@ augment(fit_model) %>%
 fc_h7  <- fabletools::forecast(fit_model, h = 7)
 fc_h14 <- fabletools::forecast(fit_model, h = 14)
 fc_h21 <- fabletools::forecast(fit_model, h = 21)
-fc_h90 <- fabletools::forecast(fit_model, h = 90)
+fc_h90 <- fabletools::forecast(fit_model, h = 57)
 ```
 
 ### 7 days
@@ -1731,14 +1745,14 @@ fc_h21 %>%
 fabletools::accuracy(fc_h21, data_madrid)
 ```
 
-### 90 days
+### 57 days
 
 ```{r}
 # Plots
 fc_h90 %>%
       autoplot(
             data_madrid_test %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h90")
 ```
@@ -1747,7 +1761,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_madrid %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59) &
                                fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Madrid - forecast h90")
@@ -1801,7 +1815,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -1815,6 +1829,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -1850,7 +1865,7 @@ augment(fit_model) %>%
 
 ```{r}
 augment(fit_model) %>%
-      features(.innov, ljung_box, lag=90)
+      features(.innov, ljung_box, lag=57)
 ```
 
 ```{r}
@@ -1863,7 +1878,7 @@ augment(fit_model) %>%
 fc_h7  <- fabletools::forecast(fit_model, h = 7)
 fc_h14 <- fabletools::forecast(fit_model, h = 14)
 fc_h21 <- fabletools::forecast(fit_model, h = 21)
-fc_h90 <- fabletools::forecast(fit_model, h = 90)
+fc_h90 <- fabletools::forecast(fit_model, h = 57)
 ```
 
 ### 7 days
@@ -1947,14 +1962,14 @@ fc_h21 %>%
 fabletools::accuracy(fc_h21, data_malaga)
 ```
 
-### 90 days
+### 57 days
 
 ```{r}
 # Plots
 fc_h90 %>%
       autoplot(
             data_malaga_test %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h90")
 ```
@@ -1963,7 +1978,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_malaga %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59) &
                                fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Malaga - forecast h90")
@@ -2017,7 +2032,7 @@ fit_model
 ```
 
 ```{r warning=FALSE}
-report(fit_model)
+glance(fit_model)
 ```
 
 ```{r}
@@ -2031,6 +2046,7 @@ fit_model %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # We use a Ljung-Box test >> large p-value, confirms residuals are similar / considered to white noise
 fit_model %>% 
       select(Snaive) %>% 
@@ -2066,7 +2082,7 @@ augment(fit_model) %>%
 
 ```{r}
 augment(fit_model) %>%
-      features(.innov, ljung_box, lag=90)
+      features(.innov, ljung_box, lag=57)
 ```
 
 ```{r}
@@ -2079,7 +2095,7 @@ augment(fit_model) %>%
 fc_h7  <- fabletools::forecast(fit_model, h = 7)
 fc_h14 <- fabletools::forecast(fit_model, h = 14)
 fc_h21 <- fabletools::forecast(fit_model, h = 21)
-fc_h90 <- fabletools::forecast(fit_model, h = 90)
+fc_h90 <- fabletools::forecast(fit_model, h = 57)
 ```
 
 ### 7 days
@@ -2163,14 +2179,14 @@ fc_h21 %>%
 fabletools::accuracy(fc_h21, data_sevilla)
 ```
 
-### 90 days
+### 57 days
 
 ```{r}
 # Plots
 fc_h90 %>%
       autoplot(
             data_sevilla_test %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92))
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h90")
 ```
@@ -2179,7 +2195,7 @@ fc_h90 %>%
 fc_h90 %>%
       autoplot(
             data_sevilla %>% 
-                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(92) &
+                  filter(fecha <= as.Date("2022-01-31", format = "%Y-%m-%d")+days(59) &
                                fecha > as.Date("2021-12-01", format = "%Y-%m-%d"))
       ) +
       labs(y = "Nº cases", title = "Sevilla - forecast h90")

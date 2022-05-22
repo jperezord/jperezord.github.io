@@ -1,4 +1,4 @@
-# CNE data  {.unnumbered}
+# CNE data {.unnumbered}
 
 Load packages:
 
@@ -17,7 +17,7 @@ pacman::p_load(
 Number of cases by diagnostic technique and province of residence \[[link](https://cnecovid.isciii.es/covid19/resources/metadata_tecnica_ccaa_prov_res.pdf)\]:
 
 -   provincia_iso: ISO code of the province of residence.
--   fecha: date \[From pandemic onset to May 10, the date of symptom onset or, if not, the date of diagnosis minus 6 days. symptoms or, in the absence of symptoms, the date of diagnosis minus 6 days. From May 11, the date of symptom onset, or in the absence thereof, the date of diagnosis minus 3 days, or the date of diagnosis for cases date of diagnosis minus 3 days, or the date of diagnosis for asymptomatic cases. asymptomatic cases.
+-   fecha: date. From pandemic onset to May 10, the date of symptom or, if not, the date of diagnosis/symptoms minus 6 days. From May 11, the date of symptom onset, or in the absence thereof, the date of diagnosis minus 3 days.
 -   num_casos: Number of cases by diagnostic technique and province of residence.
 -   num_casos_prueba_pcr: Number of cases with PCR laboratory test or molecular techniques.
 -   num_casos_prueba_test_ac: Number of cases with laboratory test of rapid antibody test.
@@ -62,10 +62,7 @@ skim(cne_tecnica)
 Number of cases, hospitalisations, admissions to ICU and deaths by sex, age and province of residence \[[link](https://cnecovid.isciii.es/covid19/resources/metadata_diag_ccaa_decl_prov_edad_sexo.pdf)\]:
 
 -   provincia_iso:ISO code of the province of residence.
--   fecha:
-    -   Cases: For cases prior to 11-May, the date of diagnosis is used, in its absence the date of declaration to the community and, in its absence, the key date (key date). the date of declaration to the community and, in its absence, the key date (date used for statistics by the Autonomous used for statistics by the Autonomous Regions). In cases after 10 May, in the absence of a diagnosis date, the date used is the date of diagnosis. date of diagnosis, the key date is used.
-
-    -   Hospitalisations, ICU admissions, deaths: hospitalised cases are represented by date of hospitalisation (failing this, date of diagnosis, and if not, date of death).
+-   fecha: date. For cases the date of diagnosis is used and for hospitalisations, ICU admissions and deaths the hospitalised cases are represented by date of hospitalisation (failing this, date of diagnosis, and if not, date of death).
 -   sexo: sex of cases: H (male), M (female), NC (not stated)
 -   grupo_edad: age group to which the case belongs: 0-9, 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, ≥80 years. NC: not stated
 -   num_casos: number of reported cases confirmed as having a positive diagnostic test for active infection (PDIA) as infection (PDIA) as set out in the Early Detection Strategy, surveillance and control strategy for COVID-19 and in addition cases notified before 11-May that required hospitalisation, ICU admission or required hospitalisation, ICU admission or died with a clinical diagnosis of COVID19, according to the case definitions in force at the time.

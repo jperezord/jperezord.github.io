@@ -16,6 +16,16 @@ pacman::p_load(
 covid_data <- readRDS(here("data", "clean", "final_covid_data.rds"))
 ```
 
+
+The ACF and PACF plots should be considered together.
+
+For the AR process in the ARIMA, we expect that the ACF plot will gradually decrease and simultaneously the PACF should have a sharp drop after p significant lags.
+
+To define a MA process in the ARIMA, we expect the opposite from the ACF and PACF plots, meaning that: the ACF should show a sharp drop after a certain q number of lags while PACF should show a geometric or gradual decreasing trend.
+
+On the other hand, if both ACF and PACF plots demonstrate a gradual decreasing pattern, then the ARMA process should be considered for modeling.
+
+
 ## Asturias
 
 ```{r}

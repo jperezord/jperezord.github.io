@@ -1,0 +1,2018 @@
+# LSTM univariate prediction {.unnumbered}
+
+Import python packages:
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib
+import matplotlib.pyplot as plt
+
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+from keras.models import Sequential
+from keras.layers import Dense, LSTM
+```
+
+```{python}
+data_covid = pd.read_csv('data/clean/final_covid_data.csv')
+data_covid
+```
+
+# All the available data
+
+## Asturias
+
+```{python}
+data_asturias = data_covid.loc[data_covid['provincia'] == 'Asturias']
+data_asturias = data_asturias.set_index('fecha')
+data_asturias = data_asturias.filter(['num_casos'])
+data_asturias
+```
+
+```{python}
+data_asturias.describe()
+```
+
+```{python}
+np_data_asturias = data_asturias.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_asturias = scaler.fit_transform(np_data_asturias)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_asturias)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_asturias_x = []
+scaled_data_asturias_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_asturias)):
+    scaled_data_asturias_x.append(scaled_data_asturias[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_asturias_y.append(scaled_data_asturias[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_asturias_x = np.array(scaled_data_asturias_x)
+scaled_data_asturias_y = np.array(scaled_data_asturias_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_asturias_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_asturias_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_asturias_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_asturias_x[0:len(scaled_data_asturias_x)-22]
+y_train = scaled_data_asturias_y[0:len(scaled_data_asturias_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_asturias_x[len(scaled_data_asturias_x)-21:len(scaled_data_asturias_x)]
+y_test = scaled_data_asturias_y[len(scaled_data_asturias_y)-21:len(scaled_data_asturias_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_asturias[:(len(x_train)+23)]
+valid = data_asturias[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2022-01-31" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Asturias: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+
+## Barcelona
+
+```{python}
+data_Barcelona = data_covid.loc[data_covid['provincia'] == 'Barcelona']
+data_Barcelona = data_Barcelona.set_index('fecha')
+data_Barcelona = data_Barcelona.filter(['num_casos'])
+data_Barcelona
+```
+
+```{python}
+data_Barcelona.describe()
+```
+
+```{python}
+np_data_Barcelona = data_Barcelona.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Barcelona = scaler.fit_transform(np_data_Barcelona)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Barcelona)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Barcelona_x = []
+scaled_data_Barcelona_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Barcelona)):
+    scaled_data_Barcelona_x.append(scaled_data_Barcelona[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Barcelona_y.append(scaled_data_Barcelona[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Barcelona_x = np.array(scaled_data_Barcelona_x)
+scaled_data_Barcelona_y = np.array(scaled_data_Barcelona_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Barcelona_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Barcelona_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Barcelona_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Barcelona_x[0:len(scaled_data_Barcelona_x)-22]
+y_train = scaled_data_Barcelona_y[0:len(scaled_data_Barcelona_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Barcelona_x[len(scaled_data_Barcelona_x)-21:len(scaled_data_Barcelona_x)]
+y_test = scaled_data_Barcelona_y[len(scaled_data_Barcelona_y)-21:len(scaled_data_Barcelona_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Barcelona[:(len(x_train)+23)]
+valid = data_Barcelona[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2022-01-31" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Barcelona: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+## Madrid
+
+```{python}
+data_Madrid = data_covid.loc[data_covid['provincia'] == 'Madrid']
+data_Madrid = data_Madrid.set_index('fecha')
+data_Madrid = data_Madrid.filter(['num_casos'])
+data_Madrid
+```
+
+```{python}
+data_Madrid.describe()
+```
+
+```{python}
+np_data_Madrid = data_Madrid.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Madrid = scaler.fit_transform(np_data_Madrid)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Madrid)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Madrid_x = []
+scaled_data_Madrid_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Madrid)):
+    scaled_data_Madrid_x.append(scaled_data_Madrid[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Madrid_y.append(scaled_data_Madrid[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Madrid_x = np.array(scaled_data_Madrid_x)
+scaled_data_Madrid_y = np.array(scaled_data_Madrid_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Madrid_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Madrid_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Madrid_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Madrid_x[0:len(scaled_data_Madrid_x)-22]
+y_train = scaled_data_Madrid_y[0:len(scaled_data_Madrid_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Madrid_x[len(scaled_data_Madrid_x)-21:len(scaled_data_Madrid_x)]
+y_test = scaled_data_Madrid_y[len(scaled_data_Madrid_y)-21:len(scaled_data_Madrid_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Madrid[:(len(x_train)+23)]
+valid = data_Madrid[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2022-01-31" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Madrid: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+## Malaga
+
+```{python}
+data_Malaga = data_covid.loc[data_covid['provincia'] == 'Málaga']
+data_Malaga = data_Malaga.set_index('fecha')
+data_Malaga = data_Malaga.filter(['num_casos'])
+data_Malaga
+```
+
+```{python}
+data_Malaga.describe()
+```
+
+```{python}
+np_data_Malaga = data_Malaga.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Malaga = scaler.fit_transform(np_data_Malaga)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Malaga)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Malaga_x = []
+scaled_data_Malaga_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Malaga)):
+    scaled_data_Malaga_x.append(scaled_data_Malaga[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Malaga_y.append(scaled_data_Malaga[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Malaga_x = np.array(scaled_data_Malaga_x)
+scaled_data_Malaga_y = np.array(scaled_data_Malaga_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Malaga_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Malaga_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Malaga_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Malaga_x[0:len(scaled_data_Malaga_x)-22]
+y_train = scaled_data_Malaga_y[0:len(scaled_data_Malaga_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Malaga_x[len(scaled_data_Malaga_x)-21:len(scaled_data_Malaga_x)]
+y_test = scaled_data_Malaga_y[len(scaled_data_Malaga_y)-21:len(scaled_data_Malaga_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Malaga[:(len(x_train)+23)]
+valid = data_Malaga[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2022-01-31" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Malaga: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+## Sevilla
+
+```{python}
+data_Sevilla = data_covid.loc[data_covid['provincia'] == 'Sevilla']
+data_Sevilla = data_Sevilla.set_index('fecha')
+data_Sevilla = data_Sevilla.filter(['num_casos'])
+data_Sevilla
+```
+
+```{python}
+data_Sevilla.describe()
+```
+
+```{python}
+np_data_Sevilla = data_Sevilla.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Sevilla = scaler.fit_transform(np_data_Sevilla)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Sevilla)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Sevilla_x = []
+scaled_data_Sevilla_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Sevilla)):
+    scaled_data_Sevilla_x.append(scaled_data_Sevilla[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Sevilla_y.append(scaled_data_Sevilla[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Sevilla_x = np.array(scaled_data_Sevilla_x)
+scaled_data_Sevilla_y = np.array(scaled_data_Sevilla_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Sevilla_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Sevilla_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Sevilla_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Sevilla_x[0:len(scaled_data_Sevilla_x)-22]
+y_train = scaled_data_Sevilla_y[0:len(scaled_data_Sevilla_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Sevilla_x[len(scaled_data_Sevilla_x)-21:len(scaled_data_Sevilla_x)]
+y_test = scaled_data_Sevilla_y[len(scaled_data_Sevilla_y)-21:len(scaled_data_Sevilla_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Sevilla[:(len(x_train)+23)]
+valid = data_Sevilla[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2022-01-31" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Sevilla: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+
+
+# Just before the sixth wave
+
+## Asturias
+
+```{python}
+data_asturias = data_covid.loc[data_covid['provincia'] == 'Asturias']
+data_asturias = data_asturias.set_index('fecha')
+data_asturias = data_asturias.filter(['num_casos'])
+data_asturias = data_asturias[data_asturias.index < "2021-12-31"]
+data_asturias
+```
+
+```{python}
+data_asturias.describe()
+```
+
+```{python}
+np_data_asturias = data_asturias.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_asturias = scaler.fit_transform(np_data_asturias)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_asturias)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_asturias_x = []
+scaled_data_asturias_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_asturias)):
+    scaled_data_asturias_x.append(scaled_data_asturias[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_asturias_y.append(scaled_data_asturias[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_asturias_x = np.array(scaled_data_asturias_x)
+scaled_data_asturias_y = np.array(scaled_data_asturias_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_asturias_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_asturias_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_asturias_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_asturias_x[0:len(scaled_data_asturias_x)-22]
+y_train = scaled_data_asturias_y[0:len(scaled_data_asturias_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_asturias_x[len(scaled_data_asturias_x)-21:len(scaled_data_asturias_x)]
+y_test = scaled_data_asturias_y[len(scaled_data_asturias_y)-21:len(scaled_data_asturias_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_asturias[:(len(x_train)+23)]
+valid = data_asturias[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2021-10-15" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Asturias: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+
+## Barcelona
+
+```{python}
+data_Barcelona = data_covid.loc[data_covid['provincia'] == 'Barcelona']
+data_Barcelona = data_Barcelona.set_index('fecha')
+data_Barcelona = data_Barcelona.filter(['num_casos'])
+data_Barcelona = data_Barcelona[data_Barcelona.index < "2021-12-31"]
+data_Barcelona
+```
+
+```{python}
+data_Barcelona.describe()
+```
+
+```{python}
+np_data_Barcelona = data_Barcelona.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Barcelona = scaler.fit_transform(np_data_Barcelona)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Barcelona)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Barcelona_x = []
+scaled_data_Barcelona_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Barcelona)):
+    scaled_data_Barcelona_x.append(scaled_data_Barcelona[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Barcelona_y.append(scaled_data_Barcelona[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Barcelona_x = np.array(scaled_data_Barcelona_x)
+scaled_data_Barcelona_y = np.array(scaled_data_Barcelona_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Barcelona_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Barcelona_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Barcelona_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Barcelona_x[0:len(scaled_data_Barcelona_x)-22]
+y_train = scaled_data_Barcelona_y[0:len(scaled_data_Barcelona_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Barcelona_x[len(scaled_data_Barcelona_x)-21:len(scaled_data_Barcelona_x)]
+y_test = scaled_data_Barcelona_y[len(scaled_data_Barcelona_y)-21:len(scaled_data_Barcelona_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Barcelona[:(len(x_train)+23)]
+valid = data_Barcelona[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2021-10-15" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Barcelona: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+## Madrid
+
+```{python}
+data_Madrid = data_covid.loc[data_covid['provincia'] == 'Madrid']
+data_Madrid = data_Madrid.set_index('fecha')
+data_Madrid = data_Madrid.filter(['num_casos'])
+data_Madrid = data_Madrid[data_Madrid.index < "2021-12-31"]
+data_Madrid
+```
+
+```{python}
+data_Madrid.describe()
+```
+
+```{python}
+np_data_Madrid = data_Madrid.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Madrid = scaler.fit_transform(np_data_Madrid)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Madrid)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Madrid_x = []
+scaled_data_Madrid_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Madrid)):
+    scaled_data_Madrid_x.append(scaled_data_Madrid[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Madrid_y.append(scaled_data_Madrid[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Madrid_x = np.array(scaled_data_Madrid_x)
+scaled_data_Madrid_y = np.array(scaled_data_Madrid_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Madrid_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Madrid_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Madrid_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Madrid_x[0:len(scaled_data_Madrid_x)-22]
+y_train = scaled_data_Madrid_y[0:len(scaled_data_Madrid_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Madrid_x[len(scaled_data_Madrid_x)-21:len(scaled_data_Madrid_x)]
+y_test = scaled_data_Madrid_y[len(scaled_data_Madrid_y)-21:len(scaled_data_Madrid_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Madrid[:(len(x_train)+23)]
+valid = data_Madrid[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2021-10-15" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Madrid: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+## Malaga
+
+```{python}
+data_Malaga = data_covid.loc[data_covid['provincia'] == 'Málaga']
+data_Malaga = data_Malaga.set_index('fecha')
+data_Malaga = data_Malaga.filter(['num_casos'])
+data_Malaga = data_Malaga[data_Malaga.index < "2021-12-31"]
+data_Malaga
+```
+
+```{python}
+data_Malaga.describe()
+```
+
+```{python}
+np_data_Malaga = data_Malaga.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Malaga = scaler.fit_transform(np_data_Malaga)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Malaga)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Malaga_x = []
+scaled_data_Malaga_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Malaga)):
+    scaled_data_Malaga_x.append(scaled_data_Malaga[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Malaga_y.append(scaled_data_Malaga[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Malaga_x = np.array(scaled_data_Malaga_x)
+scaled_data_Malaga_y = np.array(scaled_data_Malaga_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Malaga_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Malaga_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Malaga_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Malaga_x[0:len(scaled_data_Malaga_x)-22]
+y_train = scaled_data_Malaga_y[0:len(scaled_data_Malaga_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Malaga_x[len(scaled_data_Malaga_x)-21:len(scaled_data_Malaga_x)]
+y_test = scaled_data_Malaga_y[len(scaled_data_Malaga_y)-21:len(scaled_data_Malaga_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Malaga[:(len(x_train)+23)]
+valid = data_Malaga[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2021-10-15" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Malaga: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+## Sevilla
+
+```{python}
+data_Sevilla = data_covid.loc[data_covid['provincia'] == 'Sevilla']
+data_Sevilla = data_Sevilla.set_index('fecha')
+data_Sevilla = data_Sevilla.filter(['num_casos'])
+data_Sevilla = data_Sevilla[data_Sevilla.index < "2021-12-31"]
+data_Sevilla
+```
+
+```{python}
+data_Sevilla.describe()
+```
+
+```{python}
+np_data_Sevilla = data_Sevilla.values
+```
+
+```{python}
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data_Sevilla = scaler.fit_transform(np_data_Sevilla)
+print(f'Longitud del conjunto de datos disponible: {len(scaled_data_Sevilla)}')
+```
+
+```{python}
+# Since we are going to predict future values based on the X past elements, 
+# we need to create a list with those historic information for each element
+historic_values = 21
+scaled_data_Sevilla_x = []
+scaled_data_Sevilla_y = []
+
+for num_casos_i in range(historic_values, len(scaled_data_Sevilla)):
+    scaled_data_Sevilla_x.append(scaled_data_Sevilla[(num_casos_i-historic_values):num_casos_i, 0])
+    scaled_data_Sevilla_y.append(scaled_data_Sevilla[num_casos_i, 0])
+
+# Convert the x_train and y_train to numpy arrays
+scaled_data_Sevilla_x = np.array(scaled_data_Sevilla_x)
+scaled_data_Sevilla_y = np.array(scaled_data_Sevilla_y)
+```
+
+```{python}
+# Train data looks like
+scaled_data_Sevilla_x[235]
+```
+
+```{python}
+# Test data looks like
+scaled_data_Sevilla_y[235]
+```
+
+```{python}
+# Since the first 14th values does not have historic, the dataset has been reduced in 14 values
+print(f'Longitud datos de entrenamiento con historico: {len(scaled_data_Sevilla_y)}')
+```
+
+```{python}
+# we split data in train and test
+# as in previous analysis, we are going to predict a maximum of 21 days
+x_train = scaled_data_Sevilla_x[0:len(scaled_data_Sevilla_x)-22]
+y_train = scaled_data_Sevilla_y[0:len(scaled_data_Sevilla_y)-22]
+print(f'Cantidad datos de entrenamiento: x={len(x_train)} - y={len(y_train)}')
+
+x_test = scaled_data_Sevilla_x[len(scaled_data_Sevilla_x)-21:len(scaled_data_Sevilla_x)]
+y_test = scaled_data_Sevilla_y[len(scaled_data_Sevilla_y)-21:len(scaled_data_Sevilla_y)]
+print(f'Cantidad datos de test: x={len(x_test)} - y={len(y_test)}')
+```
+
+```{python}
+# Reshape the data to feed de recurrent network
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+print("Train data shape:")
+print(x_train.shape)
+print(y_train.shape)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+print("Test data shape:")
+print(x_test.shape)
+print(y_test.shape)
+```
+
+```{python}
+# Configure / setup the neural network model - LSTM
+model = Sequential()
+
+# Model with Neurons 
+# Inputshape = neurons -> Timestamps
+neurons= x_train.shape[1]
+model.add(LSTM(14, 
+               activation = 'relu',
+               return_sequences = True, 
+               input_shape = (x_train.shape[1], 1))) 
+model.add(LSTM(50, 
+               activation = 'relu',
+               return_sequences = True)) 
+model.add(LSTM(25, 
+               activation = 'relu',
+               return_sequences = False)) 
+model.add(Dense(5, activation = 'relu'))
+model.add(Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+```
+
+```{python}
+# Training the model
+# fit network
+history = model.fit(x_train,
+                    y_train,
+                    batch_size = 2, 
+                    epochs = 20, 
+                    validation_data = (x_test, y_test), 
+                    verbose = 2)
+```
+
+```{python}
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show() 
+```
+
+```{python}
+# Get the predicted values
+predictions = model.predict(x_test)
+predictions = scaler.inverse_transform(predictions)
+predictions
+```
+
+```{python}
+y_test = y_test.reshape(-1,1)
+y_test = scaler.inverse_transform(y_test)
+y_test
+```
+
+```{python}
+# Calculate the mean absolute error (MAE)
+mae = mean_absolute_error(y_test, predictions)
+print('MAE: ' + str(round(mae, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = np.sqrt(mean_squared_error(y_test,predictions))
+print('RMSE: ' + str(round(rmse, 1)))
+
+# Calculate the root mean squarred error (RMSE)
+rmse = mean_squared_error(y_test, 
+                          predictions,
+                          squared = False)
+print('RMSE: ' + str(round(rmse, 1)))
+```
+
+```{python}
+# Add the difference between the valid and predicted prices
+train = data_Sevilla[:(len(x_train)+23)]
+valid = data_Sevilla[(len(x_train)+22):]
+```
+
+```{python}
+valid.insert(1, "Predictions", predictions, True)
+valid.insert(1, "Difference", valid["Predictions"] - valid["num_casos"], True)
+```
+
+```{python}
+# Zoom-in to a closer timeframe
+# Date from which on the date is displayed
+display_start_date = "2021-10-15" 
+valid = valid[valid.index > display_start_date]
+train = train[train.index > display_start_date]
+```
+
+```{python}
+# Visualize the data
+matplotlib.style.use('ggplot')
+fig, ax1 = plt.subplots(figsize=(22, 10), sharex=True)
+
+# Data - Train
+xt = train.index; 
+yt = train[["num_casos"]]
+# Data - Test / validation 
+xv = valid.index; 
+yv = valid[["num_casos", "Predictions"]]
+
+# Plot
+plt.title("Sevilla: Predictions vs Real infections", fontsize=20)
+plt.ylabel("Nº Cases", fontsize=18)
+
+plt.plot(yt, color="blue", linewidth=1.5)
+plt.plot(yv["Predictions"], color="red", linewidth=1.5)
+plt.plot(yv["num_casos"], color="green", linewidth=1.5)
+plt.legend(["Train", "LSTM Predictions", "Test"], 
+           loc="upper left", fontsize=18)
+
+# Bar plot with the differences
+x = valid.index
+y = valid["Difference"]
+plt.bar(x, y, width=0.2, color="grey")
+plt.grid()
+plt.show()
+```
+
+
+
+

@@ -13,6 +13,8 @@ pacman::p_load(
 )
 ```
 
+The main objective of the INE dataset is to measure mobility between areas during the period starting in March-2020 and ended in December-2021.
+
 Data is available in the Spanish National Institute of Statistics in the following [link](https://www.ine.es/experimental/movilidad/experimental_em4.htm#tablas_resultados). It is also provided a [link](https://www.ine.es/jaxiT3/Tabla.htm?t=48252) for direct access to the download portal via queries.
 
 Data can be downloaded in different formats. In our case we have used 'CSV: separado por ;'
@@ -29,7 +31,7 @@ ine_data <- read_csv2(
 ine_data
 ```
 
-It is needed to rename the colulmn's name in order to facilitate the work.
+It is needed to rename columns in order to improve the handling of the dataset.
 
 ```{r}
 ine_data <- ine_data %>% 
@@ -51,7 +53,7 @@ ine_data <- ine_data %>%
 summary(ine_data$fecha)
 ```
 
-There are missing data for CA and provinces. So, we proceed to elimite the missing information.
+There are missing data for CA and provinces. So, we proceed to remove the missing information.
 
 ```{r}
 ine_data <- ine_data %>% 
@@ -59,9 +61,9 @@ ine_data <- ine_data %>%
 skim(ine_data)
 ```
 
-No isles will be used in our analysis, so instead of clean and impute missing values, we have decided to elimite them from the dataset.
+No isles will be used in our analysis, so instead of clean and impute missing values, we have decided to remove them from the dataset.
 
-We also eliminate the CA column since it information is redundant with province.
+We also remove the CA column since it information is superfluous with province.
 
 ```{r}
 ine_data <- ine_data %>% 
@@ -69,7 +71,7 @@ ine_data <- ine_data %>%
       select(-islas, -CA)
 ```
 
-Regarding completeness of the dataset, there are not daily information. The gap between days vary between one day (no gaps during lockdown) and up to four days.
+Regarding completeness of the dataset, there are not daily information. The gap between days vary between one day (no gaps during lockdown period) and up to four days.
 
 To complete the data, we are going to interpolate the data between the known values.
 
@@ -81,7 +83,7 @@ ine_data <- ine_data %>%
 ine_data
 ```
 
-For all the provinces, there are information for 18-nov-2019 which is the pre-pandemic reference value. Since it is not needed to show variations in mobility, we are going to filter it.
+For all the provinces, there are information for November, 18 2019 which is the pre-pandemic reference value. Since it is not needed to show variations in mobility, we are going to filter it.
 
 ```{r}
 ine_data <- ine_data %>% 

@@ -13,7 +13,29 @@ pacman::p_load(
 )
 ```
 
-Data is avaible in the following [link](https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip)
+The data published by Google offers information related to mobility using the Google ecosystem application services such as Android. The dataset information is available worldwide [link](https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip), but in our case, only the information relating to Spain was extracted.
+
+It provides detail information about:
+
+-   CA: autonomous communities codes.
+
+-   province: province names.
+
+-   iso_3166_2\_code: province iso code
+
+-   fecha: date.
+
+-   mob_grocery_pharmacy: Mobility trends for places like grocery markets, food warehouses, farmers markets, specialty food shops, drug, stores, and pharmacies.
+
+-   mob_parks: Mobility trends for places like national parks, public beaches, marinas, dog parks, plazas, and public garden.
+
+-   mob_residential: Mobility trends for places of residence.
+
+-   mob_retail_recreation: Mobility trends for places like restaurants, cafes, shopping centers, theme parks, museums, libraries, and movie theaters.
+
+-   mob_transit_stations: Mobility trends for places like public transport hubs such as subway, bus, and train stations.
+
+-   mob_workplaces: Mobility trends for places of work.
 
 ```{r}
 # List local google raw files

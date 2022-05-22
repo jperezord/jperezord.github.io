@@ -31,7 +31,7 @@ covid_data
 
 ### Number of cases
 
-Accordign to CNE, in the evolution of the COVID-19 pandemic in Spain, there have been six periods:
+According to CNE, in the evolution of the COVID-19 pandemic in Spain, there have been six periods:
 
 -   First period: From the beginning of the pandemic until June 21, 2020, date on which the state of alarm in Spain ended after the end of the first epidemic outbreak of COVID-19.
 
@@ -63,7 +63,7 @@ covid_data %>%
       theme_bw()
 ```
 
-The incidence of Covid-19 in Madrid and Barcelona are much higher than in the rest of the provinces, mainly due to the number of inhabitants. The next figure show the same information than the previous one but freeing the y-axis scale.
+The incidence of Covid-19 in Madrid and Barcelona are much larger than in the rest of the provinces, mainly due to the number of inhabitants. The next figure show the same information than the previous one but freeing the y-axis scale.
 
 This approach will be followed in further plots.
 
@@ -86,6 +86,7 @@ covid_data %>%
 Normality study
 
 ```{r}
+#| warning = FALSE
 # Histogram with density plot
 covid_data %>% 
       ggplot(aes(x=num_casos)) + 
@@ -177,10 +178,10 @@ Number of hospitalizations vs number of cases:
 
 ```{r}
 # Value used to transform the data
-coeff <- 50
+coeff <- 20
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -229,10 +230,10 @@ Number of UCI hospitalizations vs number of cases:
 
 ```{r}
 # Value used to transform the data
-coeff <- 500
+coeff <- 300
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -279,10 +280,10 @@ covid_data %>%
 
 ```{r}
 # Value used to transform the data
-coeff <- 200
+coeff <- 100
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -394,7 +395,7 @@ Evolution of temperature vs number cases:
 coeff <- 400
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -446,7 +447,7 @@ Precipitations vs number cases:
 coeff <- 200
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -478,6 +479,7 @@ covid_data %>%
 ### grocery and pharmacy
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_grocery_pharmacy, color = provincia)) +
@@ -494,11 +496,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 50
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -528,6 +531,7 @@ covid_data %>%
 ### parks
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_parks, color = provincia)) +
@@ -544,11 +548,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 50
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -578,6 +583,7 @@ covid_data %>%
 ### residential
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_residential, color = provincia)) +
@@ -594,11 +600,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 50
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -628,6 +635,7 @@ covid_data %>%
 ### retail and recreation
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_retail_recreation, color = provincia)) +
@@ -644,11 +652,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 50
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -678,6 +687,7 @@ covid_data %>%
 ### transit stations
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_transit_stations, color = provincia)) +
@@ -694,11 +704,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 50
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -728,6 +739,7 @@ covid_data %>%
 ### workplaces
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_workplaces, color = provincia)) +
@@ -744,11 +756,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
 coeff <- 50
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
@@ -780,7 +793,7 @@ covid_data %>%
 ```{r}
 #| warning = FALSE
 # Value used to transform the data
-coeff <- 400
+coeff <- 300
 
 # A few constants for colors
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
@@ -820,6 +833,7 @@ p
 ### General mobility (INE study zones)
 
 ```{r}
+#| warning = FALSE
 covid_data %>% 
       ggplot(aes(x = fecha)) +
       geom_line(aes(y = mob_flujo, color = provincia)) +
@@ -836,11 +850,12 @@ covid_data %>%
 ```
 
 ```{r}
+#| warning = FALSE
 # Value used to transform the data
-coeff <- 50
+coeff <- 200
 
 # A few constants for colors
-temperatureColor <- "#69b3a2"
+temperatureColor <- "#ff9e81"
 priceColor <- rgb(0.2, 0.6, 0.9, 1)
 
 covid_data %>% 
