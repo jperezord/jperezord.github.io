@@ -51,6 +51,7 @@ summary(data_asturias_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_asturias_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -272,7 +273,6 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_asturias)
 ```
 
-
 ## Barcelona
 
 ```{r}
@@ -298,6 +298,7 @@ summary(data_Barcelona_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Barcelona_casos <- data_Barcelona %>%
       features(num_casos, features = guerrero) %>%
@@ -380,7 +381,6 @@ augment(fit_model) %>%
 augment(fit_model) %>%
       features(.innov, ljung_box, lag=90)
 ```
-
 
 ```{r}
 # To predict future values of infections, we need to pass the model future/prediction values of the complementary variables tmed and mobility
@@ -520,7 +520,6 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Barcelona)
 ```
 
-
 ## Madrid
 
 ```{r}
@@ -546,6 +545,7 @@ summary(data_Madrid_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Madrid_casos <- data_Madrid %>%
       features(num_casos, features = guerrero) %>%
@@ -767,7 +767,6 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Madrid)
 ```
 
-
 ## Malaga
 
 ```{r}
@@ -793,6 +792,7 @@ summary(data_Malaga_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Malaga_casos <- data_Malaga %>%
       features(num_casos, features = guerrero) %>%
@@ -1039,6 +1039,7 @@ summary(data_Sevilla_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Sevilla_casos <- data_Sevilla %>%
       features(num_casos, features = guerrero) %>%
@@ -1260,7 +1261,6 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Sevilla)
 ```
 
-
 # Middel of sixth epidemiological period
 
 ## Asturias
@@ -1288,6 +1288,7 @@ summary(data_asturias_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_asturias_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -1534,6 +1535,7 @@ summary(data_Barcelona_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Barcelona_casos <- data_Barcelona %>%
       features(num_casos, features = guerrero) %>%
@@ -1780,6 +1782,7 @@ summary(data_Madrid_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Madrid_casos <- data_Madrid %>%
       features(num_casos, features = guerrero) %>%
@@ -2026,6 +2029,7 @@ summary(data_Malaga_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Malaga_casos <- data_Malaga %>%
       features(num_casos, features = guerrero) %>%
@@ -2272,6 +2276,7 @@ summary(data_Sevilla_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Sevilla_casos <- data_Sevilla %>%
       features(num_casos, features = guerrero) %>%

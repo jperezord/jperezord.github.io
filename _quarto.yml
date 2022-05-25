@@ -19,6 +19,7 @@ book:
         - aemet_data.qmd
     - part: combination.qmd
     - part: visual.qmd
+    - part: visual_demo.qmd
     - part: arima.qmd
       chapters: 
         - acf.qmd
@@ -28,6 +29,9 @@ book:
         - multivariate.qmd
         - multivariate_google.qmd
     - part: lstm.qmd
+      chapters: 
+        - lstm_uni.qmd
+        - lstm_multi.qmd
     - references.qmd
 
 bibliography: references.bib

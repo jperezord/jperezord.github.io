@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-0.9.345">
+<meta name="generator" content="quarto-0.9.442">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -203,14 +203,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="./visual.html" class="sidebar-item-text sidebar-link">Task 3: Visual analysis</a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./visual_demo.html" class="sidebar-item-text sidebar-link">Task 4: Visual demographic analysis</a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
     <div class="sidebar-item-container"> 
-        <a href="./arima.html" class="sidebar-item-text sidebar-link">Task 4: ARIMA</a>
-      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+        <a href="./arima.html" class="sidebar-item-text sidebar-link">Task 5: ARIMA</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
         <i class="bi bi-chevron-right ms-2"></i>
       </a>
     </div>
-    <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+    <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./acf.html" class="sidebar-item-text sidebar-link">ACF and PACF plots</a>
@@ -243,11 +248,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
     </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+    <div class="sidebar-item-container"> 
+        <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 6: LSTM</a>
+      <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+        <i class="bi bi-chevron-right ms-2"></i>
+      </a>
+    </div>
+    <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./lstm.html" class="sidebar-item-text sidebar-link">Task 5: LSTM</a>
+  <a href="./lstm_uni.html" class="sidebar-item-text sidebar-link">LSTM univariate prediction</a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lstm_multi.html" class="sidebar-item-text sidebar-link">LSTM multivariate prediction</a>
+  </div>
+</li>
+    </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
@@ -348,8 +368,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title">
 <h1 class="title d-none d-lg-block">Multivariate (INE mobility + temp) prediction</h1>
 </div>
-
-
 
 
 
@@ -3228,7 +3246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   provincia .model    lb_stat lb_pvalue
   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
 1 Madrid    arima_at1    15.6   0.0293 
-2 Madrid    arima_at2    24.2   0.00104
+2 Madrid    arima_at2    24.3   0.00102
 3 Madrid    Snaive     1470.    0      </code></pre>
 </div>
 </div>
@@ -3240,7 +3258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   provincia .model    lb_stat lb_pvalue
   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
 1 Madrid    arima_at1    46.6 0.0000224
-2 Madrid    arima_at2    41.9 0.000129 
+2 Madrid    arima_at2    41.9 0.000128 
 3 Madrid    Snaive     2317.  0        </code></pre>
 </div>
 </div>
@@ -3252,7 +3270,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   provincia .model    lb_stat lb_pvalue
   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;
 1 Madrid    arima_at1    55.2 0.0000657
-2 Madrid    arima_at2    47.5 0.000803 
+2 Madrid    arima_at2    47.5 0.000801 
 3 Madrid    Snaive     2574.  0        </code></pre>
 </div>
 </div>
@@ -3264,7 +3282,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   provincia .model    lb_stat    lb_pvalue
   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;
 1 Madrid    arima_at1    124. 0.000000809 
-2 Madrid    arima_at2    132. 0.0000000652
+2 Madrid    arima_at2    132. 0.0000000650
 3 Madrid    Snaive      3050. 0           </code></pre>
 </div>
 </div>
@@ -3330,7 +3348,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   .model    provincia .type    ME  RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1 arima_at1 Madrid    Test  3221. 3881. 3267.  47.5  50.0  8.15  6.03 0.505
-2 arima_at2 Madrid    Test  3457. 4122. 3457.  52.3  52.3  8.62  6.40 0.542
+2 arima_at2 Madrid    Test  3459. 4124. 3459.  52.3  52.3  8.63  6.40 0.542
 3 Snaive    Madrid    Test  4063. 4582. 4063.  70.2  70.2 10.1   7.12 0.491</code></pre>
 </div>
 </div>
@@ -3369,7 +3387,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   .model    provincia .type    ME   RMSE   MAE   MPE  MAPE  MASE RMSSE  ACF1
   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1 arima_at1 Madrid    Test  6943.  9169. 6966.  58.5  59.8  17.4  14.2 0.616
-2 arima_at2 Madrid    Test  7263.  9466. 7263.  62.7  62.7  18.1  14.7 0.634
+2 arima_at2 Madrid    Test  7265.  9468. 7265.  62.7  62.7  18.1  14.7 0.634
 3 Snaive    Madrid    Test  8314. 10493. 8314.  78.4  78.4  20.7  16.3 0.680</code></pre>
 </div>
 </div>
@@ -3408,7 +3426,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   .model    provincia .type     ME   RMSE    MAE   MPE  MAPE  MASE RMSSE  ACF1
   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1 arima_at1 Madrid    Test   8508. 10700.  8525.  61.9  62.8  21.3  16.6 0.578
-2 arima_at2 Madrid    Test   8919. 11111.  8919.  65.9  65.9  22.2  17.3 0.607
+2 arima_at2 Madrid    Test   8921. 11114.  8921.  66.0  66.0  22.3  17.3 0.607
 3 Snaive    Madrid    Test  10402. 12674. 10402.  82.1  82.1  25.9  19.7 0.661</code></pre>
 </div>
 </div>
@@ -3447,7 +3465,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   .model    provincia .type     ME   RMSE    MAE   MPE  MAPE  MASE RMSSE  ACF1
   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 1 arima_at1 Madrid    Test   8508. 10700.  8525.  61.9  62.8  21.3  16.6 0.578
-2 arima_at2 Madrid    Test   8919. 11111.  8919.  65.9  65.9  22.2  17.3 0.607
+2 arima_at2 Madrid    Test   8921. 11114.  8921.  66.0  66.0  22.3  17.3 0.607
 3 Snaive    Madrid    Test  10402. 12674. 10402.  82.1  82.1  25.9  19.7 0.661</code></pre>
 </div>
 </div>

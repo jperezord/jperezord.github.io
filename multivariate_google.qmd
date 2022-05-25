@@ -51,6 +51,7 @@ summary(data_asturias_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_asturias_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -316,7 +317,6 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_asturias)
 ```
 
-
 ## Barcelona
 
 ```{r}
@@ -342,6 +342,7 @@ summary(data_Barcelona_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Barcelona_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -632,6 +633,7 @@ summary(data_Madrid_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Madrid_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -922,6 +924,7 @@ summary(data_Malaga_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Malaga_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -1187,7 +1190,6 @@ fc_h90 %>%
 fabletools::accuracy(fc_h90, data_Malaga)
 ```
 
-
 ## Sevilla
 
 ```{r}
@@ -1213,6 +1215,7 @@ summary(data_Sevilla_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Sevilla_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -1505,6 +1508,7 @@ summary(data_asturias_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_asturias_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -1795,6 +1799,7 @@ summary(data_Barcelona_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Barcelona_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -2085,6 +2090,7 @@ summary(data_Madrid_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Madrid_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -2375,6 +2381,7 @@ summary(data_Malaga_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Malaga_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%
@@ -2665,6 +2672,7 @@ summary(data_Sevilla_test$fecha)
 ```
 
 ```{r}
+#| warning = FALSE
 # Lamba for num_casos
 lambda_Sevilla_casos <- data_asturias %>%
       features(num_casos, features = guerrero) %>%

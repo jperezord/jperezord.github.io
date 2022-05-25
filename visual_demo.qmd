@@ -1,0 +1,650 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Task 4: Visual demographic analysis {.unnumbered}
+
+## Introduction
+
+As previously mentioned, the visual analysis will focus on the following provinces:
+
+-   Asturias
+-   Barcelona
+-   Madrid
+-   Málaga
+-   Sevilla
+
+First, we need to load packages and clean data generated during previous tasks:
+
+```{r}
+pacman::p_load(
+      here,      # file locator
+      tidyverse, # data management and ggplot2 graphics
+      skimr,     # get overview of data
+      janitor,   # produce and adorn tabulations and cross-tabulations
+      lubridate, # manage dates
+      PerformanceAnalytics,
+      factoextra,
+      tsibble,
+      ggfortify
+)
+
+hosp_data <- readRDS(here("data", "clean", "final_hosp_data.rds"))
+hosp_data
+```
+
+## Asturias
+
+```{r}
+data_asturias <- hosp_data %>% 
+      filter(provincia == "Asturias") %>% 
+      select(-provincia) %>% 
+      as_tsibble(index = fecha, key = c(sexo, grupo_edad)) %>% 
+      mutate(ola = case_when(
+            fecha < as.Date("2020-06-21", format = "%Y-%m-%d") ~ "1_ola",
+            fecha < as.Date("2020-12-06", format = "%Y-%m-%d") ~ "2_ola",
+            fecha < as.Date("2021-03-14", format = "%Y-%m-%d") ~ "3_ola",
+            fecha < as.Date("2021-06-19", format = "%Y-%m-%d") ~ "4_ola",
+            fecha < as.Date("2021-10-13", format = "%Y-%m-%d") ~ "5_ola",
+            TRUE ~ "6_ola",
+      ))
+data_asturias
+```
+
+### by wave
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=grupo_edad, y=num_casos)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Asturias - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=grupo_edad, y=num_def)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Asturias - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by age group
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Asturias - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Asturias - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=grupo_edad)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~sexo, ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Asturias - Cases reported by age group and wave",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by sex
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Asturias - Cases reported by sex and wave",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Asturias - Deaths reported by sex and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+
+```
+
+```{r}
+data_asturias %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=sexo)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~grupo_edad, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Asturias - Cases reported by sex and age group (free y axis)",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+## Barcelona
+
+```{r}
+data_Barcelona <- hosp_data %>% 
+      filter(provincia == "Barcelona") %>% 
+      select(-provincia) %>% 
+      as_tsibble(index = fecha, key = c(sexo, grupo_edad)) %>% 
+      mutate(ola = case_when(
+            fecha < as.Date("2020-06-21", format = "%Y-%m-%d") ~ "1_ola",
+            fecha < as.Date("2020-12-06", format = "%Y-%m-%d") ~ "2_ola",
+            fecha < as.Date("2021-03-14", format = "%Y-%m-%d") ~ "3_ola",
+            fecha < as.Date("2021-06-19", format = "%Y-%m-%d") ~ "4_ola",
+            fecha < as.Date("2021-10-13", format = "%Y-%m-%d") ~ "5_ola",
+            TRUE ~ "6_ola",
+      ))
+data_Barcelona
+```
+
+### by wave
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=grupo_edad, y=num_casos)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=grupo_edad, y=num_def)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by age group
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=grupo_edad)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~sexo, ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Cases reported by age group and wave",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by sex
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Cases reported by sex and wave",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Deaths reported by sex and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+
+```
+
+```{r}
+data_Barcelona %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=sexo)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~grupo_edad, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Barcelona - Cases reported by sex and age group (free y axis)",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+## Madrid
+
+```{r}
+data_Madrid <- hosp_data %>% 
+      filter(provincia == "Madrid") %>% 
+      select(-provincia) %>% 
+      as_tsibble(index = fecha, key = c(sexo, grupo_edad)) %>% 
+      mutate(ola = case_when(
+            fecha < as.Date("2020-06-21", format = "%Y-%m-%d") ~ "1_ola",
+            fecha < as.Date("2020-12-06", format = "%Y-%m-%d") ~ "2_ola",
+            fecha < as.Date("2021-03-14", format = "%Y-%m-%d") ~ "3_ola",
+            fecha < as.Date("2021-06-19", format = "%Y-%m-%d") ~ "4_ola",
+            fecha < as.Date("2021-10-13", format = "%Y-%m-%d") ~ "5_ola",
+            TRUE ~ "6_ola",
+      ))
+data_Madrid
+```
+
+### by wave
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=grupo_edad, y=num_casos)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Madrid - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=grupo_edad, y=num_def)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Madrid - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by age group
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Madrid - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Madrid - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=grupo_edad)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~sexo, ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Madrid - Cases reported by age group and wave",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by sex
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Madrid - Cases reported by sex and wave",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Madrid - Deaths reported by sex and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+
+```
+
+```{r}
+data_Madrid %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=sexo)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~grupo_edad, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Madrid - Cases reported by sex and age group (free y axis)",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+## Malaga
+
+```{r}
+data_Malaga <- hosp_data %>% 
+      filter(provincia == "Málaga") %>% 
+      select(-provincia) %>% 
+      as_tsibble(index = fecha, key = c(sexo, grupo_edad)) %>% 
+      mutate(ola = case_when(
+            fecha < as.Date("2020-06-21", format = "%Y-%m-%d") ~ "1_ola",
+            fecha < as.Date("2020-12-06", format = "%Y-%m-%d") ~ "2_ola",
+            fecha < as.Date("2021-03-14", format = "%Y-%m-%d") ~ "3_ola",
+            fecha < as.Date("2021-06-19", format = "%Y-%m-%d") ~ "4_ola",
+            fecha < as.Date("2021-10-13", format = "%Y-%m-%d") ~ "5_ola",
+            TRUE ~ "6_ola",
+      ))
+data_Malaga
+```
+
+### by wave
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=grupo_edad, y=num_casos)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Malaga - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=grupo_edad, y=num_def)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Malaga - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by age group
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Malaga - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Malaga - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=grupo_edad)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~sexo, ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Malaga - Cases reported by age group and wave",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by sex
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Malaga - Cases reported by sex and wave",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Malaga - Deaths reported by sex and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+
+```
+
+```{r}
+data_Malaga %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=sexo)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~grupo_edad, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Malaga - Cases reported by sex and age group (free y axis)",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+## Sevilla
+
+```{r}
+data_Sevilla <- hosp_data %>% 
+      filter(provincia == "Sevilla") %>% 
+      select(-provincia) %>% 
+      as_tsibble(index = fecha, key = c(sexo, grupo_edad)) %>% 
+      mutate(ola = case_when(
+            fecha < as.Date("2020-06-21", format = "%Y-%m-%d") ~ "1_ola",
+            fecha < as.Date("2020-12-06", format = "%Y-%m-%d") ~ "2_ola",
+            fecha < as.Date("2021-03-14", format = "%Y-%m-%d") ~ "3_ola",
+            fecha < as.Date("2021-06-19", format = "%Y-%m-%d") ~ "4_ola",
+            fecha < as.Date("2021-10-13", format = "%Y-%m-%d") ~ "5_ola",
+            TRUE ~ "6_ola",
+      ))
+data_Sevilla
+```
+
+### by wave
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=grupo_edad, y=num_casos)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=grupo_edad, y=num_def)) + 
+      geom_boxplot(aes(fill=grupo_edad)) +
+      facet_grid(. ~ ola) + 
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by age group
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Cases reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ grupo_edad) + 
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Deaths reported by wave and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=grupo_edad)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~sexo, ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Cases reported by age group and wave",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
+
+### by sex
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=ola, y=num_casos)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Cases reported by sex and wave",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+```
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=ola, y=num_def)) + 
+      geom_boxplot(aes(fill=ola)) +
+      facet_grid(. ~ sexo) + 
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Deaths reported by sex and age",
+           x ="Age group", y = "Nº of cases") +
+      theme_bw()
+
+```
+
+```{r}
+data_Sevilla %>% 
+      ggplot(aes(x=fecha, y=num_casos)) +
+      geom_line(aes(color=sexo)) +
+      geom_vline(xintercept = as.Date("2020-06-21", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2020-12-06", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-03-14", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-06-19", format = "%Y-%m-%d"), linetype="dashed") +
+      geom_vline(xintercept = as.Date("2021-10-13", format = "%Y-%m-%d"), linetype="dashed") +
+      facet_wrap(~grupo_edad, scales = "free_y", ncol=1) +
+      theme(legend.position = "top") +
+      labs(title="Sevilla - Cases reported by sex and age group (free y axis)",
+           x ="Date", y = "Nº of cases") +
+      theme_bw()
+```
